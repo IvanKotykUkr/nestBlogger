@@ -3,6 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -10,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { ObjectId } from 'mongoose';
 import {
+  BloggerType,
   BodyForCreateBloggerType,
   QueryForGetBloggersType,
 } from '../types/bloggers,types';
@@ -25,32 +29,61 @@ export class BloggersController {
     const pageNumber = query.PageNumber || 1;
     const pageSize = query.PageSize || 10;
 
-    return pageNumber;
+    const bloggers = await this.bloggersService.findAllBloggers(
+      searchNameTerm,
+      pageNumber,
+      pageSize,
+    );
+    return bloggers;
   }
 
   @Get('/:id')
   async getBlogger(@Param('id') id: ObjectId) {
     const blogger = await this.bloggersService.getBlogger(id);
-    return blogger;
+    if (blogger !== 'not found') {
+      return blogger;
+    }
+    throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
   }
 
   @Post('/')
   async createBlogger(@Body() inputModel: BodyForCreateBloggerType) {
     const name = inputModel.name;
     const youtubeUrl = inputModel.youtubeUrl;
+    const newBlogger: BloggerType = await this.bloggersService.createBlogger(
+      name,
+      youtubeUrl,
+    );
+    return newBlogger;
   }
 
   @Put('/:id')
+  @HttpCode(204)
   async updateBlogger(
-    @Param('id') userId: string,
+    @Param('id') userId: ObjectId,
     @Body() inputModel: BodyForCreateBloggerType,
   ) {
-    return;
+    const isUpdated = await this.bloggersService.updateBlogger(
+      userId,
+      inputModel.name,
+      inputModel.youtubeUrl,
+    );
+    if (isUpdated) {
+      return isUpdated;
+    }
+    throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
   }
 
   @Delete('/:id')
-  async deleteBlogger(@Param('id') userId: string) {
-    return;
+  @HttpCode(204)
+  async deleteBlogger(@Param('id') userId: ObjectId) {
+    const isDeleited: boolean = await this.bloggersService.deleteBlogger(
+      userId,
+    );
+    if (isDeleited) {
+      return isDeleited;
+    }
+    throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
   }
 
   /*
