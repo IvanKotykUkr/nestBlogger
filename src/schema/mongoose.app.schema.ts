@@ -1,9 +1,11 @@
 import mongoose from 'mongoose';
+
 import { BloggerDBType } from '../types/bloggers,types';
 import { PostsDBType } from '../types/posts.types';
 
 export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
   {
+    _id: mongoose.Types.ObjectId,
     name: { type: String, required: true },
     youtubeUrl: { type: String, required: true },
   },
@@ -13,11 +15,11 @@ export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
 );
 export const PostsSchema = new mongoose.Schema<PostsDBType>(
   {
-    _id: ObjectId,
+    _id: mongoose.Types.ObjectId,
     title: String,
     shortDescription: String,
     content: String,
-    bloggerId: ObjectId,
+    bloggerId: mongoose.Types.ObjectId,
     bloggerName: String,
     addedAt: Date,
   },

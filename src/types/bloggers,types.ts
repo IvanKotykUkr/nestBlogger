@@ -1,6 +1,6 @@
-import { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 
-export type QueryForGetBloggersType = {
+export type QueryForPaginationType = {
   SearchNameTerm: string;
   PageNumber: number;
   PageSize: number;
@@ -10,19 +10,19 @@ export type BodyForCreateBloggerType = {
   youtubeUrl: string;
 };
 export type BloggerDBType = {
-  _id: ObjectId;
+  _id: mongoose.Types.ObjectId;
   name: string;
   youtubeUrl: string;
 };
 
 export type BloggerType = {
-  id?: ObjectId;
-  _id?: ObjectId;
+  id?: mongoose.Types.ObjectId;
+  _id?: mongoose.Types.ObjectId;
   name: string;
   youtubeUrl: string;
 };
 export type BloggerResponseType = {
-  id: ObjectId;
+  id: mongoose.Types.ObjectId;
   name: string;
   youtubeUrl: string;
 };
@@ -33,5 +33,6 @@ export type PaginationType<T> = {
   totalCount: number;
   items: T[];
 };
+
 export type BloggerResponseTypeWithPagination =
   PaginationType<BloggerResponseType>;

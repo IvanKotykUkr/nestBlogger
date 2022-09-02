@@ -1,15 +1,16 @@
 import { BloggersRepositories } from './bloggers.repositories';
 import { Injectable } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 import {
   BloggerResponseType,
   BloggerResponseTypeWithPagination,
   BloggerType,
 } from '../types/bloggers,types';
+import { CheckBloggerType } from '../types/posts.types';
 
 @Injectable()
 export class BloggersHelper {
-  constructor(protected BloggersRepositories: BloggersRepositories) {}
+  constructor(protected bloggersRepositories: BloggersRepositories) {}
 
   async createBlogger(name: string, youtubeUrl: string): Promise<BloggerType> {
     const newBlogger: BloggerType = {
@@ -17,24 +18,24 @@ export class BloggersHelper {
       youtubeUrl,
     };
 
-    return this.BloggersRepositories.createBlogger(newBlogger);
+    return this.bloggersRepositories.createBlogger(newBlogger);
   }
 
   async updateBlogger(
-    userId: ObjectId,
+    bloggerId: mongoose.Types.ObjectId,
     name: string,
     youtubeUrl: string,
   ): Promise<boolean> {
     const newBlogger: BloggerType = {
-      _id: userId,
+      _id: bloggerId,
       name,
       youtubeUrl,
     };
-    return this.BloggersRepositories.updateBlogger(newBlogger);
+    return this.bloggersRepositories.updateBlogger(newBlogger);
   }
 
-  async deleteBlogger(id: ObjectId): Promise<boolean> {
-    return this.BloggersRepositories.deleteBloggers(id);
+  async deleteBlogger(id: mongoose.Types.ObjectId): Promise<boolean> {
+    return this.bloggersRepositories.deleteBloggers(id);
   }
 
   async getBloggers(
@@ -45,10 +46,10 @@ export class BloggersHelper {
     const page: number = pagenumber;
     const pageSize: number = pagesize;
     const totalCountSearch: number =
-      await this.BloggersRepositories.bloggersSearchCount(searchnameterm);
+      await this.bloggersRepositories.bloggersSearchCount(searchnameterm);
     const pagesCountSearch: number = Math.ceil(totalCountSearch / pageSize);
     const itemsSearch: BloggerResponseType[] =
-      await this.BloggersRepositories.getBloggers(
+      await this.bloggersRepositories.getBloggers(
         searchnameterm,
         pageSize,
         page,
@@ -63,12 +64,30 @@ export class BloggersHelper {
     };
   }
 
-  async findBlogger(id: ObjectId): Promise<BloggerResponseType | string> {
+  async findBlogger(
+    id: mongoose.Types.ObjectId,
+  ): Promise<BloggerResponseType | string> {
     const blogger: BloggerResponseType | string =
-      await this.BloggersRepositories.findBloggerById(id);
+      await this.bloggersRepositories.findBloggerById(id);
     if (blogger) {
       return blogger;
     }
     return null;
+  }
+
+  async checkBlogger(
+    bloggerId: mongoose.Types.ObjectId,
+  ): Promise<CheckBloggerType | string> {
+    const blogger: BloggerResponseType | string =
+      await this.bloggersRepositories.findBloggerById(bloggerId);
+
+    if (typeof blogger !== 'string') {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      return {
+        _id: bloggerId,
+        name: blogger.name,
+      };
+    }
+    return 'not find blogger';
   }
 }

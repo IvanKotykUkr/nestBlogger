@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Model, ObjectId } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { BloggerResponseType, BloggerType } from '../types/bloggers,types';
 import { InjectModel } from '@nestjs/mongoose';
 import { BloggerDocument } from '../schema/mongoose.app.schema';
@@ -18,7 +18,7 @@ export class BloggersRepositories {
     };
   }
 
-  async findBloggerInDb(id: ObjectId) {
+  async findBloggerInDb(id: mongoose.Types.ObjectId) {
     return id;
   }
 
@@ -41,7 +41,7 @@ export class BloggersRepositories {
     return true;
   }
 
-  async deleteBloggers(id: ObjectId): Promise<boolean> {
+  async deleteBloggers(id: mongoose.Types.ObjectId): Promise<boolean> {
     const bloggerInstance = await this.BloggerModel.findById(id);
     if (!bloggerInstance) return false;
 
@@ -83,7 +83,9 @@ export class BloggersRepositories {
     }));
   }
 
-  async findBloggerById(id: ObjectId): Promise<BloggerResponseType | string> {
+  async findBloggerById(
+    id: mongoose.Types.ObjectId,
+  ): Promise<BloggerResponseType | string> {
     const blogger = await this.BloggerModel.findById(id);
 
     if (blogger) {

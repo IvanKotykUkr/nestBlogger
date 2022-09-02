@@ -11,20 +11,24 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ObjectId } from 'mongoose';
+import mongoose from 'mongoose';
 import {
   BloggerType,
   BodyForCreateBloggerType,
-  QueryForGetBloggersType,
+  QueryForPaginationType,
 } from '../types/bloggers,types';
 import { BloggersService } from './bloggers.service';
+import {
+  BodyTypeForPost,
+  PostsResponseTypeWithPagination,
+} from '../types/posts.types';
 
 @Controller('/bloggers')
 export class BloggersController {
   constructor(protected bloggersService: BloggersService) {}
 
   @Get('/')
-  async getBloggers(@Query() query: QueryForGetBloggersType) {
+  async getBloggers(@Query() query: QueryForPaginationType) {
     const searchNameTerm = query.SearchNameTerm || null;
     const pageNumber = query.PageNumber || 1;
     const pageSize = query.PageSize || 10;
@@ -38,7 +42,7 @@ export class BloggersController {
   }
 
   @Get('/:id')
-  async getBlogger(@Param('id') id: ObjectId) {
+  async getBlogger(@Param('id') id: mongoose.Types.ObjectId) {
     const blogger = await this.bloggersService.getBlogger(id);
     if (blogger !== 'not found') {
       return blogger;
@@ -46,7 +50,7 @@ export class BloggersController {
     throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
   }
 
-  @Post('/')
+  @Post()
   async createBlogger(@Body() inputModel: BodyForCreateBloggerType) {
     const name = inputModel.name;
     const youtubeUrl = inputModel.youtubeUrl;
@@ -60,11 +64,11 @@ export class BloggersController {
   @Put('/:id')
   @HttpCode(204)
   async updateBlogger(
-    @Param('id') userId: ObjectId,
+    @Param('id') bloggerId: mongoose.Types.ObjectId,
     @Body() inputModel: BodyForCreateBloggerType,
   ) {
     const isUpdated = await this.bloggersService.updateBlogger(
-      userId,
+      bloggerId,
       inputModel.name,
       inputModel.youtubeUrl,
     );
@@ -76,9 +80,9 @@ export class BloggersController {
 
   @Delete('/:id')
   @HttpCode(204)
-  async deleteBlogger(@Param('id') userId: ObjectId) {
+  async deleteBlogger(@Param('id') bloggerId: mongoose.Types.ObjectId) {
     const isDeleited: boolean = await this.bloggersService.deleteBlogger(
-      userId,
+      bloggerId,
     );
     if (isDeleited) {
       return isDeleited;
@@ -86,16 +90,36 @@ export class BloggersController {
     throw new HttpException('NOT FOUND', HttpStatus.NOT_FOUND);
   }
 
-  /*
-    @Get('/:id/posts')
-    getPostByBlogger() {
-      return;
+  @Get('/:id/posts')
+  async getPostByBlogger(
+    @Param('id') id: mongoose.Types.ObjectId,
+    @Query() query: QueryForPaginationType,
+  ) {
+    const pageNumber = query.PageNumber || 1;
+    const pageSize = query.PageSize || 10;
+
+    const posts: PostsResponseTypeWithPagination | string =
+      await this.bloggersService.getPostsByBloggerId(id, pageNumber, pageSize);
+    if (typeof posts !== 'string') {
+      return posts;
     }
-  
-    @Post('/:id/posts')
-    createPostByBlogger() {
-      return;
+    throw new HttpException('NOT FOUND BLOGGER', HttpStatus.NOT_FOUND);
+  }
+
+  @Post('/:id/posts')
+  async createPostByBlogger(
+    @Param('id') id: mongoose.Types.ObjectId,
+    @Body() inputModel: BodyTypeForPost,
+  ) {
+    const newPost = await this.bloggersService.createPosts(
+      id,
+      inputModel.title,
+      inputModel.shortDescription,
+      inputModel.content,
+    );
+    if (typeof newPost !== 'string') {
+      return newPost;
     }
-    
-   */
+    throw new HttpException('NOT FOUND BLOGGER', HttpStatus.NOT_FOUND);
+  }
 }
