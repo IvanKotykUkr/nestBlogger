@@ -20,6 +20,7 @@ import {
 import { BloggersService } from './bloggers.service';
 import {
   BodyTypeForPost,
+  IdTypeForReq,
   PostsResponseTypeWithPagination,
 } from '../types/posts.types';
 
@@ -42,8 +43,8 @@ export class BloggersController {
   }
 
   @Get('/:id')
-  async getBlogger(@Param('id') id: mongoose.Types.ObjectId) {
-    const blogger = await this.bloggersService.getBlogger(id);
+  async getBlogger(@Param('id') param: IdTypeForReq) {
+    const blogger = await this.bloggersService.getBlogger(param.id);
     if (blogger !== 'not found') {
       return blogger;
     }
@@ -64,11 +65,11 @@ export class BloggersController {
   @Put('/:id')
   @HttpCode(204)
   async updateBlogger(
-    @Param('id') bloggerId: mongoose.Types.ObjectId,
+    @Param('id') param: IdTypeForReq,
     @Body() inputModel: BodyForCreateBloggerType,
   ) {
     const isUpdated = await this.bloggersService.updateBlogger(
-      bloggerId,
+      param.id,
       inputModel.name,
       inputModel.youtubeUrl,
     );
@@ -92,14 +93,18 @@ export class BloggersController {
 
   @Get('/:id/posts')
   async getPostByBlogger(
-    @Param('id') id: mongoose.Types.ObjectId,
+    @Param('id') param: IdTypeForReq,
     @Query() query: QueryForPaginationType,
   ) {
     const pageNumber = query.PageNumber || 1;
     const pageSize = query.PageSize || 10;
 
     const posts: PostsResponseTypeWithPagination | string =
-      await this.bloggersService.getPostsByBloggerId(id, pageNumber, pageSize);
+      await this.bloggersService.getPostsByBloggerId(
+        param.id,
+        pageNumber,
+        pageSize,
+      );
     if (typeof posts !== 'string') {
       return posts;
     }
@@ -108,11 +113,11 @@ export class BloggersController {
 
   @Post('/:id/posts')
   async createPostByBlogger(
-    @Param('id') id: mongoose.Types.ObjectId,
+    @Param('id') param: IdTypeForReq,
     @Body() inputModel: BodyTypeForPost,
   ) {
     const newPost = await this.bloggersService.createPosts(
-      id,
+      param.id,
       inputModel.title,
       inputModel.shortDescription,
       inputModel.content,

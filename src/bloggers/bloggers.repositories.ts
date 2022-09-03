@@ -24,6 +24,7 @@ export class BloggersRepositories {
 
   async createBlogger(newBlogger: BloggerType): Promise<BloggerType> {
     const bloggerInstance = new this.BloggerModel();
+    bloggerInstance._id = new mongoose.Types.ObjectId();
     bloggerInstance.name = newBlogger.name;
     bloggerInstance.youtubeUrl = newBlogger.youtubeUrl;
 

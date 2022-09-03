@@ -1,12 +1,23 @@
 import { PaginationType } from './bloggers,types';
 import mongoose, { ObjectId } from 'mongoose';
+import { IsMongoId, Length } from 'class-validator';
 
-export type BodyTypeForPost = {
+export class IdTypeForReq {
+  @IsMongoId()
+  id: mongoose.Types.ObjectId;
+}
+
+export class BodyTypeForPost {
+  @Length(1, 30)
   title: string;
+  @Length(1, 100)
   shortDescription: string;
+  @Length(1, 1000)
   content: string;
+  @IsMongoId()
   bloggerId: mongoose.Types.ObjectId;
-};
+}
+
 export type PostsDBType = {
   _id: mongoose.Types.ObjectId;
   title: string;
