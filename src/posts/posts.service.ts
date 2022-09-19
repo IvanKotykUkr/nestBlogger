@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PostsHelper } from './posts.helper';
-import mongoose, { ObjectId } from 'mongoose';
-import {
-  PostsResponseType,
-  PostsResponseTypeWithPagination,
-} from '../types/posts.types';
+import { PostsResponseType } from '../types/posts.types';
 import { BloggersHelper } from '../bloggers/bloggers.helper';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class PostsService {
@@ -14,22 +11,11 @@ export class PostsService {
     protected bloggerHelper: BloggersHelper,
   ) {}
 
-  async getPost(id: ObjectId): Promise<PostsResponseType | string> {
-    return this.postsHelper.findPost(id);
-  }
-
-  async getPosts(
-    pageNumber: number,
-    pageSize: number,
-  ): Promise<PostsResponseTypeWithPagination> {
-    return this.postsHelper.getAllPostsWithPagination(pageNumber, pageSize);
-  }
-
   async createPost(
     title: string,
     shortDescription: string,
     content: string,
-    bloggerId: mongoose.Types.ObjectId,
+    bloggerId: ObjectId,
   ): Promise<PostsResponseType | string> {
     const blogger = await this.bloggerHelper.checkBlogger(bloggerId);
     if (typeof blogger === 'string') return 'not find blogger';
@@ -47,11 +33,11 @@ export class PostsService {
   }
 
   async updatePost(
-    postId: mongoose.Types.ObjectId,
+    postId: ObjectId,
     title: string,
     shortDescription: string,
     content: string,
-    bloggerId: mongoose.Types.ObjectId,
+    bloggerId: ObjectId,
   ): Promise<boolean | string> {
     const blogger = await this.bloggerHelper.checkBlogger(bloggerId);
     if (typeof blogger === 'string') return 'not find blogger';
@@ -67,7 +53,7 @@ export class PostsService {
     return newPost;
   }
 
-  async deletePost(postId: mongoose.Types.ObjectId): Promise<boolean | string> {
+  async deletePost(postId: ObjectId): Promise<boolean | string> {
     return this.postsHelper.deletePost(postId);
   }
 }

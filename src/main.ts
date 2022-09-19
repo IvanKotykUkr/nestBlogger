@@ -24,6 +24,10 @@ async function bootstrap() {
         });
         throw new BadRequestException(errorsForResponse);
       },
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());

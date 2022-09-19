@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 
-import { BloggerDBType } from '../types/bloggers,types';
+import { BloggerDBType } from '../types/bloggers.types';
 import { PostsDBType } from '../types/posts.types';
+import { ObjectId } from 'mongodb';
 
 export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
   {
-    _id: mongoose.Types.ObjectId,
+    _id: ObjectId,
     name: { type: String, required: true },
     youtubeUrl: { type: String, required: true },
   },
@@ -15,11 +16,11 @@ export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
 );
 export const PostsSchema = new mongoose.Schema<PostsDBType>(
   {
-    _id: mongoose.Types.ObjectId,
+    _id: ObjectId,
     title: String,
     shortDescription: String,
     content: String,
-    bloggerId: mongoose.Types.ObjectId,
+    bloggerId: ObjectId,
     bloggerName: String,
     addedAt: Date,
   },

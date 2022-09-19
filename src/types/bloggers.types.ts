@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
 import { IsUrl, Length } from 'class-validator';
+import { ObjectId } from 'mongodb';
 
 export type QueryForPaginationType = {
   SearchNameTerm: string;
@@ -8,7 +8,7 @@ export type QueryForPaginationType = {
 };
 
 export class BodyForCreateBloggerType {
-  @Length(1, 15)
+  @Length(4, 15)
   name: string;
   @Length(1, 100)
   @IsUrl()
@@ -16,19 +16,19 @@ export class BodyForCreateBloggerType {
 }
 
 export type BloggerDBType = {
-  _id: mongoose.Types.ObjectId;
+  _id: ObjectId;
   name: string;
   youtubeUrl: string;
 };
 
 export type BloggerType = {
-  id?: mongoose.Types.ObjectId;
-  _id?: mongoose.Types.ObjectId;
+  id?: ObjectId;
+  _id?: ObjectId;
   name: string;
   youtubeUrl: string;
 };
 export type BloggerResponseType = {
-  id: mongoose.Types.ObjectId;
+  id: ObjectId;
   name: string;
   youtubeUrl: string;
 };

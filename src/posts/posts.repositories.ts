@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, ObjectId } from 'mongoose';
+import { Model } from 'mongoose';
 import { PostsDocument } from '../schema/mongoose.app.schema';
 import {
   PostsDBType,
   PostsResponseType,
   PostUpdatedType,
 } from '../types/posts.types';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class PostsRepositories {
@@ -37,47 +38,6 @@ export class PostsRepositories {
     return this.resPost(postsInstance);
   }
 
-  async findPostById(id: ObjectId): Promise<PostsResponseType | string> {
-    const post = await this.PostModel.findById(id);
-    if (post) {
-      return this.resPost(post);
-    }
-    return 'not found';
-  }
-
-  async paginationFilter(bloggerId: undefined | mongoose.Types.ObjectId) {
-    const filter = {};
-    if (bloggerId) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      return { bloggerId };
-    }
-    return filter;
-  }
-
-  async findPostsByIdBloggerCount(
-    bloggerId: undefined | mongoose.Types.ObjectId,
-  ): Promise<number> {
-    const filter = await this.paginationFilter(bloggerId);
-
-    return this.PostModel.countDocuments(filter);
-  }
-
-  async findAllPosts(
-    bloggerId: undefined | mongoose.Types.ObjectId,
-    number: number,
-    size: number,
-  ): Promise<PostsDBType[]> {
-    const filter = await this.paginationFilter(bloggerId);
-
-    return (
-      this.PostModel.find(filter)
-        //.skip((number - 1) * size)
-        .skip(number > 0 ? (number - 1) * size : 0)
-        .limit(size)
-        .lean()
-    );
-  }
-
   async updatePost(newPost: PostUpdatedType): Promise<boolean | string> {
     const post = await this.PostModel.findById(newPost._id);
     if (!post) return 'not found post';
@@ -90,7 +50,7 @@ export class PostsRepositories {
     return true;
   }
 
-  async deletePost(postId: mongoose.Types.ObjectId) {
+  async deletePost(postId: ObjectId) {
     const post = await this.PostModel.findById(postId);
     if (!post) return 'not found';
 

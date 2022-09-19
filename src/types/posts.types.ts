@@ -1,10 +1,19 @@
-import { PaginationType } from './bloggers,types';
-import mongoose, { ObjectId } from 'mongoose';
+import { PaginationType } from './bloggers.types';
 import { IsMongoId, Length } from 'class-validator';
+import { ObjectId } from 'mongodb';
 
 export class IdTypeForReq {
   @IsMongoId()
-  id: mongoose.Types.ObjectId;
+  id: ObjectId;
+}
+
+export class BodyTypeForPostBlogger {
+  @Length(1, 30)
+  title: string;
+  @Length(1, 100)
+  shortDescription: string;
+  @Length(1, 1000)
+  content: string;
 }
 
 export class BodyTypeForPost {
@@ -15,32 +24,32 @@ export class BodyTypeForPost {
   @Length(1, 1000)
   content: string;
   @IsMongoId()
-  bloggerId: mongoose.Types.ObjectId;
+  bloggerId: ObjectId;
 }
 
 export type PostsDBType = {
-  _id: mongoose.Types.ObjectId;
+  _id: ObjectId;
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: mongoose.Types.ObjectId;
+  bloggerId: ObjectId;
   bloggerName: string;
   addedAt: Date;
 };
 export type PostUpdatedType = {
-  _id: mongoose.Types.ObjectId;
+  _id: ObjectId;
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: mongoose.Types.ObjectId;
+  bloggerId: ObjectId;
   bloggerName: string;
 };
 export type PostsResponseType = {
-  id?: ObjectId | mongoose.Types.ObjectId;
+  id?: ObjectId;
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: ObjectId | mongoose.Types.ObjectId;
+  bloggerId: ObjectId;
   bloggerName: string;
   addedAt: Date;
   /* extendedLikesInfo: {
@@ -57,7 +66,7 @@ export type PostsResponseType = {
    */
 };
 export type CheckBloggerType = {
-  _id: mongoose.Types.ObjectId;
+  _id: ObjectId;
   name: string;
 };
 export type PostsResponseTypeWithPagination = PaginationType<PostsResponseType>;
