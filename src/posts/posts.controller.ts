@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import {
@@ -20,6 +21,7 @@ import {
 import { QueryForPaginationType } from '../types/bloggers.types';
 import { QueryPostsRepositories } from './query.posts.repositories';
 import { notFoundBlogger } from '../bloggers/bloggers.controller';
+import { BasicAuthGuard } from '../basic.auth.guard';
 
 export const notFoundPost = [
   {
@@ -57,6 +59,7 @@ export class PostsController {
     return posts;
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post()
   async createPost(@Body() inputModel: BodyTypeForPost) {
     const newPost: PostsResponseType | string =
@@ -72,6 +75,7 @@ export class PostsController {
     throw new NotFoundException(notFoundBlogger);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Put('/:id')
   @HttpCode(204)
   async updatePost(
@@ -94,6 +98,7 @@ export class PostsController {
     throw new NotFoundException(notFoundPost);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete('/:id')
   @HttpCode(204)
   async deleteBlogger(@Param() param: IdTypeForReq) {

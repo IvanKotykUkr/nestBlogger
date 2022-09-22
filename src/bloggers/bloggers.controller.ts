@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import mongoose from 'mongoose';
 import {
@@ -21,6 +22,7 @@ import { BloggersService } from './bloggers.service';
 import { BodyTypeForPostBlogger, IdTypeForReq } from '../types/posts.types';
 import { QueryBloggersRepositories } from './query.bloggers.repositories';
 import { QueryPostsRepositories } from '../posts/query.posts.repositories';
+import { BasicAuthGuard } from '../basic.auth.guard';
 
 export const notFoundBlogger = [
   {
@@ -61,6 +63,7 @@ export class BloggersController {
     throw new NotFoundException(notFoundBlogger);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post()
   @HttpCode(201)
   async createBlogger(@Body() inputModel: BodyForCreateBloggerType) {
@@ -73,6 +76,7 @@ export class BloggersController {
     return newBlogger;
   }
 
+  @UseGuards(BasicAuthGuard)
   @Put('/:id')
   @HttpCode(204)
   async updateBlogger(
@@ -90,6 +94,7 @@ export class BloggersController {
     throw new NotFoundException(notFoundBlogger);
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete('/:id')
   @HttpCode(204)
   async deleteBlogger(@Param() bloggerId: mongoose.Types.ObjectId) {
@@ -122,6 +127,7 @@ export class BloggersController {
     );
   }
 
+  @UseGuards(BasicAuthGuard)
   @Post('/:id/posts')
   async createPostByBlogger(
     @Param() param: IdTypeForReq,
