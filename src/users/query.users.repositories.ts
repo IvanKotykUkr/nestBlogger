@@ -3,9 +3,11 @@ import { Model } from 'mongoose';
 import { UsersDocument } from '../schema/mongoose.app.schema';
 import {
   UserDBType,
+  UserRequestType,
   UsersResponseType,
   UsersWithPaginationResponseType,
 } from '../types/users.types';
+import { ObjectId } from 'mongodb';
 
 export class QueryUsersRepositories {
   constructor(@InjectModel('users') private UsersModel: Model<UsersDocument>) {}
@@ -59,6 +61,21 @@ export class QueryUsersRepositories {
     }
 
     return 'not found users';
+  }
+
+  async findUserById(_id: ObjectId): Promise<UserRequestType | string> {
+    const user = await this.UsersModel.findById(_id);
+    if (!user) {
+      return 'not found';
+    }
+    return {
+      id: user.id,
+      login: user.accountData.login,
+      email: user.accountData.email,
+      passwordHash: user.accountData.passwordHash,
+      passwordSalt: user.accountData.passwordSalt,
+      createdAt: user.accountData.createdAt,
+    };
   }
 
   private async usersSearchCount(): Promise<number> {

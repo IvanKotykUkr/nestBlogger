@@ -4,6 +4,7 @@ import { BloggerDBType } from '../types/bloggers.types';
 import { PostsDBType } from '../types/posts.types';
 import { ObjectId } from 'mongodb';
 import { UserDBType } from '../types/users.types';
+import { CommentsDBType } from '../types/comments.types';
 
 export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
   {
@@ -44,8 +45,17 @@ export const UsersSchema = new mongoose.Schema<UserDBType>({
     isConfirmed: Boolean,
   },
 });
+export const CommentsSchema = new mongoose.Schema<CommentsDBType>({
+  _id: ObjectId,
+  postId: ObjectId,
+  content: String,
+  userId: ObjectId,
+  userLogin: String,
+  addedAt: Date,
+});
 export type BloggerDocument = BloggerDBType & Document;
 export type PostsDocument = PostsDBType & Document;
 export type UsersDocument = UserDBType & Document;
+export type CommentsDocument = CommentsDBType & Document;
 //export const BloggerModel = model<BloggerDocument>('Bloggers', MongooseAppSchema);
 //export const BloggerModel = mongoose.model('Bloggers', MongooseAppSchema);

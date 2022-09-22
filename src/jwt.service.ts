@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { UserFromTokenType } from './types/users.types';
 import { ObjectId } from 'mongodb';
 
-const expired = 'expired';
+const wrong = 'wrong';
 
 @Injectable()
 export class JwtService {
@@ -35,7 +35,7 @@ export class JwtService {
       // @ts-ignore
       return jwt.verify(token, process.env.ACCESS_JWT_SECRET);
     } catch (error) {
-      return expired;
+      return wrong;
     }
   }
 
@@ -45,7 +45,7 @@ export class JwtService {
       // @ts-ignore
       return jwt.verify(token, process.env.REFRESH_JWT_SECRET);
     } catch (error) {
-      return expired;
+      return wrong;
     }
   }
 }

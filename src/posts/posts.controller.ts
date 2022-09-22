@@ -22,6 +22,7 @@ import { QueryForPaginationType } from '../types/bloggers.types';
 import { QueryPostsRepositories } from './query.posts.repositories';
 import { notFoundBlogger } from '../bloggers/bloggers.controller';
 import { BasicAuthGuard } from '../basic.auth.guard';
+import { QueryCommentsRepositories } from '../comments/query.comments.repositories';
 
 export const notFoundPost = [
   {
@@ -35,6 +36,7 @@ export class PostsController {
   constructor(
     protected postsService: PostsService,
     protected queryPostsRepositories: QueryPostsRepositories,
+    protected queryCommentsRepositories: QueryCommentsRepositories,
   ) {}
 
   @Get('/:id')
@@ -57,6 +59,18 @@ export class PostsController {
         pageSize,
       );
     return posts;
+  }
+
+  @Get('/:id/comments')
+  async getAllCommentsForPost(
+    @Param() param: IdTypeForReq,
+    @Query() query: QueryForPaginationType,
+  ) {
+    return this.queryCommentsRepositories.findAllComments(
+      param.id,
+      query.PageNumber,
+      query.PageSize,
+    );
   }
 
   @UseGuards(BasicAuthGuard)
