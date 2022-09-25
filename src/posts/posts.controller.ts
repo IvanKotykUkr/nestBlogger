@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
@@ -23,6 +24,10 @@ import { QueryPostsRepositories } from './query.posts.repositories';
 import { notFoundBlogger } from '../bloggers/bloggers.controller';
 import { BasicAuthGuard } from '../basic.auth.guard';
 import { QueryCommentsRepositories } from '../comments/query.comments.repositories';
+import { CommentsService } from '../comments/comments.service';
+import { BodyForComments } from '../types/comments.types';
+import { AuthGuard } from '../auth.guard';
+import { Request } from 'express';
 
 export const notFoundPost = [
   {
@@ -37,6 +42,7 @@ export class PostsController {
     protected postsService: PostsService,
     protected queryPostsRepositories: QueryPostsRepositories,
     protected queryCommentsRepositories: QueryCommentsRepositories,
+    protected commentsService: CommentsService,
   ) {}
 
   @Get('/:id')
@@ -66,15 +72,36 @@ export class PostsController {
     @Param() param: IdTypeForReq,
     @Query() query: QueryForPaginationType,
   ) {
+    const pageNumber = query.PageNumber || 1;
+    const pageSize = query.PageSize || 10;
     return this.queryCommentsRepositories.findAllComments(
       param.id,
-      query.PageNumber,
-      query.PageSize,
+      pageNumber,
+      pageSize,
     );
   }
 
+  @UseGuards(AuthGuard)
+  @Post('/:id/comments')
+  async createComment(
+    @Body() body: BodyForComments,
+    @Param() param: IdTypeForReq,
+    @Req() request: Request,
+  ) {
+    const comment = await this.commentsService.createComment(
+      param.id,
+      body.content,
+      request.user.id,
+      request.user.login,
+    );
+    if (typeof comment === 'string') {
+      throw new NotFoundException(notFoundPost);
+    }
+    return comment;
+  }
+
   @UseGuards(BasicAuthGuard)
-  @Post()
+  @Post('/')
   async createPost(@Body() inputModel: BodyTypeForPost) {
     const newPost: PostsResponseType | string =
       await this.postsService.createPost(

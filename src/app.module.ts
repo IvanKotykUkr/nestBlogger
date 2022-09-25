@@ -3,13 +3,6 @@ import { BloggersController } from './bloggers/bloggers.controller';
 import { BloggersService } from './bloggers/bloggers.service';
 import { BloggersHelper } from './bloggers/bloggers.helper';
 import { BloggersRepositories } from './bloggers/bloggers.repositories';
-import { MongooseModule } from '@nestjs/mongoose';
-import {
-  BloggerSchema,
-  CommentsSchema,
-  PostsSchema,
-  UsersSchema,
-} from './schema/mongoose.app.schema';
 import { PostsController } from './posts/posts.controller';
 import { PostsService } from './posts/posts.service';
 import { PostsHelper } from './posts/posts.helper';
@@ -29,6 +22,13 @@ import { CommentsController } from './comments/comments.controller.';
 import { CommentsService } from './comments/comments.service';
 import { CommentsHelper } from './comments/comments.helper';
 import { CommentsRepositories } from './comments/comments.repositories';
+import { MongooseModule } from '@nestjs/mongoose';
+import {
+  BloggerSchema,
+  CommentsSchema,
+  PostsSchema,
+  UsersSchema,
+} from './schema/mongoose.app.schema';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -55,6 +55,7 @@ dotenv.config();
     BloggersHelper,
     BloggersRepositories,
     QueryBloggersRepositories,
+
     PostsService,
     PostsHelper,
     PostsRepositories,

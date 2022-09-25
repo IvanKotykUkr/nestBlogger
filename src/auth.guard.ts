@@ -60,13 +60,13 @@ export class CheckOwnGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const req: Request = context.switchToHttp().getRequest();
     const userId = req.user.id.toString();
-    const commentUserId = await this.queryCommentsRepositories.findCommentsById(
+    const comment = await this.queryCommentsRepositories.findCommentsById(
       new ObjectId(req.params.id),
     );
-    if (typeof commentUserId == 'string') {
+    if (typeof comment === 'string') {
       throw new NotFoundException([{ message: 'no comment', field: 'id' }]);
     }
-
+    const commentUserId = comment.userId.toString();
     if (userId !== commentUserId.toString()) {
       throw new ForbiddenException([
         { message: 'not your own', field: 'user' },

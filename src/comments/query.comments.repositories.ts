@@ -2,47 +2,66 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CommentsDocument } from '../schema/mongoose.app.schema';
 import { ObjectId } from 'mongodb';
-import { CommentsResponseTypeWithPagination } from '../types/comments.types';
+import {
+  CommentResponseType,
+  CommentsResponseTypeWithPagination,
+} from '../types/comments.types';
 
 export class QueryCommentsRepositories {
   constructor(
     @InjectModel('comments') private CommentsModel: Model<CommentsDocument>,
   ) {}
 
-  async findCommentsById(_id: ObjectId): Promise<ObjectId | string> {
+  async findCommentsById(_id: ObjectId): Promise<CommentResponseType | string> {
     const comment = await this.CommentsModel.findById(_id);
     if (comment) {
-      return comment._id;
+      return this.reqComment(comment);
     }
     return 'not found';
   }
 
   async findAllComments(
     id: ObjectId,
-    PageNumber: number,
-    PageSize: number,
+    page: number,
+    pageSize: number,
   ): Promise<CommentsResponseTypeWithPagination> {
-    const page: number = PageNumber;
-    const pageSize: number = PageSize;
-    const totalCountSearch: number = await this.commentsSearchCount();
-    const pagesCountSearch: number = Math.ceil(totalCountSearch / pageSize);
+    const totalCount: number = await this.commentsSearchCount(id);
+    const pagesCount: number = Math.ceil(totalCount / pageSize);
     const itemsSearch = await this.getComments(pageSize, page, id);
-
+    const items = itemsSearch.map((c) => ({
+      id: c._id,
+      content: c.content,
+      userId: c.userId,
+      userLogin: c.userLogin,
+      addedAt: c.addedAt,
+    }));
     return {
-      pagesCount: pagesCountSearch,
+      pagesCount,
       page,
       pageSize,
-      totalCount: totalCountSearch,
-      items: itemsSearch.map((c)=>[{id:c.id,conntent:c.content,uswr
-      ;Use}])
+      totalCount,
+      items,
     };
   }
 
-  private async commentsSearchCount(): Promise<number> {
-    return this.CommentsModel.countDocuments();
+  protected reqComment(comment: CommentsDocument) {
+    return {
+      id: comment._id,
+      content: comment.content,
+      userId: comment.userId,
+      userLogin: comment.userLogin,
+      addedAt: comment.addedAt,
+    };
   }
 
-  private async getComments(pageSize: number, page: number, _id) {
-    return this.CommentsModel.find({ postid: _id });
+  private async commentsSearchCount(postId): Promise<number> {
+    return this.CommentsModel.countDocuments({ postId });
+  }
+
+  private async getComments(pageSize: number, page: number, postId) {
+    return this.CommentsModel.find({ postId })
+      .skip(page > 0 ? (page - 1) * pageSize : 0)
+      .limit(pageSize)
+      .lean();
   }
 }

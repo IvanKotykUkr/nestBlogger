@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { BloggerType } from '../types/bloggers.types';
-import { InjectModel } from '@nestjs/mongoose';
 import { BloggerDocument } from '../schema/mongoose.app.schema';
 import { ObjectId } from 'mongodb';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class BloggersRepositories {
