@@ -56,3 +56,11 @@ export type UserFromTokenType = {
   iat: number;
   exp: number;
 };
+export type UserRequestType = {
+  id?: ObjectId;
+  login: string;
+  email?: string;
+  passwordHash: string;
+  passwordSalt: string;
+  createdAt?: Date;
+};

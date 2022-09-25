@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './exeption.filter';
+import cookieParser from 'cookie-parser';
 
 const PORT = process.env.PORT;
 
@@ -31,6 +32,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.use(cookieParser());
   await app.listen(PORT);
   console.log(`server started at http://localhost:${PORT}`);
 }
