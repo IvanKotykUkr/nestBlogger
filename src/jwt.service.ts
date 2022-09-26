@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { UserFromTokenType } from './types/users.types';
 import { ObjectId } from 'mongodb';
 
-const wrong = 'wrong';
+export const wrong = 'wrong';
 
 @Injectable()
 export class JwtService {

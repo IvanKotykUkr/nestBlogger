@@ -29,6 +29,11 @@ import {
   PostsSchema,
   UsersSchema,
 } from './schema/mongoose.app.schema';
+import { GuardHelper } from './guard.helper';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { EmailManager } from './users/email.manager';
+import { EmailAdapter } from './email.adaptor';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -42,6 +47,30 @@ dotenv.config();
     MongooseModule.forFeature([{ name: 'posts', schema: PostsSchema }]),
     MongooseModule.forFeature([{ name: 'users', schema: UsersSchema }]),
     MongooseModule.forFeature([{ name: 'comments', schema: CommentsSchema }]),
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          port: 465,
+          ignoreTLS: true,
+          secure: true,
+          auth: {
+            user: process.env.EMAIL_ID,
+            pass: process.env.EMAIL_PASS,
+          },
+        },
+        defaults: {
+          from: '"Kotyk" <backendkotyk@gmail.com>',
+        },
+        template: {
+          dir: __dirname + '/templates',
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+      }),
+    }),
   ],
   controllers: [
     BloggersController,
@@ -55,7 +84,7 @@ dotenv.config();
     BloggersHelper,
     BloggersRepositories,
     QueryBloggersRepositories,
-
+    GuardHelper,
     PostsService,
     PostsHelper,
     PostsRepositories,
@@ -70,6 +99,8 @@ dotenv.config();
     CommentsHelper,
     CommentsRepositories,
     QueryCommentsRepositories,
+    EmailManager,
+    EmailAdapter,
   ],
 })
 export class AppModule {}
