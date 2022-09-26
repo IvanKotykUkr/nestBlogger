@@ -1,16 +1,24 @@
 import {
   Body,
   Controller,
+  Get,
+  HttpCode,
   Post,
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
-import { AuthBodyType } from '../types/auth.types';
+import { AuthBodyType, refreshType } from '../types/auth.types';
 import { AuthService } from './auth.service';
 import { JwtService } from '../jwt.service';
 import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
+import { LogoutTokenGuards, RefreshTokenGuards } from '../refresh.token.guards';
+import { AuthGuard } from '../auth.guard';
+import { Cookies } from '../types/decorator';
+import { BodyForCreateUser } from '../types/users.types';
+import { CreateUserGuard } from '../create.user.guard';
 
 export const wrongPassword = [
   {
@@ -32,6 +40,17 @@ export class AuthController {
     protected authService: AuthService,
     protected jwtService: JwtService,
   ) {}
+
+  @UseGuards(CreateUserGuard)
+  @Post('/registration')
+  async registration(@Body() body: BodyForCreateUser) {
+    const user = await this.authService.createUser(
+      body.login,
+      body.email,
+      body.password,
+    );
+    return user;
+  }
 
   @Post('/login')
   async login(
@@ -56,6 +75,7 @@ export class AuthController {
     return this.resToken(accessToken, refreshToken, res);
   }
 
+  @UseGuards(RefreshTokenGuards)
   @Post('/refresh-token')
   async refreshToken(
     @Req() req: Request,
@@ -65,6 +85,28 @@ export class AuthController {
     const refreshToken = await this.jwtService.createRefreshToken(req.user.id);
 
     return this.resToken(accessToken, refreshToken, res);
+  }
+
+  @UseGuards(LogoutTokenGuards)
+  @HttpCode(204)
+  @Post('/logout')
+  async logout(
+    @Cookies('refreshToken') token: refreshType,
+    @Res() res: Response,
+  ) {
+    res.clearCookie('refreshToken');
+    res.send();
+    return;
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/me')
+  async getUserFromAccessesToken(@Req() req: Request) {
+    return {
+      email: req.user.email,
+      login: req.user.login,
+      userId: req.user.id,
+    };
   }
 
   protected resToken(

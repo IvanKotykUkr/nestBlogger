@@ -10,6 +10,7 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   BodyForCreateUser,
@@ -18,6 +19,7 @@ import {
   UsersWithPaginationResponseType,
 } from '../types/users.types';
 import { IdTypeForReq } from '../types/posts.types';
+import { CreateUserGuard } from '../create.user.guard';
 
 export const notFoundUser = [
   {
@@ -45,6 +47,7 @@ export class UsersController {
     );
   }
 
+  @UseGuards(CreateUserGuard)
   @Post('/')
   @HttpCode(201)
   async createUsers(

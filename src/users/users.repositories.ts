@@ -10,21 +10,8 @@ export class UsersRepositories {
   constructor(@InjectModel('users') private UsersModel: Model<UsersDocument>) {}
 
   async createUser(newUser: UserDBType): Promise<UserDBType> {
-    const userInstance = new this.UsersModel();
-    userInstance._id = newUser._id;
-    userInstance.accountData.login = newUser.accountData.login;
-    userInstance.accountData.email = newUser.accountData.email;
-    userInstance.accountData.passwordHash = newUser.accountData.passwordHash;
-    userInstance.accountData.passwordSalt = newUser.accountData.passwordSalt;
-    userInstance.accountData.createdAt = newUser.accountData.createdAt;
-    userInstance.emailConfirmation.confirmationCode =
-      newUser.emailConfirmation.confirmationCode;
-    userInstance.emailConfirmation.expirationDate =
-      newUser.emailConfirmation.expirationDate;
-    userInstance.emailConfirmation.isConfirmed =
-      newUser.emailConfirmation.isConfirmed;
-    await userInstance.save();
-    return;
+    const userInstance = new this.UsersModel(newUser);
+    return userInstance.save();
   }
 
   async deleteUser(_id: ObjectId): Promise<boolean> {

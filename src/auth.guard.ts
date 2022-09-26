@@ -7,17 +7,17 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { UserFromTokenType, UserRequestType } from './types/users.types';
+import { UserFromTokenType } from './types/users.types';
 import { JwtService } from './jwt.service';
-import { QueryUsersRepositories } from './users/query.users.repositories';
 import { ObjectId } from 'mongodb';
 import { QueryCommentsRepositories } from './comments/query.comments.repositories';
+import { GuardHelper } from './guard.helper';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     protected jwtService: JwtService,
-    protected queryUsersRepositories: QueryUsersRepositories,
+    protected guardHelper: GuardHelper,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -38,18 +38,8 @@ export class AuthGuard implements CanActivate {
         { message: 'Should be valide JWT Token', field: 'token' },
       ]);
     }
-    req.user = await this.findUserById(user.userId);
+    req.user = await this.guardHelper.findUserById(user.userId);
     return true;
-  }
-
-  private async findUserById(userId: ObjectId): Promise<UserRequestType> {
-    const user = await this.queryUsersRepositories.findUserById(userId);
-    if (typeof user == 'string') {
-      throw new UnauthorizedException([
-        { message: 'there is no user', field: 'token' },
-      ]);
-    }
-    return user;
   }
 }
 

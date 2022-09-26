@@ -78,6 +78,20 @@ export class QueryUsersRepositories {
     };
   }
 
+  async checkUseLoginOrEmail(
+    login: string,
+    email: string,
+  ): Promise<UserDBType | string> {
+    const user = await this.UsersModel.findOne({
+      $or: [{ 'accountData.login': login }, { 'accountData.email': email }],
+    });
+    if (user) {
+      return this.reqUsers(user);
+    }
+
+    return 'not found users';
+  }
+
   private async usersSearchCount(): Promise<number> {
     return this.UsersModel.countDocuments();
   }
