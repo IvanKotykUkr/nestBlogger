@@ -47,6 +47,7 @@ dotenv.config();
     MongooseModule.forFeature([{ name: 'posts', schema: PostsSchema }]),
     MongooseModule.forFeature([{ name: 'users', schema: UsersSchema }]),
     MongooseModule.forFeature([{ name: 'comments', schema: CommentsSchema }]),
+
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: {

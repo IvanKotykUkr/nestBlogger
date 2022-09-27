@@ -1,4 +1,4 @@
-import { IsJWT } from 'class-validator';
+import { IsEmail, IsJWT, IsUUID } from 'class-validator';
 
 export type AuthBodyType = {
   login: string;
@@ -8,4 +8,16 @@ export type AuthBodyType = {
 export class refreshType {
   @IsJWT()
   refreshToken: string;
+}
+
+export class ConfirmationType {
+  @IsUUID()
+  code: string;
+  @IsEmail()
+  email: string;
+}
+
+export class ResendConfirmationType {
+  @IsEmail()
+  email: string;
 }

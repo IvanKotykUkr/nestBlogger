@@ -20,4 +20,35 @@ export class UsersRepositories {
     await userInstance.deleteOne();
     return true;
   }
+
+  async confirmUser(code: string): Promise<string | boolean> {
+    const user = await this.UsersModel.findOne({
+      'emailConfirmation.confirmationCode': code,
+    });
+    if (!user) return 'not found';
+    if (user.emailConfirmation.isConfirmed === true) return 'already confirmed';
+    if (user.emailConfirmation.expirationDate < new Date()) {
+      return 'code expired';
+    }
+    user.emailConfirmation.isConfirmed = true;
+    await user.save();
+    return true;
+  }
+
+  async renewConfirmationCode(
+    email: string,
+    confirmationCode: string,
+    expirationDate: Date,
+  ): Promise<boolean> {
+    const result = await this.UsersModel.findOneAndUpdate(
+      { 'accountData.email': email },
+      {
+        $set: {
+          'emailConfirmation.confirmationCode': confirmationCode,
+          'emailConfirmation.expirationDate': expirationDate,
+        },
+      },
+    );
+    return true;
+  }
 }
