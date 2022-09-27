@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -9,7 +10,12 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { AuthBodyType, refreshType } from '../types/auth.types';
+import {
+  AuthBodyType,
+  ConfirmationType,
+  refreshType,
+  ResendConfirmationType,
+} from '../types/auth.types';
 import { AuthService } from './auth.service';
 import { JwtService } from '../jwt.service';
 import { ObjectId } from 'mongodb';
@@ -50,6 +56,46 @@ export class AuthController {
       body.password,
     );
     return user;
+  }
+
+  @Post('registration-confirmation')
+  async registrationConfirmation(@Body() body: ConfirmationType) {
+    const isConfirmed = await this.authService.confirmUser(body.code);
+    if (isConfirmed === 'not found') {
+      throw new BadRequestException([
+        { message: ' code doesnt exist', field: 'code' },
+      ]);
+    }
+    if (isConfirmed === 'already confirmed') {
+      throw new BadRequestException([
+        { message: 'code already confirmed', field: 'code' },
+      ]);
+    }
+    if (isConfirmed === 'code expired') {
+      throw new BadRequestException([
+        { message: 'code expired', field: 'code' },
+      ]);
+    }
+    return true;
+  }
+
+  @Post('registration-email-resending')
+  async resendConfirmation(@Body() body: ResendConfirmationType) {
+    const dispatchCode = await this.authService.resendConfirmationCode(
+      body.email,
+    );
+    if (dispatchCode === 'not found users') {
+      throw new BadRequestException([
+        { message: 'user email doesnt exist', field: 'email' },
+      ]);
+    }
+    if (dispatchCode === 'already confirmed') {
+      throw new BadRequestException([
+        { message: 'email already confirmed', field: 'email' },
+      ]);
+    }
+
+    return dispatchCode;
   }
 
   @Post('/login')

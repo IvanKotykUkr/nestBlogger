@@ -4,6 +4,8 @@ import { UsersHelper } from '../users/users.helper';
 import { ObjectId } from 'mongodb';
 import { UsersRepositories } from '../users/users.repositories';
 import { EmailManager } from '../users/email.manager';
+import { v4 as uuidv4 } from 'uuid';
+import add from 'date-fns/add';
 
 @Injectable()
 export class AuthService {
@@ -43,5 +45,42 @@ export class AuthService {
       await this.usersRepositories.deleteUser(user._id);
     }
     return;
+  }
+
+  async confirmUser(code: string): Promise<string | boolean> {
+    return this.usersRepositories.confirmUser(code);
+  }
+
+  async resendConfirmationCode(email: string) {
+    const user = await this.queryUsersRepositories.findUserByEmailOrLogin(
+      email,
+    );
+    if (typeof user === 'string') {
+      return user;
+    }
+    if (user.emailConfirmation.isConfirmed === true) return 'already confirmed';
+
+    const confirmationCode = uuidv4();
+    const expirationDate = add(new Date(), {
+      hours: 1,
+      minutes: 2,
+    });
+    const code = await this.usersRepositories.renewConfirmationCode(
+      email,
+      confirmationCode,
+      expirationDate,
+    );
+
+    try {
+      await this.emailManager.resentEmailConfirmationMessage(
+        email,
+        confirmationCode,
+      );
+      return 'allOk';
+    } catch (error) {
+      console.error(error);
+
+      return true;
+    }
   }
 }
