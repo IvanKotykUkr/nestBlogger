@@ -34,6 +34,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { EmailManager } from './users/email.manager';
 import { EmailAdapter } from './email.adaptor';
+import { DeleteTest } from './delete.test';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -47,7 +48,6 @@ dotenv.config();
     MongooseModule.forFeature([{ name: 'posts', schema: PostsSchema }]),
     MongooseModule.forFeature([{ name: 'users', schema: UsersSchema }]),
     MongooseModule.forFeature([{ name: 'comments', schema: CommentsSchema }]),
-
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: {
@@ -79,6 +79,7 @@ dotenv.config();
     UsersController,
     AuthController,
     CommentsController,
+    DeleteTest,
   ],
   providers: [
     BloggersService,
