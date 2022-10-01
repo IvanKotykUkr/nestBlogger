@@ -1,53 +1,97 @@
 import { Module } from '@nestjs/common';
-import { BloggersController } from './bloggers/bloggers.controller';
-import { BloggersService } from './bloggers/bloggers.service';
-import { BloggersHelper } from './bloggers/bloggers.helper';
-import { BloggersRepositories } from './bloggers/bloggers.repositories';
-import { PostsController } from './posts/posts.controller';
-import { PostsService } from './posts/posts.service';
-import { PostsHelper } from './posts/posts.helper';
-import { PostsRepositories } from './posts/posts.repositories';
-import { QueryBloggersRepositories } from './bloggers/query.bloggers.repositories';
-import { QueryPostsRepositories } from './posts/query.posts.repositories';
-import { UsersController } from './users/users.controller';
-import { UsersHelper } from './users/users.helper';
-import { UsersRepositories } from './users/users.repositories';
-import { QueryUsersRepositories } from './users/query.users.repositories';
-import { UsersService } from './users/users.service';
+import { BloggersController } from './bloggers/api/bloggers.controller';
+import { BloggersService } from './bloggers/application/bloggers.service';
+import { BloggersHelper } from './bloggers/application/bloggers.helper';
+import { BloggersRepositories } from './bloggers/infrastructure/bloggers.repositories';
+import { PostsController } from './posts/api/posts.controller';
+import { PostsService } from './posts/application/posts.service';
+import { PostsHelper } from './posts/application/posts.helper';
+import { PostsRepositories } from './posts/infrastructure/posts.repositories';
+import { QueryBloggersRepositories } from './bloggers/infrastructure/query.bloggers.repositories';
+import { QueryPostsRepositories } from './posts/infrastructure/query.posts.repositories';
+import { UsersController } from './users/api/users.controller';
+import { UsersHelper } from './users/application/users.helper';
+import { UsersRepositories } from './users/infrastructure/users.repositories';
+import { QueryUsersRepositories } from './users/infrastructure/query.users.repositories';
+import { UsersService } from './users/application/users.service';
 import { JwtService } from './jwt.service';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
-import { QueryCommentsRepositories } from './comments/query.comments.repositories';
-import { CommentsController } from './comments/comments.controller.';
-import { CommentsService } from './comments/comments.service';
-import { CommentsHelper } from './comments/comments.helper';
-import { CommentsRepositories } from './comments/comments.repositories';
+import { AuthController } from './auth/api/auth.controller';
+import { AuthService } from './auth/application/auth.service';
+import { QueryCommentsRepositories } from './comments/infrastructure/query.comments.repositories';
+import { CommentsController } from './comments/api/comments.controller.';
+import { CommentsService } from './comments/application/comments.service';
+import { CommentsHelper } from './comments/application/comments.helper';
+import { CommentsRepositories } from './comments/infrastructure/comments.repositories';
 import { MongooseModule } from '@nestjs/mongoose';
-import {
-  BloggerSchema,
-  CommentsSchema,
-  PostsSchema,
-  UsersSchema,
-} from './schema/mongoose.app.schema';
-import { GuardHelper } from './guard.helper';
+import { CommentsSchema } from './comments/infrastructure/repository/comments.mongooose.schema';
+import { GuardHelper } from './guards/guard.helper';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { EmailManager } from './users/email.manager';
-import { EmailAdapter } from './email.adaptor';
+import { EmailManager } from './adapters/email.manager';
+import { EmailAdapter } from './adapters/email.adaptor';
 import { DeleteTest } from './delete.test';
+import { BloggerSchema } from './bloggers/infrastructure/repository/blogger.mongoose';
+import { PostsSchema } from './posts/infrastructure/repository/posts.mongoose.schema';
+import { UsersSchema } from './users/infrastructure/repository/users.mongoose.schema';
+import { QueryBloggersController } from './bloggers/api/query.bloggers.controller';
+import { QueryPostsController } from './posts/api/query.posts.controller';
+import { QueryCommentsController } from './comments/api/query.comments.controller.';
+import { QueryUsersController } from './users/api/query.users.controller';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
 
 dotenv.config();
+const controller = [
+  BloggersController,
+  PostsController,
+  UsersController,
+  AuthController,
+  CommentsController,
+  DeleteTest,
+];
+const queryController = [
+  QueryBloggersController,
+  QueryPostsController,
+  QueryCommentsController,
+  QueryUsersController,
+];
+const auth = [AuthService];
+const user = [
+  UsersService,
+  UsersHelper,
+  UsersRepositories,
+  QueryUsersRepositories,
+];
+const post = [
+  PostsService,
+  PostsHelper,
+  PostsRepositories,
+  QueryPostsRepositories,
+];
+const comment = [
+  CommentsService,
+  CommentsHelper,
+  CommentsRepositories,
+  QueryCommentsRepositories,
+];
+const blogger = [
+  BloggersService,
+  BloggersHelper,
+  BloggersRepositories,
+  QueryBloggersRepositories,
+];
+const mongooseModule = [
+  MongooseModule.forRoot(process.env.MONGO_URL),
+  MongooseModule.forFeature([{ name: 'bloggers', schema: BloggerSchema }]),
+  MongooseModule.forFeature([{ name: 'posts', schema: PostsSchema }]),
+  MongooseModule.forFeature([{ name: 'users', schema: UsersSchema }]),
+  MongooseModule.forFeature([{ name: 'comments', schema: CommentsSchema }]),
+];
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGO_URL),
-    MongooseModule.forFeature([{ name: 'bloggers', schema: BloggerSchema }]),
-    MongooseModule.forFeature([{ name: 'posts', schema: PostsSchema }]),
-    MongooseModule.forFeature([{ name: 'users', schema: UsersSchema }]),
-    MongooseModule.forFeature([{ name: 'comments', schema: CommentsSchema }]),
+    ...mongooseModule,
     MailerModule.forRootAsync({
       useFactory: () => ({
         transport: {
@@ -73,34 +117,15 @@ dotenv.config();
       }),
     }),
   ],
-  controllers: [
-    BloggersController,
-    PostsController,
-    UsersController,
-    AuthController,
-    CommentsController,
-    DeleteTest,
-  ],
+  controllers: [...controller, ...queryController],
   providers: [
-    BloggersService,
-    BloggersHelper,
-    BloggersRepositories,
-    QueryBloggersRepositories,
+    ...auth,
+    ...blogger,
+    ...post,
+    ...comment,
+    ...user,
     GuardHelper,
-    PostsService,
-    PostsHelper,
-    PostsRepositories,
-    QueryPostsRepositories,
-    UsersService,
-    UsersHelper,
-    UsersRepositories,
-    QueryUsersRepositories,
-    AuthService,
     JwtService,
-    CommentsService,
-    CommentsHelper,
-    CommentsRepositories,
-    QueryCommentsRepositories,
     EmailManager,
     EmailAdapter,
   ],

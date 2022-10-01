@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import jwt from 'jsonwebtoken';
-import { UserFromTokenType } from './types/users.types';
+import { UserFromTokenType } from './users/users.types';
 import { ObjectId } from 'mongodb';
 
 export const wrong = 'wrong';
