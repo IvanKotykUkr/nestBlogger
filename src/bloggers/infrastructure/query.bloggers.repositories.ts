@@ -22,6 +22,7 @@ export class QueryBloggersRepositories {
       id: blogger._id,
       name: blogger.name,
       youtubeUrl: blogger.youtubeUrl,
+      createdAt: blogger.createdAt,
     };
   }
 
@@ -55,11 +56,13 @@ export class QueryBloggersRepositories {
       id: d._id,
       name: d.name,
       youtubeUrl: d.youtubeUrl,
+      createdAt: d.createdAt,
     }));
   }
 
   async findBloggerById(_id: ObjectId): Promise<BloggerResponseType | string> {
-    const blogger = await this.BloggerModel.findById(_id);
+    const blogger = await this.BloggerModel.findById({ _id: _id });
+
     if (blogger) {
       return this.reqBlogger(blogger);
     }
@@ -85,8 +88,8 @@ export class QueryBloggersRepositories {
 
     return {
       pagesCount: pagesCountSearch,
-      page,
-      pageSize,
+      page: pagenumber,
+      pageSize: pagesize,
       totalCount: totalCountSearch,
       items: itemsSearch,
     };

@@ -1,11 +1,13 @@
 import { IsUrl, Length } from 'class-validator';
 import { ObjectId } from 'mongodb';
 
-export type QueryForPaginationType = {
+export class QueryForPaginationType {
   SearchNameTerm: string;
+
   PageNumber: number;
+
   PageSize: number;
-};
+}
 
 export class BodyForCreateBloggerType {
   @Length(4, 15)
@@ -19,6 +21,7 @@ export type BloggerDBType = {
   _id: ObjectId;
   name: string;
   youtubeUrl: string;
+  createdAt: Date;
 };
 
 export type BloggerType = {
@@ -26,11 +29,13 @@ export type BloggerType = {
   _id?: ObjectId;
   name: string;
   youtubeUrl: string;
+  createdAt: Date;
 };
 export type BloggerResponseType = {
   id: ObjectId;
   name: string;
   youtubeUrl: string;
+  createdAt: Date;
 };
 export type PaginationType<T> = {
   pagesCount: number;

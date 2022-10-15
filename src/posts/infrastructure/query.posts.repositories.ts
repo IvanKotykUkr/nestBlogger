@@ -25,8 +25,8 @@ export class QueryPostsRepositories {
     };
   }
 
-  async findPostById(id: ObjectId): Promise<PostsResponseType | string> {
-    const post = await this.PostModel.findById(id);
+  async findPostById(_id: ObjectId): Promise<PostsResponseType | string> {
+    const post = await this.PostModel.findById(_id);
     if (post) {
       return this.resPost(post);
     }

@@ -16,6 +16,7 @@ export class BloggersRepositories {
       id: blogger._id,
       name: blogger.name,
       youtubeUrl: blogger.youtubeUrl,
+      createdAt: blogger.createdAt,
     };
   }
 
@@ -24,6 +25,7 @@ export class BloggersRepositories {
     bloggerInstance._id = newBlogger._id;
     bloggerInstance.name = newBlogger.name;
     bloggerInstance.youtubeUrl = newBlogger.youtubeUrl;
+    bloggerInstance.createdAt = newBlogger.createdAt;
 
     await bloggerInstance.save();
 

@@ -14,19 +14,21 @@ export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
 
 
  */
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { BloggerDBType } from '../../bloggers.types';
 
-@Schema()
-export class BloggerMongoose {
-  @Prop()
-  _id: ObjectId;
-  @Prop()
-  name: string;
-  @Prop()
-  youtubeUrl: string;
-}
+export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
+  {
+    _id: ObjectId,
+    name: String,
+    youtubeUrl: String,
+    createdAt: Date,
+  },
+  {
+    versionKey: false,
+  },
+);
 
-export const BloggerSchema = SchemaFactory.createForClass(BloggerMongoose);
-export type BloggerDocument = BloggerMongoose & Document;
+//export const BloggerSchema = SchemaFactory.createForClass(BloggerMongoose);
+export type BloggerDocument = BloggerDBType & Document;
