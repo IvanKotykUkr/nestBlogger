@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PostsRepositories } from '../infrastructure/posts.repositories';
 import { PostsDBType, PostUpdatedType } from '../posts.types';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class PostsHelper {
-  constructor(protected postRepositories: PostsRepositories) {}
-
   makePost(
     title: string,
     shortDescription: string,

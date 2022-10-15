@@ -27,14 +27,15 @@ export class QueryBloggersController {
   @Get('/')
   async getBloggers(@Query() query: QueryForPaginationType) {
     const searchNameTerm = query.SearchNameTerm || null;
-    const pageNumber = query.PageNumber || 1;
-    const pageSize = query.PageSize || 10;
+    const pageNumber: number = query.PageNumber || 1;
+    const pageSize: number = query.PageSize || 10;
 
     const bloggers = await this.queryBloggersRepositories.findAllBloggers(
       searchNameTerm,
-      pageNumber,
-      pageSize,
+      +pageNumber,
+      +pageSize,
     );
+
     return bloggers;
   }
 
@@ -58,6 +59,7 @@ export class QueryBloggersController {
     const blogger = await this.queryBloggersRepositories.findBloggerById(
       param.id,
     );
+
     if (blogger === 'not found') {
       throw new NotFoundException(notFoundBlogger);
     }

@@ -32,10 +32,10 @@ export class QueryPostsController {
   async getPost(@Param() param: IdTypeForReq) {
     const post: PostsResponseType | string =
       await this.queryPostsRepositories.findPostById(param.id);
-    if (post !== 'not found') {
-      return post;
+    if (post === 'not found') {
+      throw new NotFoundException(notFoundPost);
     }
-    throw new NotFoundException(notFoundPost);
+    return post;
   }
 
   @Get('/')

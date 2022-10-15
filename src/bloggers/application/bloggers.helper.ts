@@ -13,6 +13,7 @@ export class BloggersHelper {
       _id: new ObjectId(),
       name,
       youtubeUrl,
+      createdAt: new Date(),
     };
 
     return newBlogger;
@@ -27,6 +28,7 @@ export class BloggersHelper {
       _id: bloggerId,
       name,
       youtubeUrl,
+      createdAt: new Date(),
     };
     return newBlogger;
   }

@@ -82,7 +82,11 @@ const blogger = [
   QueryBloggersRepositories,
 ];
 const mongooseModule = [
-  MongooseModule.forRoot(process.env.MONGO_URL),
+  MongooseModule.forRoot(
+    // process.env.NODE_ENV === 'test'
+    //'mongodb://localhost:27017',
+    process.env.MONGO_URL,
+  ),
   MongooseModule.forFeature([{ name: 'bloggers', schema: BloggerSchema }]),
   MongooseModule.forFeature([{ name: 'posts', schema: PostsSchema }]),
   MongooseModule.forFeature([{ name: 'users', schema: UsersSchema }]),

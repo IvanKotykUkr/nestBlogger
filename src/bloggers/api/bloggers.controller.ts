@@ -9,7 +9,6 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import mongoose from 'mongoose';
 import { BloggerType, BodyForCreateBloggerType } from '../bloggers.types';
 import { BloggersService } from '../application/bloggers.service';
 import { BodyTypeForPostBlogger, IdTypeForReq } from '../../posts/posts.types';
@@ -60,9 +59,9 @@ export class BloggersController {
   @UseGuards(BasicAuthGuard)
   @Delete('/:id')
   @HttpCode(204)
-  async deleteBlogger(@Param() bloggerId: mongoose.Types.ObjectId) {
+  async deleteBlogger(@Param() param: IdTypeForReq) {
     const isDeleited: boolean = await this.bloggersService.deleteBlogger(
-      bloggerId,
+      param.id,
     );
     if (isDeleited) {
       return isDeleited;
