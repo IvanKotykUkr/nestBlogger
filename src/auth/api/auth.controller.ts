@@ -51,6 +51,7 @@ export class AuthController {
   ) {}
 
   @UseGuards(CreateUserGuard)
+  @HttpCode(204)
   @Post('/registration')
   async registration(@Body() body: BodyForCreateUser) {
     const user = await this.authService.createUser(
@@ -58,7 +59,7 @@ export class AuthController {
       body.email,
       body.password,
     );
-    return user;
+    return;
   }
 
   @Post('registration-confirmation')

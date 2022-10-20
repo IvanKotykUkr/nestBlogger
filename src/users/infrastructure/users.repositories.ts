@@ -14,12 +14,15 @@ export class UsersRepositories {
       _id: user._id,
       accountData: user.accountData,
       emailConfirmation: user.emailConfirmation,
+      createdAt: user.createdAt,
     };
   }
 
   async createUser(newUser: UserDBType): Promise<UserDBType> {
     const userInstance = new this.UsersModel(newUser);
-    return userInstance.save();
+    userInstance.createdAt = new Date();
+    await userInstance.save();
+    return this.reqUsers(userInstance);
   }
 
   async deleteUser(_id: ObjectId): Promise<boolean> {

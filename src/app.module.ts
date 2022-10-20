@@ -27,8 +27,8 @@ import { CommentsSchema } from './comments/infrastructure/repository/comments.mo
 import { GuardHelper } from './guards/guard.helper';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { EmailManager } from './adapters/email.manager';
-import { EmailAdapter } from './adapters/email.adaptor';
+import { EmailManager } from './auth/application/adapters/email.manager';
+import { EmailAdapter } from './auth/application/adapters/email.adaptor';
 import { DeleteTest } from './delete.test';
 import { BloggerSchema } from './bloggers/infrastructure/repository/blogger.mongoose';
 import { PostsSchema } from './posts/infrastructure/repository/posts.mongoose.schema';
