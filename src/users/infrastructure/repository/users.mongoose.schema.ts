@@ -17,6 +17,7 @@ export const UsersSchema = new mongoose.Schema<UserDBType>(
       expirationDate: Date,
       isConfirmed: Boolean,
     },
+    createdAt: Date,
   },
   {
     versionKey: false,

@@ -27,6 +27,7 @@ export type UserDBType = {
     expirationDate: Date;
     isConfirmed: boolean;
   };
+  createdAt: Date;
 };
 
 export type AccountDataType = {
@@ -49,6 +50,8 @@ export type QueryForGetUsers = {
 export type UsersResponseType = {
   id: ObjectId;
   login: string;
+  email: string;
+  createdAt: Date;
 };
 export type UsersWithPaginationResponseType = PaginationType<UsersResponseType>;
 export type UserFromTokenType = {

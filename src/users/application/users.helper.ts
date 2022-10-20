@@ -35,6 +35,7 @@ export class UsersHelper {
         }),
         isConfirmed: false,
       },
+      createdAt: new Date(),
     };
     return newUser;
   }

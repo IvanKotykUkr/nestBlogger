@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersHelper } from '../../users/application/users.helper';
 import { ObjectId } from 'mongodb';
 import { UsersRepositories } from '../../users/infrastructure/users.repositories';
-import { EmailManager } from '../../adapters/email.manager';
+import { EmailManager } from './adapters/email.manager';
 import { v4 as uuidv4 } from 'uuid';
 import add from 'date-fns/add';
 

@@ -3,10 +3,10 @@ import {
   INestApplication,
   ValidationPipe,
 } from '@nestjs/common';
-import { HttpExceptionFilter } from '../src/exeption.filter';
+import { HttpExceptionFilter } from './exeption.filter';
 import cookieParser from 'cookie-parser';
 import { Test } from '@nestjs/testing';
-import { AppModule } from '../src/app.module';
+import { AppModule } from './app.module';
 import { ObjectId } from 'mongodb';
 import request = require('supertest');
 
@@ -20,11 +20,24 @@ describe('Posts', () => {
     youtubeUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
     createdAt: '',
   };
+  const differentBlogger = {
+    id: '',
+    name: 'Vasya',
+    youtubeUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra4U',
+    createdAt: '',
+  };
   const firstPost = {
     id: '',
     title: 'ddfddfdfdfs',
     shortDescription: 'Post from add post by blogger',
     content: 'cвісавvxvx',
+    createdAt: '',
+  };
+  const differentPost = {
+    id: '',
+    title: 'different',
+    shortDescription: 'Post from add post by blogger',
+    content: 'adwqsdadsafdsa',
     createdAt: '',
   };
   const secondPost = {
@@ -97,8 +110,24 @@ describe('Posts', () => {
     blogger.id = res.body.id;
     blogger.createdAt = res.body.createdAt;
   });
-  it('Create Post', async () => {
+  it('Create Different Blogger ', async () => {
     const res = await request(app.getHttpServer())
+      .post('/bloggers')
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .send({
+        name: differentBlogger.name,
+        youtubeUrl: differentBlogger.youtubeUrl,
+      })
+      .expect(201);
+
+    expect(res.body.name).toBe(differentBlogger.name);
+    expect(res.body.youtubeUrl).toBe(differentBlogger.youtubeUrl);
+
+    differentBlogger.id = res.body.id;
+    differentBlogger.createdAt = res.body.createdAt;
+  });
+  it('Create Post', async () => {
+    await request(app.getHttpServer())
       .post('/bloggers/' + blogger.id.toString() + '/posts')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
@@ -126,7 +155,7 @@ describe('Posts', () => {
       });
   });
   it('Create Post', async () => {
-    const res = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post('/bloggers/' + blogger.id.toString() + '/posts')
 
       .send({
@@ -137,7 +166,7 @@ describe('Posts', () => {
       .expect(401);
   });
   it('should be 404 not correct id', async () => {
-    const res = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .post('/bloggers/' + new ObjectId() + '/posts')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
@@ -147,7 +176,7 @@ describe('Posts', () => {
       })
       .expect(404);
   });
-  it('Create Post', async () => {
+  it('Create Post for blogger', async () => {
     const res = await request(app.getHttpServer())
       .post('/bloggers/' + blogger.id.toString() + '/posts')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
@@ -167,7 +196,7 @@ describe('Posts', () => {
     expect(res.body.bloggerName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(secondPost.createdAt);
   });
-  it('Create Post', async () => {
+  it('Create Post for blogger', async () => {
     const res = await request(app.getHttpServer())
       .post('/bloggers/' + blogger.id.toString() + '/posts')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
@@ -187,8 +216,28 @@ describe('Posts', () => {
     expect(res.body.bloggerName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(firstPost.createdAt);
   });
-  it('Get post by blogger', async () => {
+  it('Create Post for different blogger', async () => {
     const res = await request(app.getHttpServer())
+      .post('/bloggers/' + differentBlogger.id.toString() + '/posts')
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .send({
+        title: differentPost.title,
+        shortDescription: differentPost.shortDescription,
+        content: differentPost.content,
+      })
+      .expect(201);
+    differentPost.id = res.body.id;
+    differentPost.createdAt = res.body.createdAt;
+    expect(res.body.id).toBe(differentPost.id);
+    expect(res.body.title).toBe(differentPost.title);
+    expect(res.body.shortDescription).toBe(differentPost.shortDescription);
+    expect(res.body.content).toBe(differentPost.content);
+    expect(res.body.bloggerId).toBe(differentBlogger.id);
+    expect(res.body.bloggerName).toBe(differentBlogger.name);
+    expect(res.body.createdAt).toBe(differentPost.createdAt);
+  });
+  it('Get post by blogger', async () => {
+    await request(app.getHttpServer())
       .get('/bloggers/' + blogger.id.toString() + '/posts')
 
       .expect(200);
@@ -220,13 +269,13 @@ describe('Posts', () => {
     });
   });
   it('Get post by blogger', async () => {
-    const res = await request(app.getHttpServer())
+    await request(app.getHttpServer())
       .get('/bloggers/' + new ObjectId() + '/posts')
 
       .expect(404);
   });
-  it('Get post by blogger', async () => {
-    const res = await request(app.getHttpServer())
+  it('Get all post', async () => {
+    await request(app.getHttpServer())
       .get('/posts')
 
       .expect(200);
@@ -234,7 +283,7 @@ describe('Posts', () => {
       pagesCount: 1,
       page: 1,
       pageSize: 10,
-      totalCount: 2,
+      totalCount: 3,
       items: [
         {
           id: secondPost.id,
@@ -253,6 +302,15 @@ describe('Posts', () => {
           bloggerId: blogger.id,
           bloggerName: blogger.name,
           addedAt: firstPost.createdAt,
+        },
+        {
+          id: differentPost.id,
+          title: differentPost.title,
+          shortDescription: differentPost.shortDescription,
+          content: differentPost.content,
+          bloggerId: differentBlogger.id,
+          bloggerName: differentBlogger.name,
+          addedAt: differentPost.createdAt,
         },
       ],
     });
@@ -290,6 +348,70 @@ describe('Posts', () => {
     expect(res.body.bloggerId).toBe(blogger.id);
     expect(res.body.bloggerName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(thirdPost.createdAt);
+  });
+  it('Update  Post', async () => {
+    await request(app.getHttpServer())
+      .put('/posts/' + thirdPost.id.toString())
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .send({
+        title: firstPost.title,
+        shortDescription: firstPost.shortDescription,
+        content: firstPost.content,
+        bloggerId: differentBlogger.id,
+      })
+      .expect(204);
+  });
+  it('Update  Post', async () => {
+    await request(app.getHttpServer())
+      .put('/posts/' + thirdPost.id.toString())
+      .send({
+        title: firstPost.title,
+        shortDescription: firstPost.shortDescription,
+        content: firstPost.content,
+        bloggerId: differentBlogger.id,
+      })
+      .expect(401);
+  });
+  it('Update  Post', async () => {
+    await request(app.getHttpServer())
+      .put('/posts/' + thirdPost.id.toString())
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .send({
+        title: bedPost.title,
+        shortDescription: bedPost.shortDescription,
+        content: bedPost.content,
+        bloggerId: differentBlogger.id,
+      })
+      .expect(400);
+  });
+  it('Get post', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/posts/' + thirdPost.id.toString())
+      .expect(200);
+    expect(res.body.id).toBe(thirdPost.id);
+    expect(res.body.title).toBe(firstPost.title);
+    expect(res.body.shortDescription).toBe(firstPost.shortDescription);
+    expect(res.body.content).toBe(firstPost.content);
+    expect(res.body.bloggerId).toBe(differentBlogger.id);
+    expect(res.body.bloggerName).toBe(differentBlogger.name);
+    expect(res.body.createdAt).toBe(thirdPost.createdAt);
+  });
+  it('Delete  Post', async () => {
+    await request(app.getHttpServer())
+      .delete('/posts/' + firstPost.id.toString())
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .expect(204);
+  });
+  it('Get post', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/posts/' + firstPost.id.toString())
+      .expect(404);
+  });
+  it('Delete  Post', async () => {
+    await request(app.getHttpServer())
+      .delete('/posts/' + firstPost.id.toString())
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .expect(404);
   });
   afterAll(async () => {
     await app.close();

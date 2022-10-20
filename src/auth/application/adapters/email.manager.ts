@@ -7,6 +7,7 @@ export class EmailManager {
   constructor(protected emailAdapter: EmailAdapter) {}
 
   async sendEmailConfirmationMessage(email: string, code: string) {
+    console.log(code);
     const message = this.message(code);
 
     await this.emailAdapter.sendEmail(email, 'registration', message);

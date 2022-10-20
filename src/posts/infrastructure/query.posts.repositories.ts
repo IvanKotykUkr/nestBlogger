@@ -33,7 +33,7 @@ export class QueryPostsRepositories {
     return 'not found';
   }
 
-  async paginationFilter(bloggerId: undefined | ObjectId) {
+  paginationFilter(bloggerId: undefined | ObjectId) {
     const filter = {};
     if (bloggerId) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -45,7 +45,7 @@ export class QueryPostsRepositories {
   async findPostsByIdBloggerCount(
     bloggerId: undefined | ObjectId,
   ): Promise<number> {
-    const filter = await this.paginationFilter(bloggerId);
+    const filter = this.paginationFilter(bloggerId);
 
     return this.PostModel.countDocuments(filter);
   }

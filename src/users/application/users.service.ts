@@ -18,8 +18,13 @@ export class UsersService {
   ): Promise<UsersResponseType> {
     const newUser = await this.usersHelper.makeUser(login, email, password);
 
-    await this.usersRepositories.createUser(newUser);
-    return { id: newUser._id, login: newUser.accountData.login };
+    const createdUser = await this.usersRepositories.createUser(newUser);
+    return {
+      id: createdUser._id,
+      login: createdUser.accountData.login,
+      email: createdUser.accountData.email,
+      createdAt: createdUser.createdAt,
+    };
   }
 
   async deleteUsers(id: ObjectId): Promise<boolean> {

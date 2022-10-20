@@ -12,6 +12,7 @@ import {
 import { BodyForCreateUser, UsersResponseType } from '../users.types';
 import { IdTypeForReq } from '../../posts/posts.types';
 import { CreateUserGuard } from '../../guards/create.user.guard';
+import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 
 export const notFoundUser = [
   {
@@ -37,6 +38,7 @@ export class UsersController {
     );
   }
 
+  @UseGuards(BasicAuthGuard)
   @Delete('/:id')
   @HttpCode(204)
   async deleteUsers(@Param() param: IdTypeForReq): Promise<string> {

@@ -47,7 +47,12 @@ export class QueryUsersRepositories {
       .skip(number > 0 ? (number - 1) * size : 0)
       .limit(size)
       .lean();
-    return users.map((u) => ({ id: u._id, login: u.accountData.login }));
+    return users.map((u) => ({
+      id: u._id,
+      login: u.accountData.login,
+      email: u.accountData.email,
+      createdAt: u.createdAt,
+    }));
   }
 
   private async usersSearchCount(): Promise<number> {
