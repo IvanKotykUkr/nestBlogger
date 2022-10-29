@@ -9,7 +9,7 @@ export const CommentsSchema = new mongoose.Schema<CommentsDBType>(
     content: String,
     userId: ObjectId,
     userLogin: String,
-    addedAt: Date,
+    createdAt: Date,
   },
   {
     versionKey: false,

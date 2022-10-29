@@ -13,14 +13,14 @@ export type CommentsDBType = {
   content: string;
   userId: ObjectId;
   userLogin: string;
-  addedAt: Date;
+  createdAt: Date;
 };
 export type CommentResponseType = {
   id: ObjectId;
   content: string;
   userId: ObjectId;
   userLogin: string;
-  addedAt: Date;
+  createdAt: Date;
 };
 export type CommentsResponseTypeWithPagination =
   PaginationType<CommentResponseType>;

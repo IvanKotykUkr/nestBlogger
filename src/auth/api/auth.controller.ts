@@ -62,7 +62,8 @@ export class AuthController {
     return;
   }
 
-  @Post('registration-confirmation')
+  @Post('/registration-confirmation')
+  @HttpCode(204)
   async registrationConfirmation(@Body() body: ConfirmationType) {
     const isConfirmed = await this.authService.confirmUser(body.code);
     if (isConfirmed === 'not found') {
@@ -83,7 +84,8 @@ export class AuthController {
     return true;
   }
 
-  @Post('registration-email-resending')
+  @Post('/registration-email-resending')
+  @HttpCode(204)
   async resendConfirmation(@Body() body: ResendConfirmationType) {
     const dispatchCode = await this.authService.resendConfirmationCode(
       body.email,
@@ -103,6 +105,7 @@ export class AuthController {
   }
 
   @Post('/login')
+  @HttpCode(200)
   async login(
     @Body() body: AuthBodyType,
     @Res({ passthrough: true }) res: Response,
@@ -127,6 +130,7 @@ export class AuthController {
 
   @UseGuards(RefreshTokenGuards)
   @Post('/refresh-token')
+  @HttpCode(200)
   async refreshToken(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,

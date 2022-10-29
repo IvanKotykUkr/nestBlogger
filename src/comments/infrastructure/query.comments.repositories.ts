@@ -33,7 +33,7 @@ export class QueryCommentsRepositories {
       content: c.content,
       userId: c.userId,
       userLogin: c.userLogin,
-      addedAt: c.addedAt,
+      createdAt: c.createdAt,
     }));
     return {
       pagesCount,
@@ -50,7 +50,7 @@ export class QueryCommentsRepositories {
       content: comment.content,
       userId: comment.userId,
       userLogin: comment.userLogin,
-      addedAt: comment.addedAt,
+      createdAt: comment.createdAt,
     };
   }
 
