@@ -33,11 +33,13 @@ export class AuthGuard implements CanActivate {
     const token: string = req.headers.authorization.split(' ')[1];
     const user: UserFromTokenType | string =
       this.jwtService.getUserIdByAccessToken(token);
+
     if (typeof user == 'string') {
       throw new UnauthorizedException([
         { message: 'Should be valide JWT Token', field: 'token' },
       ]);
     }
+
     req.user = await this.guardHelper.findUserById(user.userId);
     return true;
   }

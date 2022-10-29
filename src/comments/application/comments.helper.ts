@@ -19,7 +19,7 @@ export class CommentsHelper {
       userId,
       userLogin,
       postId,
-      addedAt: new Date(),
+      createdAt: new Date(),
     };
   }
 }

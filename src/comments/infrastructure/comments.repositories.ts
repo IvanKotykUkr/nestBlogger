@@ -16,7 +16,7 @@ export class CommentsRepositories {
     commentInstance.content = comment.content;
     commentInstance.userId = comment.userId;
     commentInstance.userLogin = comment.userLogin;
-    commentInstance.addedAt = comment.addedAt;
+    commentInstance.createdAt = comment.createdAt;
     await commentInstance.save();
 
     return this.reqComment(commentInstance);
@@ -49,7 +49,7 @@ export class CommentsRepositories {
       content: comment.content,
       userId: comment.userId,
       userLogin: comment.userLogin,
-      addedAt: comment.addedAt,
+      createdAt: comment.createdAt,
     };
   }
 }
