@@ -1,0 +1,32 @@
+name: Test & Deploy #Название pipeline который будет выполнять github actions
+
+on:
+  push:
+    branches:
+      - staging # указываем название ветки в которую хотим пушить и запускать наш деплой
+
+jobs:
+  tests:
+    name: Tests # название конктретной работы в pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout  # клонируем репозиторый
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: yarn # устанавливаем зависимости
+
+      - name: Test
+        run: yarn test # запускаем скрипт тестами
+
+  deploy:
+    name: Deploy
+    needs: tests # указываем зависимую джобу т/е в данном случае деплой не запустится если тесты завершились ошибкой
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}} # данный апи кей нужно получить в своем аккаунте на хероку
+          heroku_app_name: "incubator-github-actions" #Must be unique in Heroku
+          heroku_email: "youremail@gmail.com" # ваш email который зареган в heroku
