@@ -7,7 +7,7 @@ export class EmailAdapter {
   constructor(protected mailerService: MailerService) {}
 
   async sendEmail(email: string, subject: string, text: string) {
-    await this.mailerService.sendMail({ to: email, subject, html: text });
+    //  await this.mailerService.sendMail({ to: email, subject, html: text });
     return;
   }
 }
