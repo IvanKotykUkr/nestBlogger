@@ -51,7 +51,6 @@ export class QueryBloggersRepositories {
       .skip(number > 0 ? (number - 1) * size : 0)
       .limit(size)
       .lean();
-
     return bloggers.map((d) => ({
       id: d._id,
       name: d.name,
