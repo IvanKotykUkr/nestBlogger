@@ -17,7 +17,7 @@ import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 export const notFoundBlogger = [
   {
     message: 'NOT FOUND',
-    field: 'bloggerId',
+    field: 'blogId',
   },
 ];
 

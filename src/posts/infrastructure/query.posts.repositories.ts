@@ -19,7 +19,7 @@ export class QueryPostsRepositories {
       title: post.title,
       shortDescription: post.shortDescription,
       content: post.content,
-      bloggerId: post.bloggerId,
+      blogId: post.blogId,
       bloggerName: post.bloggerName,
       addedAt: post.addedAt,
     };
@@ -33,29 +33,29 @@ export class QueryPostsRepositories {
     return 'not found';
   }
 
-  paginationFilter(bloggerId: undefined | ObjectId) {
+  paginationFilter(blogId: undefined | ObjectId) {
     const filter = {};
-    if (bloggerId) {
+    if (blogId) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      return { bloggerId };
+      return { blogId };
     }
     return filter;
   }
 
   async findPostsByIdBloggerCount(
-    bloggerId: undefined | ObjectId,
+    blogId: undefined | ObjectId,
   ): Promise<number> {
-    const filter = this.paginationFilter(bloggerId);
+    const filter = this.paginationFilter(blogId);
 
     return this.PostModel.countDocuments(filter);
   }
 
   async findAllPosts(
-    bloggerId: undefined | ObjectId,
+    blogId: undefined | ObjectId,
     number: number,
     size: number,
   ): Promise<PostsDBType[]> {
-    const filter = await this.paginationFilter(bloggerId);
+    const filter = await this.paginationFilter(blogId);
 
     return (
       this.PostModel.find(filter)
@@ -69,14 +69,14 @@ export class QueryPostsRepositories {
   async getAllPostsWithPagination(
     number: number,
     size: number,
-    bloggerId?: ObjectId,
+    blogId?: ObjectId,
   ): Promise<PostsResponseTypeWithPagination> {
-    const totalCount: number = await this.findPostsByIdBloggerCount(bloggerId);
+    const totalCount: number = await this.findPostsByIdBloggerCount(blogId);
     const page: number = number;
     const pageSize: number = size;
     const pagesCount: number = Math.ceil(totalCount / pageSize);
     const itemsFromDb: PostsDBType[] = await this.findAllPosts(
-      bloggerId,
+      blogId,
       page,
       pageSize,
     );
@@ -86,7 +86,7 @@ export class QueryPostsRepositories {
       title: p.title,
       shortDescription: p.shortDescription,
       content: p.content,
-      bloggerId: p.bloggerId,
+      blogId: p.blogId,
       bloggerName: p.bloggerName,
       addedAt: p.addedAt,
     }));

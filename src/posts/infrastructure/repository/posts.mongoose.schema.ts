@@ -8,7 +8,7 @@ export const PostsSchema = new mongoose.Schema<PostsDBType>(
     title: String,
     shortDescription: String,
     content: String,
-    bloggerId: ObjectId,
+    blogId: ObjectId,
     bloggerName: String,
     addedAt: Date,
   },
