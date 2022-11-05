@@ -9,7 +9,7 @@ export const PostsSchema = new mongoose.Schema<PostsDBType>(
     shortDescription: String,
     content: String,
     blogId: ObjectId,
-    bloggerName: String,
+    blogName: String,
     addedAt: Date,
   },
   {

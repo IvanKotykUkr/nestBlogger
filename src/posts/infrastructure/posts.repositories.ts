@@ -20,7 +20,7 @@ export class PostsRepositories {
       shortDescription: post.shortDescription,
       content: post.content,
       blogId: post.blogId,
-      bloggerName: post.bloggerName,
+      blogName: post.blogName,
       addedAt: post.addedAt,
     };
   }
@@ -32,7 +32,7 @@ export class PostsRepositories {
     postsInstance.shortDescription = newPost.shortDescription;
     postsInstance.content = newPost.content;
     postsInstance.blogId = newPost.blogId;
-    postsInstance.bloggerName = newPost.bloggerName;
+    postsInstance.blogName = newPost.blogName;
     postsInstance.addedAt = new Date();
     await postsInstance.save();
     return this.resPost(postsInstance);
@@ -45,7 +45,7 @@ export class PostsRepositories {
     post.shortDescription = newPost.shortDescription;
     post.content = newPost.content;
     post.blogId = newPost.blogId;
-    post.bloggerName = newPost.bloggerName;
+    post.blogName = newPost.blogName;
     await post.save();
     return true;
   }

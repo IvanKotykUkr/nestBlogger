@@ -213,7 +213,7 @@ describe('Users', () => {
     expect(res.body.shortDescription).toBe(firstPost.shortDescription);
     expect(res.body.content).toBe(firstPost.content);
     expect(res.body.blogId).toBe(blogger.id);
-    expect(res.body.bloggerName).toBe(blogger.name);
+    expect(res.body.blogName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(firstPost.createdAt);
   });
   it('Add Comment', async () => {

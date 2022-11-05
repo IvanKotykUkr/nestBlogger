@@ -33,7 +33,7 @@ export type PostsDBType = {
   shortDescription: string;
   content: string;
   blogId: ObjectId;
-  bloggerName: string;
+  blogName: string;
   addedAt: Date;
 };
 export type PostUpdatedType = {
@@ -42,7 +42,7 @@ export type PostUpdatedType = {
   shortDescription: string;
   content: string;
   blogId: ObjectId;
-  bloggerName: string;
+  blogName: string;
 };
 export type PostsResponseType = {
   id?: ObjectId;
@@ -50,7 +50,7 @@ export type PostsResponseType = {
   shortDescription: string;
   content: string;
   blogId: ObjectId;
-  bloggerName: string;
+  blogName: string;
   addedAt: Date;
   /* extendedLikesInfo: {
          likesCount: number;
