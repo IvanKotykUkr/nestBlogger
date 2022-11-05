@@ -37,6 +37,7 @@ import { QueryBloggersController } from './bloggers/api/query.bloggers.controlle
 import { QueryPostsController } from './posts/api/query.posts.controller';
 import { QueryCommentsController } from './comments/api/query.comments.controller.';
 import { QueryUsersController } from './users/api/query.users.controller';
+import { ConfigModule } from '@nestjs/config';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -82,6 +83,7 @@ const blogger = [
   QueryBloggersRepositories,
 ];
 const mongooseModule = [
+  ConfigModule.forRoot(),
   MongooseModule.forRoot(
     // process.env.NODE_ENV === 'test'
     //'mongodb://localhost:27017',
