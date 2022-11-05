@@ -25,7 +25,7 @@ export class EmailManager {
   }
 
   protected message(code: string) {
-    process.env.ConfirmationCode = code;
+    // process.env.ConfirmationCode = code;
 
     return ` <div><a href=https://some-front.com/confirm-registration?code=${code}>https://some-front.com/confirm-registration?code=${code}</a></div>`;
   }
