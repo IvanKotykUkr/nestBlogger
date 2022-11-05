@@ -18,7 +18,7 @@ jobs:
         run: yarn # устанавливаем зависимости
 
       - name: Test
-        run: jest --config ./test/jest-e2e.json --watch # запускаем скрипт тестами
+        run: yarn test # запускаем скрипт тестами
 
   Deploy-Preview:
     runs-on: ubuntu-latest
