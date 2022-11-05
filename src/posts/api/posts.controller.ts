@@ -64,7 +64,7 @@ export class PostsController {
         inputModel.title,
         inputModel.shortDescription,
         inputModel.content,
-        inputModel.bloggerId,
+        inputModel.blogId,
       );
     if (typeof newPost !== 'string') {
       return newPost;
@@ -84,7 +84,7 @@ export class PostsController {
       inputModel.title,
       inputModel.shortDescription,
       inputModel.content,
-      inputModel.bloggerId,
+      inputModel.blogId,
     );
     if (typeof isUpdated !== 'string') {
       return isUpdated;

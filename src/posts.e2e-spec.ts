@@ -192,7 +192,7 @@ describe('Posts', () => {
     expect(res.body.title).toBe(secondPost.title);
     expect(res.body.shortDescription).toBe(secondPost.shortDescription);
     expect(res.body.content).toBe(secondPost.content);
-    expect(res.body.bloggerId).toBe(blogger.id);
+    expect(res.body.blogId).toBe(blogger.id);
     expect(res.body.bloggerName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(secondPost.createdAt);
   });
@@ -212,7 +212,7 @@ describe('Posts', () => {
     expect(res.body.title).toBe(firstPost.title);
     expect(res.body.shortDescription).toBe(firstPost.shortDescription);
     expect(res.body.content).toBe(firstPost.content);
-    expect(res.body.bloggerId).toBe(blogger.id);
+    expect(res.body.blogId).toBe(blogger.id);
     expect(res.body.bloggerName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(firstPost.createdAt);
   });
@@ -232,7 +232,7 @@ describe('Posts', () => {
     expect(res.body.title).toBe(differentPost.title);
     expect(res.body.shortDescription).toBe(differentPost.shortDescription);
     expect(res.body.content).toBe(differentPost.content);
-    expect(res.body.bloggerId).toBe(differentBlogger.id);
+    expect(res.body.blogId).toBe(differentBlogger.id);
     expect(res.body.bloggerName).toBe(differentBlogger.name);
     expect(res.body.createdAt).toBe(differentPost.createdAt);
   });
@@ -252,7 +252,7 @@ describe('Posts', () => {
           title: secondPost.title,
           shortDescription: secondPost.shortDescription,
           content: secondPost.content,
-          bloggerId: blogger.id,
+          blogId: blogger.id,
           bloggerName: blogger.name,
           addedAt: secondPost.createdAt,
         },
@@ -261,7 +261,7 @@ describe('Posts', () => {
           title: firstPost.title,
           shortDescription: firstPost.shortDescription,
           content: firstPost.content,
-          bloggerId: blogger.id,
+          blogId: blogger.id,
           bloggerName: blogger.name,
           addedAt: firstPost.createdAt,
         },
@@ -290,7 +290,7 @@ describe('Posts', () => {
           title: secondPost.title,
           shortDescription: secondPost.shortDescription,
           content: secondPost.content,
-          bloggerId: blogger.id,
+          blogId: blogger.id,
           bloggerName: blogger.name,
           addedAt: secondPost.createdAt,
         },
@@ -299,7 +299,7 @@ describe('Posts', () => {
           title: firstPost.title,
           shortDescription: firstPost.shortDescription,
           content: firstPost.content,
-          bloggerId: blogger.id,
+          blogId: blogger.id,
           bloggerName: blogger.name,
           addedAt: firstPost.createdAt,
         },
@@ -308,7 +308,7 @@ describe('Posts', () => {
           title: differentPost.title,
           shortDescription: differentPost.shortDescription,
           content: differentPost.content,
-          bloggerId: differentBlogger.id,
+          blogId: differentBlogger.id,
           bloggerName: differentBlogger.name,
           addedAt: differentPost.createdAt,
         },
@@ -324,7 +324,7 @@ describe('Posts', () => {
         title: thirdPost.title,
         shortDescription: thirdPost.shortDescription,
         content: thirdPost.content,
-        bloggerId: blogger.id,
+        blogId: blogger.id,
       })
       .expect(201);
     thirdPost.id = res.body.id;
@@ -333,7 +333,7 @@ describe('Posts', () => {
     expect(res.body.title).toBe(thirdPost.title);
     expect(res.body.shortDescription).toBe(thirdPost.shortDescription);
     expect(res.body.content).toBe(thirdPost.content);
-    expect(res.body.bloggerId).toBe(blogger.id);
+    expect(res.body.blogId).toBe(blogger.id);
     expect(res.body.bloggerName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(thirdPost.createdAt);
   });
@@ -345,7 +345,7 @@ describe('Posts', () => {
     expect(res.body.title).toBe(thirdPost.title);
     expect(res.body.shortDescription).toBe(thirdPost.shortDescription);
     expect(res.body.content).toBe(thirdPost.content);
-    expect(res.body.bloggerId).toBe(blogger.id);
+    expect(res.body.blogId).toBe(blogger.id);
     expect(res.body.bloggerName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(thirdPost.createdAt);
   });
@@ -357,7 +357,7 @@ describe('Posts', () => {
         title: firstPost.title,
         shortDescription: firstPost.shortDescription,
         content: firstPost.content,
-        bloggerId: differentBlogger.id,
+        blogId: differentBlogger.id,
       })
       .expect(204);
   });
@@ -368,7 +368,7 @@ describe('Posts', () => {
         title: firstPost.title,
         shortDescription: firstPost.shortDescription,
         content: firstPost.content,
-        bloggerId: differentBlogger.id,
+        blogId: differentBlogger.id,
       })
       .expect(401);
   });
@@ -380,7 +380,7 @@ describe('Posts', () => {
         title: bedPost.title,
         shortDescription: bedPost.shortDescription,
         content: bedPost.content,
-        bloggerId: differentBlogger.id,
+        blogId: differentBlogger.id,
       })
       .expect(400);
   });
@@ -392,7 +392,7 @@ describe('Posts', () => {
     expect(res.body.title).toBe(firstPost.title);
     expect(res.body.shortDescription).toBe(firstPost.shortDescription);
     expect(res.body.content).toBe(firstPost.content);
-    expect(res.body.bloggerId).toBe(differentBlogger.id);
+    expect(res.body.blogId).toBe(differentBlogger.id);
     expect(res.body.bloggerName).toBe(differentBlogger.name);
     expect(res.body.createdAt).toBe(thirdPost.createdAt);
   });

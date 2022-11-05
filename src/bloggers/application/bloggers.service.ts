@@ -22,12 +22,12 @@ export class BloggersService {
   }
 
   async updateBlogger(
-    bloggerId: ObjectId,
+    blogId: ObjectId,
     name: string,
     youtubeUrl: string,
   ): Promise<boolean> {
     const newBlogger = this.bloggersHelper.updateBlogger(
-      bloggerId,
+      blogId,
       name,
       youtubeUrl,
     );

@@ -20,12 +20,12 @@ export class BloggersHelper {
   }
 
   updateBlogger(
-    bloggerId: ObjectId,
+    blogId: ObjectId,
     name: string,
     youtubeUrl: string,
   ): BloggerType {
     const newBlogger: BloggerType = {
-      _id: bloggerId,
+      _id: blogId,
       name,
       youtubeUrl,
       createdAt: new Date(),
@@ -33,13 +33,13 @@ export class BloggersHelper {
     return newBlogger;
   }
 
-  async checkBlogger(bloggerId: ObjectId): Promise<CheckBloggerType | string> {
+  async checkBlogger(blogId: ObjectId): Promise<CheckBloggerType | string> {
     const blogger: BloggerResponseType | string =
-      await this.bloggersRepositories.findBlogger(bloggerId);
+      await this.bloggersRepositories.findBlogger(blogId);
 
     if (typeof blogger !== 'string') {
       return {
-        _id: bloggerId,
+        _id: blogId,
         name: blogger.name,
       };
     }

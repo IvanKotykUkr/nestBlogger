@@ -17,9 +17,9 @@ export class PostsService {
     title: string,
     shortDescription: string,
     content: string,
-    bloggerId: ObjectId,
+    blogId: ObjectId,
   ): Promise<PostsResponseType | string> {
-    const blogger = await this.bloggerHelper.checkBlogger(bloggerId);
+    const blogger = await this.bloggerHelper.checkBlogger(blogId);
     if (typeof blogger === 'string') return 'not find blogger';
     const madePost = this.postsHelper.makePost(
       title,
@@ -41,9 +41,9 @@ export class PostsService {
     title: string,
     shortDescription: string,
     content: string,
-    bloggerId: ObjectId,
+    blogId: ObjectId,
   ): Promise<boolean | string> {
-    const blogger = await this.bloggerHelper.checkBlogger(bloggerId);
+    const blogger = await this.bloggerHelper.checkBlogger(blogId);
     if (typeof blogger === 'string') return 'not find blogger';
 
     const newPost = this.postsHelper.updatePost(
@@ -51,7 +51,7 @@ export class PostsService {
       title,
       shortDescription,
       content,
-      bloggerId,
+      blogId,
       blogger.name,
     );
 

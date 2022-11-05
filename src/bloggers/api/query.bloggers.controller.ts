@@ -13,7 +13,7 @@ import { QueryPostsRepositories } from '../../posts/infrastructure/query.posts.r
 export const notFoundBlogger = [
   {
     message: 'NOT FOUND',
-    field: 'bloggerId',
+    field: 'blogId',
   },
 ];
 

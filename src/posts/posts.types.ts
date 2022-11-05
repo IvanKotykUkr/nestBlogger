@@ -24,7 +24,7 @@ export class BodyTypeForPost {
   @Length(1, 1000)
   content: string;
   @IsMongoId()
-  bloggerId: ObjectId;
+  blogId: ObjectId;
 }
 
 export type PostsDBType = {
@@ -32,7 +32,7 @@ export type PostsDBType = {
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: ObjectId;
+  blogId: ObjectId;
   bloggerName: string;
   addedAt: Date;
 };
@@ -41,7 +41,7 @@ export type PostUpdatedType = {
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: ObjectId;
+  blogId: ObjectId;
   bloggerName: string;
 };
 export type PostsResponseType = {
@@ -49,21 +49,21 @@ export type PostsResponseType = {
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: ObjectId;
+  blogId: ObjectId;
   bloggerName: string;
   addedAt: Date;
   /* extendedLikesInfo: {
-       likesCount: number;
-       dislikesCount: number;
-       myStatus: string;
-       newestLikes: Array<{
-         addedAt?: Date;
-         userId?: ObjectId;
-         login?: string;
-       }>;
-     };
-     
-     */
+         likesCount: number;
+         dislikesCount: number;
+         myStatus: string;
+         newestLikes: Array<{
+           addedAt?: Date;
+           userId?: ObjectId;
+           login?: string;
+         }>;
+       };
+       
+       */
 };
 export type CheckBloggerType = {
   _id: ObjectId;
