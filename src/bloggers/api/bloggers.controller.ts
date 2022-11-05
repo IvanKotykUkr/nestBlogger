@@ -21,7 +21,7 @@ export const notFoundBlogger = [
   },
 ];
 
-@Controller('/bloggers')
+@Controller('/blogs')
 export class BloggersController {
   constructor(protected bloggersService: BloggersService) {}
 
