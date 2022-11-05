@@ -6,9 +6,9 @@ import {
 
 import cookieParser from 'cookie-parser';
 import { Test } from '@nestjs/testing';
-import { HttpExceptionFilter } from '../src/exeption.filter';
-import { AppModule } from '../src/app.module';
-import { EmailAdapter } from '../src/auth/application/adapters/email.adaptor';
+import { HttpExceptionFilter } from './exeption.filter';
+import { AppModule } from './app.module';
+import { EmailAdapter } from './auth/application/adapters/email.adaptor';
 import request = require('supertest');
 
 jest.setTimeout(60_0000);
