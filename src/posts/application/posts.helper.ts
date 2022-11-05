@@ -9,7 +9,7 @@ export class PostsHelper {
     shortDescription: string,
     content: string,
     blogId: ObjectId,
-    bloggerName: string,
+    blogName: string,
   ): PostsDBType {
     const newPost: PostsDBType = {
       _id: new ObjectId(),
@@ -17,7 +17,7 @@ export class PostsHelper {
       shortDescription: shortDescription,
       content: content,
       blogId,
-      bloggerName,
+      blogName,
       addedAt: new Date(),
     };
     return newPost;
@@ -29,7 +29,7 @@ export class PostsHelper {
     shortDescription: string,
     content: string,
     blogId: ObjectId,
-    bloggerName: string,
+    blogName: string,
   ): PostUpdatedType {
     const newPost: PostUpdatedType = {
       _id: postId,
@@ -37,7 +37,7 @@ export class PostsHelper {
       shortDescription: shortDescription,
       content: content,
       blogId,
-      bloggerName,
+      blogName,
     };
     return newPost;
   }

@@ -20,7 +20,7 @@ export class QueryPostsRepositories {
       shortDescription: post.shortDescription,
       content: post.content,
       blogId: post.blogId,
-      bloggerName: post.bloggerName,
+      blogName: post.blogName,
       addedAt: post.addedAt,
     };
   }
@@ -87,7 +87,7 @@ export class QueryPostsRepositories {
       shortDescription: p.shortDescription,
       content: p.content,
       blogId: p.blogId,
-      bloggerName: p.bloggerName,
+      blogName: p.blogName,
       addedAt: p.addedAt,
     }));
     return {

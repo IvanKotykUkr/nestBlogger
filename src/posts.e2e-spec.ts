@@ -193,7 +193,7 @@ describe('Posts', () => {
     expect(res.body.shortDescription).toBe(secondPost.shortDescription);
     expect(res.body.content).toBe(secondPost.content);
     expect(res.body.blogId).toBe(blogger.id);
-    expect(res.body.bloggerName).toBe(blogger.name);
+    expect(res.body.blogName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(secondPost.createdAt);
   });
   it('Create Post for blogger', async () => {
@@ -213,7 +213,7 @@ describe('Posts', () => {
     expect(res.body.shortDescription).toBe(firstPost.shortDescription);
     expect(res.body.content).toBe(firstPost.content);
     expect(res.body.blogId).toBe(blogger.id);
-    expect(res.body.bloggerName).toBe(blogger.name);
+    expect(res.body.blogName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(firstPost.createdAt);
   });
   it('Create Post for different blogger', async () => {
@@ -233,7 +233,7 @@ describe('Posts', () => {
     expect(res.body.shortDescription).toBe(differentPost.shortDescription);
     expect(res.body.content).toBe(differentPost.content);
     expect(res.body.blogId).toBe(differentBlogger.id);
-    expect(res.body.bloggerName).toBe(differentBlogger.name);
+    expect(res.body.blogName).toBe(differentBlogger.name);
     expect(res.body.createdAt).toBe(differentPost.createdAt);
   });
   it('Get post by blogger', async () => {
@@ -253,7 +253,7 @@ describe('Posts', () => {
           shortDescription: secondPost.shortDescription,
           content: secondPost.content,
           blogId: blogger.id,
-          bloggerName: blogger.name,
+          blogName: blogger.name,
           addedAt: secondPost.createdAt,
         },
         {
@@ -262,7 +262,7 @@ describe('Posts', () => {
           shortDescription: firstPost.shortDescription,
           content: firstPost.content,
           blogId: blogger.id,
-          bloggerName: blogger.name,
+          blogName: blogger.name,
           addedAt: firstPost.createdAt,
         },
       ],
@@ -291,7 +291,7 @@ describe('Posts', () => {
           shortDescription: secondPost.shortDescription,
           content: secondPost.content,
           blogId: blogger.id,
-          bloggerName: blogger.name,
+          blogName: blogger.name,
           addedAt: secondPost.createdAt,
         },
         {
@@ -300,7 +300,7 @@ describe('Posts', () => {
           shortDescription: firstPost.shortDescription,
           content: firstPost.content,
           blogId: blogger.id,
-          bloggerName: blogger.name,
+          blogName: blogger.name,
           addedAt: firstPost.createdAt,
         },
         {
@@ -309,7 +309,7 @@ describe('Posts', () => {
           shortDescription: differentPost.shortDescription,
           content: differentPost.content,
           blogId: differentBlogger.id,
-          bloggerName: differentBlogger.name,
+          blogName: differentBlogger.name,
           addedAt: differentPost.createdAt,
         },
       ],
@@ -334,7 +334,7 @@ describe('Posts', () => {
     expect(res.body.shortDescription).toBe(thirdPost.shortDescription);
     expect(res.body.content).toBe(thirdPost.content);
     expect(res.body.blogId).toBe(blogger.id);
-    expect(res.body.bloggerName).toBe(blogger.name);
+    expect(res.body.blogName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(thirdPost.createdAt);
   });
   it('Get post', async () => {
@@ -346,7 +346,7 @@ describe('Posts', () => {
     expect(res.body.shortDescription).toBe(thirdPost.shortDescription);
     expect(res.body.content).toBe(thirdPost.content);
     expect(res.body.blogId).toBe(blogger.id);
-    expect(res.body.bloggerName).toBe(blogger.name);
+    expect(res.body.blogName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(thirdPost.createdAt);
   });
   it('Update  Post', async () => {
@@ -393,7 +393,7 @@ describe('Posts', () => {
     expect(res.body.shortDescription).toBe(firstPost.shortDescription);
     expect(res.body.content).toBe(firstPost.content);
     expect(res.body.blogId).toBe(differentBlogger.id);
-    expect(res.body.bloggerName).toBe(differentBlogger.name);
+    expect(res.body.blogName).toBe(differentBlogger.name);
     expect(res.body.createdAt).toBe(thirdPost.createdAt);
   });
   it('Delete  Post', async () => {
