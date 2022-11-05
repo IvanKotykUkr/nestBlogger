@@ -18,7 +18,7 @@ export class CreateUserGuard implements CanActivate {
       request.body.email,
     );
     if (typeof user === 'string') return true;
-    if (user.accountData.login === request.body.email) {
+    if (user.accountData.login === request.body.login) {
       throw new BadRequestException([
         { message: 'login already exist', field: 'login' },
       ]);

@@ -6,9 +6,9 @@ import {
 
 import cookieParser from 'cookie-parser';
 import { Test } from '@nestjs/testing';
-import { HttpExceptionFilter } from './exeption.filter';
-import { AppModule } from './app.module';
-import { EmailAdapter } from './auth/application/adapters/email.adaptor';
+import { HttpExceptionFilter } from '../src/exeption.filter';
+import { AppModule } from '../src/app.module';
+import { EmailAdapter } from '../src/auth/application/adapters/email.adaptor';
 import request = require('supertest');
 
 jest.setTimeout(60_0000);
@@ -89,6 +89,16 @@ describe('Users', () => {
       })
       .expect(204);
     firstUser.confirmCode = process.env.ConfirmationCode;
+  });
+  it('Registration User Already Exist', async () => {
+    await request(app.getHttpServer())
+      .post('/auth/registration')
+      .send({
+        login: firstUser.login,
+        password: firstUser.password,
+        email: 'someemail@gmail.com',
+      })
+      .expect(400);
   });
   it('Confirmation User', async () => {
     await request(app.getHttpServer())
