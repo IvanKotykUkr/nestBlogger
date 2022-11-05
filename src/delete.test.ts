@@ -17,6 +17,7 @@ export class DeleteTest {
 
   @Delete('/all-data')
   async deleteAllData(): Promise<void> {
+    console.log('here' + ' delete');
     await this.BloggerModel.deleteMany();
     await this.CommentsModel.deleteMany();
     await this.PostModel.deleteMany();
