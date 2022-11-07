@@ -5,7 +5,7 @@ env:
 on:
   push:
     branches:
-      - staging
+      - hw_7
 jobs:
   Tests:
     name: Tests # название конктретной работы в pipeline
