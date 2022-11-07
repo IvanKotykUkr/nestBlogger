@@ -182,7 +182,7 @@ describe('Users', () => {
   });
   it('Create Blogger ', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers')
+      .post('/blogs')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: blogger.name,
@@ -198,7 +198,7 @@ describe('Users', () => {
   });
   it('Create Post for blogger', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers/' + blogger.id.toString() + '/posts')
+      .post('/blogs/' + blogger.id.toString() + '/posts')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         title: firstPost.title,
@@ -413,6 +413,11 @@ describe('Users', () => {
           },
         ],
       });
+  });
+  it('Get Comment', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/posts/' + firstUser.id.toString() + '/comments')
+      .expect(404);
   });
 
   afterAll(async () => {

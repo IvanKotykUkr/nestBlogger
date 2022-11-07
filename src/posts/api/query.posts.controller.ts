@@ -57,6 +57,10 @@ export class QueryPostsController {
   ) {
     const pageNumber = query.PageNumber || 1;
     const pageSize = query.PageSize || 10;
+    const post = await this.queryPostsRepositories.findPostById(param.id);
+    if (typeof post == 'string') {
+      throw new NotFoundException(notFoundPost);
+    }
     return this.queryCommentsRepositories.findAllComments(
       param.id,
       pageNumber,

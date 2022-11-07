@@ -28,7 +28,6 @@ export class BloggersRepositories {
     bloggerInstance.createdAt = newBlogger.createdAt;
 
     await bloggerInstance.save();
-
     return this.reqBlogger(bloggerInstance);
   }
 
