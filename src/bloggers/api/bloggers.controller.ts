@@ -9,7 +9,11 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { BloggerType, BodyForCreateBloggerType } from '../bloggers.types';
+import {
+  BloggerType,
+  BodyForCreateBloggerType,
+  BodyForUpdateBloggerType,
+} from '../bloggers.types';
 import { BloggersService } from '../application/bloggers.service';
 import { BodyTypeForPostBlogger, IdTypeForReq } from '../../posts/posts.types';
 import { BasicAuthGuard } from '../../guards/basic.auth.guard';
@@ -43,7 +47,7 @@ export class BloggersController {
   @HttpCode(204)
   async updateBlogger(
     @Param() param: IdTypeForReq,
-    @Body() inputModel: BodyForCreateBloggerType,
+    @Body() inputModel: BodyForUpdateBloggerType,
   ) {
     const isUpdated = await this.bloggersService.updateBlogger(
       param.id,

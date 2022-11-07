@@ -16,7 +16,7 @@ export class CommentsRepositories {
     commentInstance.content = comment.content;
     commentInstance.userId = comment.userId;
     commentInstance.userLogin = comment.userLogin;
-    commentInstance.createdAt = comment.createdAt;
+    commentInstance.createdAt = new Date();
     await commentInstance.save();
 
     return this.reqComment(commentInstance);

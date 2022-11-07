@@ -1,6 +1,10 @@
 import { BloggersRepositories } from '../infrastructure/bloggers.repositories';
 import { Injectable } from '@nestjs/common';
-import { BloggerResponseType, BloggerType } from '../bloggers.types';
+import {
+  BloggerResponseType,
+  BloggerType,
+  BloggerTypeForUpdate,
+} from '../bloggers.types';
 import { CheckBloggerType } from '../../posts/posts.types';
 import { ObjectId } from 'mongodb';
 
@@ -23,7 +27,7 @@ export class BloggersHelper {
     blogId: ObjectId,
     name: string,
     youtubeUrl: string,
-  ): BloggerType {
+  ): BloggerTypeForUpdate {
     const newBlogger: BloggerType = {
       _id: blogId,
       name,
