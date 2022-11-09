@@ -24,10 +24,18 @@ export class QueryCommentsRepositories {
     id: ObjectId,
     page: number,
     pageSize: number,
+    sortBy: string,
+    sortDirection: string,
   ): Promise<CommentsResponseTypeWithPagination> {
     const totalCount: number = await this.commentsSearchCount(id);
     const pagesCount: number = Math.ceil(totalCount / pageSize);
-    const itemsSearch = await this.getComments(pageSize, page, id);
+    const itemsSearch = await this.getComments(
+      pageSize,
+      page,
+      id,
+      sortBy,
+      sortDirection,
+    );
     const items = itemsSearch.map((c) => ({
       id: c._id,
       content: c.content,
@@ -58,10 +66,28 @@ export class QueryCommentsRepositories {
     return this.CommentsModel.countDocuments({ postId });
   }
 
-  private async getComments(pageSize: number, page: number, postId) {
+  private async getComments(
+    pageSize: number,
+    page: number,
+    postId,
+    sortBy: string,
+    sortDirection: string,
+  ) {
+    const direction = this.getDirection(sortDirection);
     return this.CommentsModel.find({ postId })
       .skip(page > 0 ? (page - 1) * pageSize : 0)
+      .sort({ [sortBy]: direction })
       .limit(pageSize)
       .lean();
+  }
+
+  private getDirection(sortDirection: string) {
+    console.log(sortDirection);
+    if (sortDirection.toString() === 'asc') {
+      return 1;
+    }
+    if (sortDirection.toString() === 'desc') {
+      return -1;
+    }
   }
 }
