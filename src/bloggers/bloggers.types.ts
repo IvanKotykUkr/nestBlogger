@@ -3,10 +3,10 @@ import { ObjectId } from 'mongodb';
 
 export class QueryForPaginationType {
   SearchNameTerm: string;
-
   PageNumber: number;
-
   PageSize: number;
+  SortBy: string;
+  SortDirection: string;
 }
 
 export class BodyForCreateBloggerType {
