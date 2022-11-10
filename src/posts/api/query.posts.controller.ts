@@ -58,7 +58,7 @@ export class QueryPostsController {
     const pageNumber = query.PageNumber || 1;
     const pageSize = query.PageSize || 10;
     const sortBy = query.SortBy || 'createdAt';
-    const sortDirection = query.SortDirection || 'asc';
+    const sortDirection = query.SortDirection || 'desc';
     const post = await this.queryPostsRepositories.findPostById(param.id);
     if (typeof post == 'string') {
       throw new NotFoundException(notFoundPost);
