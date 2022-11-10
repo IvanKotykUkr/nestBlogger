@@ -18,7 +18,7 @@ import {
   ResendConfirmationType,
 } from '../auth.types';
 import { AuthService } from '../application/auth.service';
-import { JwtService } from '../../jwt.service';
+import { JwtService } from '../application/adapters/jwt.service';
 import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
 import {

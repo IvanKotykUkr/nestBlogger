@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { UserFromTokenType } from '../users/users.types';
-import { JwtService } from '../jwt.service';
+import { JwtService } from '../auth/application/adapters/jwt.service';
 import { ObjectId } from 'mongodb';
 import { GuardHelper } from './guard.helper';
 import { CommentsRepositories } from '../comments/infrastructure/comments.repositories';

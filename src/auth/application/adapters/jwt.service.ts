@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import jwt from 'jsonwebtoken';
-import { UserFromTokenType } from './users/users.types';
+import { UserFromTokenType } from '../../../users/users.types';
 import { ObjectId } from 'mongodb';
 
 export const wrong = 'wrong';
@@ -11,7 +11,7 @@ export class JwtService {
     const access: string = jwt.sign(
       { userId: id },
       process.env.ACCESS_JWT_SECRET,
-      { expiresIn: '1H' },
+      { expiresIn: '10s' },
     );
 
     return { accessToken: access };
@@ -23,7 +23,7 @@ export class JwtService {
     const refresh: string = jwt.sign(
       { userId: id },
       process.env.REFRESH_JWT_SECRET,
-      { expiresIn: '2H' },
+      { expiresIn: '20s' },
     );
 
     return refresh;
