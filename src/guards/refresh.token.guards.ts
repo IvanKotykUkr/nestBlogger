@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { JwtService } from '../jwt.service';
+import { JwtService } from '../auth/application/adapters/jwt.service';
 import { UserFromTokenType } from '../users/users.types';
 import { GuardHelper } from './guard.helper';
 

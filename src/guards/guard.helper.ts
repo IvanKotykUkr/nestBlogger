@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { UserRequestType } from '../users/users.types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '../jwt.service';
+import { JwtService } from '../auth/application/adapters/jwt.service';
 import { Response } from 'express';
 import { UsersRepositories } from '../users/infrastructure/users.repositories';
 

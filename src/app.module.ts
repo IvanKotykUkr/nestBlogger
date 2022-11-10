@@ -14,7 +14,7 @@ import { UsersHelper } from './users/application/users.helper';
 import { UsersRepositories } from './users/infrastructure/users.repositories';
 import { QueryUsersRepositories } from './users/infrastructure/query.users.repositories';
 import { UsersService } from './users/application/users.service';
-import { JwtService } from './jwt.service';
+import { JwtService } from './auth/application/adapters/jwt.service';
 import { AuthController } from './auth/api/auth.controller';
 import { AuthService } from './auth/application/auth.service';
 import { QueryCommentsRepositories } from './comments/infrastructure/query.comments.repositories';
