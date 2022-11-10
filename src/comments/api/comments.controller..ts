@@ -10,7 +10,10 @@ import {
 import { CommentsService } from '../application/comments.service';
 import { BodyForComments } from '../comments.types';
 import { IdTypeForReq } from '../../posts/posts.types';
-import { AuthGuard, CheckOwnGuard } from '../../guards/auth.guard';
+import {
+  AuthGuard,
+  CheckOwnGuard,
+} from '../../auth/application/adapters/auth.guard';
 
 @Controller('/comments')
 export class CommentsController {

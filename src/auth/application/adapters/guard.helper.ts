@@ -1,15 +1,17 @@
 import { ObjectId } from 'mongodb';
-import { UserRequestType } from '../users/users.types';
+import { UserRequestType } from '../../../users/users.types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '../auth/application/adapters/jwt.service';
+import { JwtService } from './jwt.service';
 import { Response } from 'express';
-import { UsersRepositories } from '../users/infrastructure/users.repositories';
+import { UsersRepositories } from '../../../users/infrastructure/users.repositories';
+import { BedRefreshTokensRepositories } from '../../infrastructure/bed-refresh-tokens-repositories.service';
 
 @Injectable()
 export class GuardHelper {
   constructor(
     protected usersRepositories: UsersRepositories,
     protected jwtService: JwtService,
+    protected bedTokensRepositories: BedRefreshTokensRepositories,
   ) {}
 
   async findUserById(userId: ObjectId): Promise<UserRequestType> {
@@ -29,6 +31,16 @@ export class GuardHelper {
       ]);
     }
     return refreshToken;
+  }
+
+  async checkRefreshToken(refreshToken: string, res: Response) {
+    const result = await this.bedTokensRepositories.checkToken(refreshToken);
+    if (typeof result === 'string') {
+      res.clearCookie('refreshToken');
+      throw new UnauthorizedException([
+        { message: 'invalid refreshToken', field: 'refreshToken' },
+      ]);
+    }
   }
 
   getUserRefreshToken(refreshToken: string, res: Response) {
