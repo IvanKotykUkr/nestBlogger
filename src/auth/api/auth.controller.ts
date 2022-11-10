@@ -24,8 +24,8 @@ import { Request, Response } from 'express';
 import {
   LogoutTokenGuards,
   RefreshTokenGuards,
-} from '../../guards/refresh.token.guards';
-import { AuthGuard } from '../../guards/auth.guard';
+} from '../application/adapters/refresh.token.guards';
+import { AuthGuard } from '../application/adapters/auth.guard';
 import { Cookies } from '../../types/decorator';
 import { BodyForCreateUser } from '../../users/users.types';
 import { CreateUserGuard } from '../../guards/create.user.guard';
@@ -139,7 +139,6 @@ export class AuthController {
   ) {
     const accessToken = await this.jwtService.createAccessToken(req.user.id);
     const refreshToken = await this.jwtService.createRefreshToken(req.user.id);
-
     return this.resToken(accessToken, refreshToken, res);
   }
 

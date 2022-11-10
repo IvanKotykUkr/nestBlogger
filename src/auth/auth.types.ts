@@ -1,4 +1,5 @@
 import { IsEmail, IsJWT, IsString, IsUUID, Length } from 'class-validator';
+import { ObjectId } from 'mongodb';
 
 export class AuthBodyType {
   @IsString()
@@ -23,3 +24,9 @@ export class ResendConfirmationType {
   @IsEmail()
   email: string;
 }
+
+export type TokensType = {
+  _id: ObjectId;
+  token: string;
+  addedAt: number;
+};

@@ -24,7 +24,7 @@ import { CommentsHelper } from './comments/application/comments.helper';
 import { CommentsRepositories } from './comments/infrastructure/comments.repositories';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommentsSchema } from './comments/infrastructure/repository/comments.mongooose.schema';
-import { GuardHelper } from './guards/guard.helper';
+import { GuardHelper } from './auth/application/adapters/guard.helper';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { EmailManager } from './auth/application/adapters/email.manager';
@@ -38,6 +38,8 @@ import { QueryPostsController } from './posts/api/query.posts.controller';
 import { QueryCommentsController } from './comments/api/query.comments.controller.';
 import { QueryUsersController } from './users/api/query.users.controller';
 import { ConfigModule } from '@nestjs/config';
+import { TokesSchema } from './auth/infrastructure/repository/bedrefreshtoken.mongoose';
+import { BedRefreshTokensRepositories } from './auth/infrastructure/bed-refresh-tokens-repositories.service';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -57,7 +59,7 @@ const queryController = [
   QueryCommentsController,
   QueryUsersController,
 ];
-const auth = [AuthService];
+const auth = [AuthService, BedRefreshTokensRepositories];
 const user = [
   UsersService,
   UsersHelper,
@@ -93,6 +95,7 @@ const mongooseModule = [
   MongooseModule.forFeature([{ name: 'posts', schema: PostsSchema }]),
   MongooseModule.forFeature([{ name: 'users', schema: UsersSchema }]),
   MongooseModule.forFeature([{ name: 'comments', schema: CommentsSchema }]),
+  MongooseModule.forFeature([{ name: 'tokens', schema: TokesSchema }]),
 ];
 
 @Module({
