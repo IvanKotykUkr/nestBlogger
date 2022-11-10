@@ -26,9 +26,9 @@ export class QueryBloggersController {
 
   @Get('/')
   async getBloggers(@Query() query: QueryForPaginationType) {
-    const searchNameTerm = query.SearchNameTerm || null;
-    const pageNumber: number = query.PageNumber || 1;
-    const pageSize: number = query.PageSize || 10;
+    const searchNameTerm = query.searchNameTerm || null;
+    const pageNumber: number = query.pageNumber || 1;
+    const pageSize: number = query.pageSize || 10;
 
     const bloggers = await this.queryBloggersRepositories.findAllBloggers(
       searchNameTerm,
@@ -54,8 +54,8 @@ export class QueryBloggersController {
     @Param() param: IdTypeForReq,
     @Query() query: QueryForPaginationType,
   ) {
-    const pageNumber = query.PageNumber || 1;
-    const pageSize = query.PageSize || 10;
+    const pageNumber = query.pageNumber || 1;
+    const pageSize = query.pageSize || 10;
     const blogger = await this.queryBloggersRepositories.findBloggerById(
       param.id,
     );

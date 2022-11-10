@@ -27,8 +27,10 @@ export class QueryCommentsRepositories {
     sortBy: string,
     sortDirection: string,
   ): Promise<CommentsResponseTypeWithPagination> {
-    const totalCount: number = await this.commentsSearchCount(id);
-    const pagesCount: number = Math.ceil(totalCount / pageSize);
+    const pagenumber: number = page;
+    const pagesize: number = pageSize;
+    const totalCountSearch: number = await this.commentsSearchCount(id);
+    const pagesCountSearch: number = Math.ceil(totalCountSearch / pageSize);
     const itemsSearch = await this.getComments(
       pageSize,
       page,
@@ -43,11 +45,12 @@ export class QueryCommentsRepositories {
       userLogin: c.userLogin,
       createdAt: c.createdAt,
     }));
+
     return {
-      pagesCount,
-      page,
-      pageSize,
-      totalCount,
+      pagesCount: pagesCountSearch,
+      page: pagenumber,
+      pageSize: pagesize,
+      totalCount: totalCountSearch,
       items,
     };
   }
@@ -69,7 +72,7 @@ export class QueryCommentsRepositories {
   private async getComments(
     pageSize: number,
     page: number,
-    postId,
+    postId: ObjectId,
     sortBy: string,
     sortDirection: string,
   ) {
@@ -82,7 +85,6 @@ export class QueryCommentsRepositories {
   }
 
   private getDirection(sortDirection: string) {
-    console.log(sortDirection);
     if (sortDirection.toString() === 'asc') {
       return 1;
     }

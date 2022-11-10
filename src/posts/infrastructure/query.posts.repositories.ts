@@ -71,14 +71,16 @@ export class QueryPostsRepositories {
     size: number,
     blogId?: ObjectId,
   ): Promise<PostsResponseTypeWithPagination> {
-    const totalCount: number = await this.findPostsByIdBloggerCount(blogId);
-    const page: number = number;
-    const pageSize: number = size;
-    const pagesCount: number = Math.ceil(totalCount / pageSize);
+    const totalCountSearch: number = await this.findPostsByIdBloggerCount(
+      blogId,
+    );
+    const pagenumber: number = number;
+    const pagesize: number = size;
+    const pagesCountSearch: number = Math.ceil(totalCountSearch / pagesize);
     const itemsFromDb: PostsDBType[] = await this.findAllPosts(
       blogId,
-      page,
-      pageSize,
+      pagenumber,
+      pagesize,
     );
 
     const items = itemsFromDb.map((p) => ({
@@ -91,10 +93,10 @@ export class QueryPostsRepositories {
       addedAt: p.addedAt,
     }));
     return {
-      pagesCount,
-      page,
-      pageSize,
-      totalCount,
+      pagesCount: pagesCountSearch,
+      page: pagenumber,
+      pageSize: pagesize,
+      totalCount: totalCountSearch,
       items,
     };
   }
