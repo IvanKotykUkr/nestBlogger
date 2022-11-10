@@ -72,7 +72,7 @@ export class QueryCommentsRepositories {
   private async getComments(
     pageSize: number,
     page: number,
-    postId,
+    postId: ObjectId,
     sortBy: string,
     sortDirection: string,
   ) {
