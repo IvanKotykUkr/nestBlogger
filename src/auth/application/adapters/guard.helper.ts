@@ -35,7 +35,7 @@ export class GuardHelper {
 
   async checkRefreshToken(refreshToken: string, res: Response) {
     const result = await this.bedTokensRepositories.checkToken(refreshToken);
-    if (result.toString() === 'bedToken') {
+    if (typeof result === 'string') {
       res.clearCookie('refreshToken');
       throw new UnauthorizedException([
         { message: 'invalid refreshToken', field: 'refreshToken' },
