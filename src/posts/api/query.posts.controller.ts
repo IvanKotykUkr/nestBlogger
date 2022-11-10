@@ -40,8 +40,8 @@ export class QueryPostsController {
 
   @Get('/')
   async getPosts(@Query() query: QueryForPaginationType) {
-    const pageNumber = query.PageNumber || 1;
-    const pageSize = query.PageSize || 10;
+    const pageNumber = query.pageNumber || 1;
+    const pageSize = query.pageSize || 10;
     const posts: PostsResponseTypeWithPagination =
       await this.queryPostsRepositories.getAllPostsWithPagination(
         pageNumber,
@@ -55,20 +55,20 @@ export class QueryPostsController {
     @Param() param: IdTypeForReq,
     @Query() query: QueryForPaginationType,
   ) {
-    const pageNumber = query.PageNumber || 1;
-    const pageSize = query.PageSize || 10;
-    const sortBy = query.SortBy || 'createdAt';
-    const sortDirection = query.SortDirection || 'desc';
+    const pageNumberQuery: number = query.pageNumber || 1;
+    const pageSizeQuery: number = query.pageSize || 10;
+    const sortByQuery = query.sortBy || 'createdAt';
+    const sortDirectionQuery = query.sortDirection || 'desc';
     const post = await this.queryPostsRepositories.findPostById(param.id);
     if (typeof post == 'string') {
       throw new NotFoundException(notFoundPost);
     }
     return this.queryCommentsRepositories.findAllComments(
       param.id,
-      pageNumber,
-      pageSize,
-      sortBy,
-      sortDirection,
+      +pageNumberQuery,
+      +pageSizeQuery,
+      sortByQuery,
+      sortDirectionQuery,
     );
   }
 }

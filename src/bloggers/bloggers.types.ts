@@ -2,11 +2,11 @@ import { IsUrl, Length } from 'class-validator';
 import { ObjectId } from 'mongodb';
 
 export class QueryForPaginationType {
-  SearchNameTerm: string;
-  PageNumber: number;
-  PageSize: number;
-  SortBy: string;
-  SortDirection: string;
+  searchNameTerm: string;
+  pageNumber: number;
+  pageSize: number;
+  sortBy: string;
+  sortDirection: string;
 }
 
 export class BodyForCreateBloggerType {
