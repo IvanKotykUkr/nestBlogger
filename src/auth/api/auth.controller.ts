@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  Ip,
   Post,
   Req,
   Res,
@@ -53,7 +54,8 @@ export class AuthController {
   @UseGuards(CreateUserGuard)
   @HttpCode(204)
   @Post('/registration')
-  async registration(@Body() body: BodyForCreateUser) {
+  async registration(@Body() body: BodyForCreateUser, @Ip() ip) {
+    console.log(ip);
     const user = await this.authService.createUser(
       body.login,
       body.email,
