@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb';
-import { IsUUID } from 'class-validator';
 
 export type AuthDevicesType = {
   _id: ObjectId;
@@ -34,6 +33,7 @@ export type DevicesRequestType = {
 };
 
 export class IdForReqDevices {
-  @IsUUID()
+  // @IsUUID()
+  ///
   id: string;
 }
