@@ -66,4 +66,6 @@ export type UserRequestType = {
   passwordHash: string;
   passwordSalt: string;
   createdAt?: Date;
+  deviceId?: string;
+  date?: Date;
 };

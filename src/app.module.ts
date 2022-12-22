@@ -24,7 +24,7 @@ import { CommentsHelper } from './comments/application/comments.helper';
 import { CommentsRepositories } from './comments/infrastructure/comments.repositories';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommentsSchema } from './comments/infrastructure/repository/comments.mongooose.schema';
-import { GuardHelper } from './auth/application/adapters/guard.helper';
+import { GuardHelper } from './auth/application/adapters/guards/guard.helper';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { EmailManager } from './auth/application/adapters/email.manager';
@@ -39,7 +39,15 @@ import { QueryCommentsController } from './comments/api/query.comments.controlle
 import { QueryUsersController } from './users/api/query.users.controller';
 import { ConfigModule } from '@nestjs/config';
 import { TokesSchema } from './auth/infrastructure/repository/bedrefreshtoken.mongoose';
-import { BedRefreshTokensRepositories } from './auth/infrastructure/bed-refresh-tokens-repositories.service';
+import { BedRefreshTokensRepositories } from './auth/infrastructure/bed-refresh-tokens-repositories';
+import { LimitingSchema } from './auth/infrastructure/repository/rate.limiting.mongoose';
+import { RateRecordRepositories } from './auth/infrastructure/rate-record-repositories';
+import { AuthDevicesSchema } from './securitydevices/infrastructure/repository/auth.devices.sessions.mongoose';
+import { SecurityDevicesController } from './securitydevices/api/security.devices.controller';
+import { SecurityDevicesService } from './securitydevices/application/security.devices.service';
+import { AuthDevicesRepositories } from './securitydevices/infrastructure/auth.devices.repositories';
+import { QueryAuthDevicesRepositories } from './securitydevices/infrastructure/query.auth.devices.repositories';
+import { DeviceGuards } from './securitydevices/application/adapters/guards/device.guards';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -52,6 +60,7 @@ const controller = [
   AuthController,
   CommentsController,
   DeleteTest,
+  SecurityDevicesController,
 ];
 const queryController = [
   QueryBloggersController,
@@ -59,7 +68,11 @@ const queryController = [
   QueryCommentsController,
   QueryUsersController,
 ];
-const auth = [AuthService, BedRefreshTokensRepositories];
+const auth = [
+  AuthService,
+  BedRefreshTokensRepositories,
+  RateRecordRepositories,
+];
 const user = [
   UsersService,
   UsersHelper,
@@ -96,6 +109,10 @@ const mongooseModule = [
   MongooseModule.forFeature([{ name: 'users', schema: UsersSchema }]),
   MongooseModule.forFeature([{ name: 'comments', schema: CommentsSchema }]),
   MongooseModule.forFeature([{ name: 'tokens', schema: TokesSchema }]),
+  MongooseModule.forFeature([{ name: 'rate record', schema: LimitingSchema }]),
+  MongooseModule.forFeature([
+    { name: 'auth devices', schema: AuthDevicesSchema },
+  ]),
 ];
 
 @Module({
@@ -133,10 +150,14 @@ const mongooseModule = [
     ...post,
     ...comment,
     ...user,
+    DeviceGuards,
     GuardHelper,
     JwtService,
     EmailManager,
     EmailAdapter,
+    SecurityDevicesService,
+    AuthDevicesRepositories,
+    QueryAuthDevicesRepositories,
   ],
 })
 export class AppModule {}

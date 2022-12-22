@@ -30,3 +30,10 @@ export type TokensType = {
   token: string;
   addedAt: number;
 };
+
+export type RecordType = {
+  _id: ObjectId;
+  ip: string;
+  date: Date;
+  process: string;
+};

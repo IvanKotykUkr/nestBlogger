@@ -19,16 +19,17 @@ import {
 } from '../auth.types';
 import { AuthService } from '../application/auth.service';
 import { JwtService } from '../application/adapters/jwt.service';
-import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
 import {
   LogoutTokenGuards,
   RefreshTokenGuards,
-} from '../application/adapters/refresh.token.guards';
-import { AuthGuard } from '../application/adapters/auth.guard';
+} from '../application/adapters/guards/refresh.token.guards';
+import { AuthGuard } from '../application/adapters/guards/auth.guard';
 import { Cookies } from '../../types/decorator';
 import { BodyForCreateUser } from '../../users/users.types';
 import { CreateUserGuard } from '../../guards/create.user.guard';
+import { AntiDdosGuard } from '../application/adapters/guards/anti.ddos.guard';
+import { SecurityDevicesService } from '../../securitydevices/application/security.devices.service';
 
 export const wrongPassword = [
   {
@@ -49,13 +50,13 @@ export class AuthController {
   constructor(
     protected authService: AuthService,
     protected jwtService: JwtService,
+    protected securityDevicesService: SecurityDevicesService,
   ) {}
 
   @UseGuards(CreateUserGuard)
   @HttpCode(204)
   @Post('/registration')
   async registration(@Body() body: BodyForCreateUser, @Ip() ip) {
-    console.log(ip);
     const user = await this.authService.createUser(
       body.login,
       body.email,
@@ -106,10 +107,12 @@ export class AuthController {
     return dispatchCode;
   }
 
+  @UseGuards(AntiDdosGuard)
   @Post('/login')
   @HttpCode(200)
   async login(
     @Body() body: AuthBodyType,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
     const userId = await this.authService.checkUser(body.login, body.password);
@@ -119,12 +122,21 @@ export class AuthController {
     if (userId === 'password wrong') {
       throw new UnauthorizedException(wrongPassword);
     }
-
-    const accessToken = await this.jwtService.createAccessToken(
-      userId as ObjectId,
+    if (typeof userId === 'string') {
+      return false;
+    }
+    const fixDate = new Date();
+    const deviceInfo = await this.securityDevicesService.addDevice(
+      req.headers['user-agent'],
+      req.ip,
+      userId,
+      fixDate,
     );
+    const accessToken = await this.jwtService.createAccessToken(userId);
     const refreshToken = await this.jwtService.createRefreshToken(
-      userId as ObjectId,
+      userId,
+      deviceInfo.deviceId,
+      deviceInfo.date,
     );
 
     return this.resToken(accessToken, refreshToken, res);
@@ -138,7 +150,11 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const accessToken = await this.jwtService.createAccessToken(req.user.id);
-    const refreshToken = await this.jwtService.createRefreshToken(req.user.id);
+    const refreshToken = await this.jwtService.createRefreshToken(
+      req.user.id,
+      req.user.deviceId,
+      req.user.date,
+    );
     return this.resToken(accessToken, refreshToken, res);
   }
 

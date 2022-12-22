@@ -16,20 +16,30 @@ export class BloggersService {
     protected postRepositories: PostsRepositories,
   ) {}
 
-  async createBlogger(name: string, youtubeUrl: string): Promise<BloggerType> {
-    const blogger = this.bloggersHelper.makeBlogger(name, youtubeUrl);
+  async createBlogger(
+    name: string,
+    websiteUrl: string,
+    description: string,
+  ): Promise<BloggerType> {
+    const blogger = this.bloggersHelper.makeBlogger(
+      name,
+      websiteUrl,
+      description,
+    );
     return this.bloggersRepositories.createBlogger(blogger);
   }
 
   async updateBlogger(
     blogId: ObjectId,
     name: string,
-    youtubeUrl: string,
+    websiteUrl: string,
+    description: string,
   ): Promise<boolean> {
     const newBlogger = this.bloggersHelper.updateBlogger(
       blogId,
       name,
-      youtubeUrl,
+      websiteUrl,
+      description,
     );
     return this.bloggersRepositories.updateBlogger(newBlogger);
   }

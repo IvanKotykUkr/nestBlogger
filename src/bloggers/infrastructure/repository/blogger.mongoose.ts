@@ -3,7 +3,7 @@ export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
   {
     _id: ObjectId,
     name: { type: String, required: true },
-    youtubeUrl: { type: String, required: true },
+    websiteUrl: { type: String, required: true },
   },
   {
     versionKey: false,
@@ -22,7 +22,8 @@ export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
   {
     _id: ObjectId,
     name: String,
-    youtubeUrl: String,
+    description: String,
+    websiteUrl: String,
     createdAt: Date,
   },
   {

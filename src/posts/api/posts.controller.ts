@@ -20,7 +20,7 @@ import { notFoundBlogger } from '../../bloggers/api/bloggers.controller';
 import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 import { CommentsService } from '../../comments/application/comments.service';
 import { BodyForComments } from '../../comments/comments.types';
-import { AuthGuard } from '../../auth/application/adapters/auth.guard';
+import { AuthGuard } from '../../auth/application/adapters/guards/auth.guard';
 import { Request } from 'express';
 
 export const notFoundPost = [

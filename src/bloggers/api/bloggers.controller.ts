@@ -34,10 +34,12 @@ export class BloggersController {
   @HttpCode(201)
   async createBlogger(@Body() inputModel: BodyForCreateBloggerType) {
     const name = inputModel.name;
-    const youtubeUrl = inputModel.youtubeUrl;
+    const websiteUrl = inputModel.websiteUrl;
+    const description = inputModel.description;
     const newBlogger: BloggerType = await this.bloggersService.createBlogger(
       name,
-      youtubeUrl,
+      websiteUrl,
+      description,
     );
     return newBlogger;
   }
@@ -52,7 +54,8 @@ export class BloggersController {
     const isUpdated = await this.bloggersService.updateBlogger(
       param.id,
       inputModel.name,
-      inputModel.youtubeUrl,
+      inputModel.websiteUrl,
+      inputModel.description,
     );
     if (isUpdated) {
       return isUpdated;

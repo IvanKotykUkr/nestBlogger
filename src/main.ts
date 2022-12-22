@@ -8,6 +8,9 @@ const PORT = process.env.PORT;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  app.set('trust proxy', true);
   console.log('Connected successfully to mongoose server');
   app.enableCors();
   app.useGlobalPipes(
@@ -31,9 +34,12 @@ async function bootstrap() {
       },
     }),
   );
+
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
+
   await app.listen(PORT);
+
   console.log(`server started at http://localhost:${PORT}`);
 }
 

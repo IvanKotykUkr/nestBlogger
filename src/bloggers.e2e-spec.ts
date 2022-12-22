@@ -16,44 +16,44 @@ describe('Bloggers', () => {
   const bloggerForTest1 = {
     id: '',
     name: 'Nadya',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ez9s2N_Ra9U',
+    websiteUrl: 'https://www.youtube.com/watch?v=ez9s2N_Ra9U',
     createdAt: '',
   };
   const bloggerForTest2 = {
     id: '',
     name: 'Olya',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
+    websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
     createdAt: '',
   };
   const bedBloggerForTest = {
     id: '',
     name: 'Ncdfgdhfhtdghgdfhfhgdfhfdhdadyadhfjdytdfkmfjhgjh',
-    youtubeUrl: '11',
+    websiteUrl: '11',
     createdAt: '',
   };
 
   const bloggerForTestPagination = {
     id: '',
     name: 'Masha',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra1U',
+    websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra1U',
     createdAt: '',
   };
   const bloggerForTestPagination1 = {
     id: '',
     name: 'Dasha',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra2U',
+    websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra2U',
     createdAt: '',
   };
   const bloggerForTestPagination2 = {
     id: '',
     name: 'Pasha',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra3U',
+    websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra3U',
     createdAt: '',
   };
   const bloggerForTestPagination3 = {
     id: '',
     name: 'Ivan',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra4U',
+    websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra4U',
     createdAt: '',
   };
   beforeAll(async () => {
@@ -96,7 +96,7 @@ describe('Bloggers', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTestPagination.name,
-        youtubeUrl: bloggerForTestPagination.youtubeUrl,
+        websiteUrl: bloggerForTestPagination.websiteUrl,
       })
       .expect(201);
 
@@ -109,7 +109,7 @@ describe('Bloggers', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTestPagination1.name,
-        youtubeUrl: bloggerForTestPagination1.youtubeUrl,
+        websiteUrl: bloggerForTestPagination1.websiteUrl,
       })
       .expect(201);
     bloggerForTestPagination1.id = res.body.id;
@@ -121,7 +121,7 @@ describe('Bloggers', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTestPagination2.name,
-        youtubeUrl: bloggerForTestPagination2.youtubeUrl,
+        websiteUrl: bloggerForTestPagination2.websiteUrl,
       })
       .expect(201);
     bloggerForTestPagination2.id = res.body.id;
@@ -133,7 +133,7 @@ describe('Bloggers', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTestPagination3.name,
-        youtubeUrl: bloggerForTestPagination3.youtubeUrl,
+        websiteUrl: bloggerForTestPagination3.websiteUrl,
       })
       .expect(201);
     bloggerForTestPagination3.id = res.body.id;
@@ -152,25 +152,25 @@ describe('Bloggers', () => {
           {
             id: bloggerForTestPagination.id,
             name: bloggerForTestPagination.name,
-            youtubeUrl: bloggerForTestPagination.youtubeUrl,
+            websiteUrl: bloggerForTestPagination.websiteUrl,
             createdAt: bloggerForTestPagination.createdAt,
           },
           {
             id: bloggerForTestPagination1.id,
             name: bloggerForTestPagination1.name,
-            youtubeUrl: bloggerForTestPagination1.youtubeUrl,
+            websiteUrl: bloggerForTestPagination1.websiteUrl,
             createdAt: bloggerForTestPagination1.createdAt,
           },
           {
             id: bloggerForTestPagination2.id,
             name: bloggerForTestPagination2.name,
-            youtubeUrl: bloggerForTestPagination2.youtubeUrl,
+            websiteUrl: bloggerForTestPagination2.websiteUrl,
             createdAt: bloggerForTestPagination2.createdAt,
           },
           {
             id: bloggerForTestPagination3.id,
             name: bloggerForTestPagination3.name,
-            youtubeUrl: bloggerForTestPagination3.youtubeUrl,
+            websiteUrl: bloggerForTestPagination3.websiteUrl,
             createdAt: bloggerForTestPagination3.createdAt,
           },
         ],
@@ -192,13 +192,13 @@ describe('Bloggers', () => {
           {
             id: bloggerForTestPagination2.id,
             name: bloggerForTestPagination2.name,
-            youtubeUrl: bloggerForTestPagination2.youtubeUrl,
+            websiteUrl: bloggerForTestPagination2.websiteUrl,
             createdAt: bloggerForTestPagination2.createdAt,
           },
           {
             id: bloggerForTestPagination3.id,
             name: bloggerForTestPagination3.name,
-            youtubeUrl: bloggerForTestPagination3.youtubeUrl,
+            websiteUrl: bloggerForTestPagination3.websiteUrl,
             createdAt: bloggerForTestPagination3.createdAt,
           },
         ],
@@ -211,7 +211,7 @@ describe('Bloggers', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bedBloggerForTest.name,
-        youtubeUrl: bedBloggerForTest.youtubeUrl,
+        websiteUrl: bedBloggerForTest.websiteUrl,
       })
       .expect(400)
       .expect({
@@ -221,8 +221,8 @@ describe('Bloggers', () => {
             field: 'name',
           },
           {
-            message: 'youtubeUrl must be an URL address',
-            field: 'youtubeUrl',
+            message: 'websiteUrl must be an URL address',
+            field: 'websiteUrl',
           },
         ],
       });
@@ -234,12 +234,12 @@ describe('Bloggers', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTest1.name,
-        youtubeUrl: bloggerForTest1.youtubeUrl,
+        websiteUrl: bloggerForTest1.websiteUrl,
       })
       .expect(201);
 
     expect(res.body.name).toBe(bloggerForTest1.name);
-    expect(res.body.youtubeUrl).toBe(bloggerForTest1.youtubeUrl);
+    expect(res.body.websiteUrl).toBe(bloggerForTest1.websiteUrl);
 
     bloggerForTest1.id = res.body.id;
     bloggerForTest1.createdAt = res.body.createdAt;
@@ -251,7 +251,7 @@ describe('Bloggers', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTest2.name,
-        youtubeUrl: bloggerForTest2.youtubeUrl,
+        websiteUrl: bloggerForTest2.websiteUrl,
       })
       .expect(204);
   });
@@ -261,7 +261,7 @@ describe('Bloggers', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bedBloggerForTest.name,
-        youtubeUrl: bedBloggerForTest.youtubeUrl,
+        websiteUrl: bedBloggerForTest.websiteUrl,
       })
       .expect(400)
       .expect({
@@ -271,8 +271,8 @@ describe('Bloggers', () => {
             field: 'name',
           },
           {
-            message: 'youtubeUrl must be an URL address',
-            field: 'youtubeUrl',
+            message: 'websiteUrl must be an URL address',
+            field: 'websiteUrl',
           },
         ],
       });
@@ -284,7 +284,7 @@ describe('Bloggers', () => {
       .expect({
         id: bloggerForTest1.id,
         name: bloggerForTest2.name,
-        youtubeUrl: bloggerForTest2.youtubeUrl,
+        websiteUrl: bloggerForTest2.websiteUrl,
         createdAt: bloggerForTest1.createdAt,
       });
   });
@@ -294,12 +294,12 @@ describe('Bloggers', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTest2.name,
-        youtubeUrl: bloggerForTest2.youtubeUrl,
+        websiteUrl: bloggerForTest2.websiteUrl,
       })
       .expect(201);
 
     expect(res.body.name).toBe(bloggerForTest2.name);
-    expect(res.body.youtubeUrl).toBe(bloggerForTest2.youtubeUrl);
+    expect(res.body.websiteUrl).toBe(bloggerForTest2.websiteUrl);
 
     bloggerForTest2.id = res.body.id;
     bloggerForTest2.createdAt = res.body.createdAt;
@@ -311,7 +311,7 @@ describe('Bloggers', () => {
       .expect({
         id: bloggerForTest2.id,
         name: bloggerForTest2.name,
-        youtubeUrl: bloggerForTest2.youtubeUrl,
+        websiteUrl: bloggerForTest2.websiteUrl,
         createdAt: bloggerForTest2.createdAt,
       });
   });

@@ -13,7 +13,7 @@ import { IdTypeForReq } from '../../posts/posts.types';
 import {
   AuthGuard,
   CheckOwnGuard,
-} from '../../auth/application/adapters/auth.guard';
+} from '../../auth/application/adapters/guards/auth.guard';
 
 @Controller('/comments')
 export class CommentsController {
