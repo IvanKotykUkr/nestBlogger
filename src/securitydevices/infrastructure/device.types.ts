@@ -34,5 +34,6 @@ export type DevicesRequestType = {
 
 export class IdForReqDevices {
   // @IsUUID()
+  ///
   id: string;
 }
