@@ -17,13 +17,13 @@ describe('Posts', () => {
   const blogger = {
     id: '',
     name: 'Olya',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
+    websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
     createdAt: '',
   };
   const differentBlogger = {
     id: '',
     name: 'Vasya',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra4U',
+    websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra4U',
     createdAt: '',
   };
   const firstPost = {
@@ -100,12 +100,12 @@ describe('Posts', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: blogger.name,
-        youtubeUrl: blogger.youtubeUrl,
+        websiteUrl: blogger.websiteUrl,
       })
       .expect(201);
 
     expect(res.body.name).toBe(blogger.name);
-    expect(res.body.youtubeUrl).toBe(blogger.youtubeUrl);
+    expect(res.body.websiteUrl).toBe(blogger.websiteUrl);
 
     blogger.id = res.body.id;
     blogger.createdAt = res.body.createdAt;
@@ -116,12 +116,12 @@ describe('Posts', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: differentBlogger.name,
-        youtubeUrl: differentBlogger.youtubeUrl,
+        websiteUrl: differentBlogger.websiteUrl,
       })
       .expect(201);
 
     expect(res.body.name).toBe(differentBlogger.name);
-    expect(res.body.youtubeUrl).toBe(differentBlogger.youtubeUrl);
+    expect(res.body.websiteUrl).toBe(differentBlogger.websiteUrl);
 
     differentBlogger.id = res.body.id;
     differentBlogger.createdAt = res.body.createdAt;

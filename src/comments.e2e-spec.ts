@@ -43,7 +43,7 @@ describe('Users', () => {
   const blogger = {
     id: '',
     name: 'Olya',
-    youtubeUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
+    websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
     createdAt: '',
   };
 
@@ -186,12 +186,12 @@ describe('Users', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: blogger.name,
-        youtubeUrl: blogger.youtubeUrl,
+        websiteUrl: blogger.websiteUrl,
       })
       .expect(201);
 
     expect(res.body.name).toBe(blogger.name);
-    expect(res.body.youtubeUrl).toBe(blogger.youtubeUrl);
+    expect(res.body.websiteUrl).toBe(blogger.websiteUrl);
 
     blogger.id = res.body.id;
     blogger.createdAt = res.body.createdAt;

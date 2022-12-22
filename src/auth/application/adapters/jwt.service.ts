@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { UserFromTokenType } from '../../../users/users.types';
 import { ObjectId } from 'mongodb';
 
@@ -17,13 +17,15 @@ export class JwtService {
     return { accessToken: access };
   }
 
-  async createRefreshToken(id: ObjectId): Promise<string> {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+  async createRefreshToken(
+    id: ObjectId,
+    deviceId: string,
+    data: Date,
+  ): Promise<string> {
     const refresh: string = jwt.sign(
-      { userId: id },
+      { userId: id, iat: +data, deviceId },
       process.env.REFRESH_JWT_SECRET,
-      { expiresIn: '20s' },
+      { expiresIn: '30s' },
     );
 
     return refresh;
@@ -39,10 +41,8 @@ export class JwtService {
     }
   }
 
-  getUserIdByRefreshToken(token: string): UserFromTokenType | string {
+  getMetaFromRefreshToken(token: string): JwtPayload | string {
     try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       return jwt.verify(token, process.env.REFRESH_JWT_SECRET);
     } catch (error) {
       return wrong;

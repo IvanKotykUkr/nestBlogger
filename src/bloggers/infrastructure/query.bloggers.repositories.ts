@@ -21,7 +21,8 @@ export class QueryBloggersRepositories {
     return {
       id: blogger._id,
       name: blogger.name,
-      youtubeUrl: blogger.youtubeUrl,
+      description: blogger.description,
+      websiteUrl: blogger.websiteUrl,
       createdAt: blogger.createdAt,
     };
   }
@@ -54,7 +55,8 @@ export class QueryBloggersRepositories {
     return bloggers.map((d) => ({
       id: d._id,
       name: d.name,
-      youtubeUrl: d.youtubeUrl,
+      description: d.description,
+      websiteUrl: d.websiteUrl,
       createdAt: d.createdAt,
     }));
   }

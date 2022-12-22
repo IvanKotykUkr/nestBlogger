@@ -12,11 +12,16 @@ import { ObjectId } from 'mongodb';
 export class BloggersHelper {
   constructor(protected bloggersRepositories: BloggersRepositories) {}
 
-  makeBlogger(name: string, youtubeUrl: string): BloggerType {
+  makeBlogger(
+    name: string,
+    websiteUrl: string,
+    description: string,
+  ): BloggerType {
     const newBlogger: BloggerType = {
       _id: new ObjectId(),
       name,
-      youtubeUrl,
+      description,
+      websiteUrl,
       createdAt: new Date(),
     };
 
@@ -26,12 +31,14 @@ export class BloggersHelper {
   updateBlogger(
     blogId: ObjectId,
     name: string,
-    youtubeUrl: string,
+    websiteUrl: string,
+    description: string,
   ): BloggerTypeForUpdate {
     const newBlogger: BloggerType = {
       _id: blogId,
       name,
-      youtubeUrl,
+      description,
+      websiteUrl,
       createdAt: new Date(),
     };
     return newBlogger;

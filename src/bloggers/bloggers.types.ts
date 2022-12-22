@@ -12,23 +12,28 @@ export class QueryForPaginationType {
 export class BodyForCreateBloggerType {
   @Length(4, 15)
   name: string;
+  @Length(1, 500)
+  description: string;
   @Length(1, 100)
   @IsUrl()
-  youtubeUrl: string;
+  websiteUrl: string;
 }
 
 export class BodyForUpdateBloggerType {
   @Length(4, 15)
   name: string;
+  @Length(1, 500)
+  description: string;
   @Length(1, 100)
   @IsUrl()
-  youtubeUrl: string;
+  websiteUrl: string;
 }
 
 export type BloggerDBType = {
   _id: ObjectId;
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
   createdAt: Date;
 };
 
@@ -36,20 +41,23 @@ export type BloggerType = {
   id?: ObjectId;
   _id?: ObjectId;
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
   createdAt: Date;
 };
 export type BloggerTypeForUpdate = {
   id?: ObjectId;
   _id?: ObjectId;
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
   createdAt: Date;
 };
 export type BloggerResponseType = {
   id: ObjectId;
   name: string;
-  youtubeUrl: string;
+  description: string;
+  websiteUrl: string;
   createdAt: Date;
 };
 export type PaginationType<T> = {

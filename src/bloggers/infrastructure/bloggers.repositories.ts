@@ -15,7 +15,8 @@ export class BloggersRepositories {
     return {
       id: blogger._id,
       name: blogger.name,
-      youtubeUrl: blogger.youtubeUrl,
+      description: blogger.description,
+      websiteUrl: blogger.websiteUrl,
       createdAt: blogger.createdAt,
     };
   }
@@ -24,7 +25,8 @@ export class BloggersRepositories {
     const bloggerInstance = new this.BloggerModel();
     bloggerInstance._id = newBlogger._id;
     bloggerInstance.name = newBlogger.name;
-    bloggerInstance.youtubeUrl = newBlogger.youtubeUrl;
+    bloggerInstance.description = newBlogger.description;
+    bloggerInstance.websiteUrl = newBlogger.websiteUrl;
     bloggerInstance.createdAt = newBlogger.createdAt;
 
     await bloggerInstance.save();
@@ -35,7 +37,8 @@ export class BloggersRepositories {
     const bloggerInstance = await this.BloggerModel.findById(blogger._id);
     if (!bloggerInstance) return false;
     bloggerInstance.name = blogger.name;
-    bloggerInstance.youtubeUrl = blogger.youtubeUrl;
+    bloggerInstance.description = blogger.description;
+    bloggerInstance.websiteUrl = blogger.websiteUrl;
     await bloggerInstance.save();
     return true;
   }
