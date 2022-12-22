@@ -6,7 +6,6 @@ import {
   DevicesInfo,
 } from '../infrastructure/device.types';
 import * as uuid from 'uuid';
-import * as process from 'process';
 
 @Injectable()
 export class SecurityDevicesService {
@@ -70,10 +69,6 @@ export class SecurityDevicesService {
       userId,
       date,
     );
-    //for test
-    process.env.DEVICEID = device.deviceId;
-    process.env.DATEDEVICE = device.lastActiveDate.toJSON();
-    //
 
     return this.authDevicesRepositories.saveDevice(device);
   }

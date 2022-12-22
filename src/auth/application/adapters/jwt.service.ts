@@ -25,7 +25,7 @@ export class JwtService {
     const refresh: string = jwt.sign(
       { userId: id, iat: +data, deviceId },
       process.env.REFRESH_JWT_SECRET,
-      { expiresIn: '30s' },
+      { expiresIn: '20s' },
     );
 
     return refresh;
