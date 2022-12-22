@@ -53,7 +53,7 @@ export class AuthController {
     protected securityDevicesService: SecurityDevicesService,
   ) {}
 
-  @UseGuards(CreateUserGuard)
+  @UseGuards(AntiDdosGuard, CreateUserGuard)
   @HttpCode(204)
   @Post('/registration')
   async registration(@Body() body: BodyForCreateUser, @Ip() ip) {
@@ -65,6 +65,7 @@ export class AuthController {
     return;
   }
 
+  @UseGuards(AntiDdosGuard)
   @Post('/registration-confirmation')
   @HttpCode(204)
   async registrationConfirmation(@Body() body: ConfirmationType) {
@@ -87,6 +88,7 @@ export class AuthController {
     return true;
   }
 
+  @UseGuards(AntiDdosGuard)
   @Post('/registration-email-resending')
   @HttpCode(204)
   async resendConfirmation(@Body() body: ResendConfirmationType) {
@@ -145,7 +147,7 @@ export class AuthController {
     return this.resToken(accessToken, refreshToken, res);
   }
 
-  @UseGuards(RefreshTokenGuards)
+  @UseGuards(AntiDdosGuard, RefreshTokenGuards)
   @Post('/refresh-token')
   @HttpCode(200)
   async refreshToken(
@@ -161,7 +163,7 @@ export class AuthController {
     return this.resToken(accessToken, refreshToken, res);
   }
 
-  @UseGuards(LogoutTokenGuards)
+  @UseGuards(AntiDdosGuard, LogoutTokenGuards)
   @HttpCode(204)
   @Post('/logout')
   async logout(
@@ -173,7 +175,7 @@ export class AuthController {
     return;
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AntiDdosGuard, AuthGuard)
   @Get('/me')
   async getUserFromAccessesToken(@Req() req: Request) {
     return {
