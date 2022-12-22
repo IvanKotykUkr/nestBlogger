@@ -115,7 +115,10 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const userId = await this.authService.checkUser(body.login, body.password);
+    const userId = await this.authService.checkUser(
+      body.loginOrEmail,
+      body.password,
+    );
     if (userId === 'not found users') {
       throw new UnauthorizedException(wrongLogin);
     }

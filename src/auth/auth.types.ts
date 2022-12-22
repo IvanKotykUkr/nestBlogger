@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 export class AuthBodyType {
   @IsString()
   @Length(3, 10)
-  login: string;
+  loginOrEmail: string;
   @Length(6, 20)
   @IsString()
   password: string;
