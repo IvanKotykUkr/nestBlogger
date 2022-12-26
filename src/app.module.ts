@@ -48,6 +48,7 @@ import { SecurityDevicesService } from './securitydevices/application/security.d
 import { AuthDevicesRepositories } from './securitydevices/infrastructure/auth.devices.repositories';
 import { QueryAuthDevicesRepositories } from './securitydevices/infrastructure/query.auth.devices.repositories';
 import { DeviceGuards } from './securitydevices/application/adapters/guards/device.guards';
+import { Validator } from 'class-validator';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -158,6 +159,7 @@ const mongooseModule = [
     SecurityDevicesService,
     AuthDevicesRepositories,
     QueryAuthDevicesRepositories,
+    Validator,
   ],
 })
 export class AppModule {}

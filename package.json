@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
+    "@types/crypto-js": "^4.1.1",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/uuid": "^8.3.4",
     "bcrypt": "^5.0.1",

@@ -14,13 +14,7 @@ export class AuthDevicesRepositories {
   ) {}
 
   async saveDevice(device: AuthDevicesTypeDTO): Promise<DevicesInfo> {
-    const newDevice = new this.AuthDevicesModel();
-    newDevice._id = device._id;
-    newDevice.ip = device.ip;
-    newDevice.deviceId = device.deviceId;
-    newDevice.lastActiveDate = device.lastActiveDate;
-    newDevice.title = device.title;
-    newDevice.userId = device.userId;
+    const newDevice = new this.AuthDevicesModel(device);
     await newDevice.save();
     const deviceInfo: DevicesInfo = {
       deviceId: device.deviceId,

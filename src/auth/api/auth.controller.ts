@@ -13,9 +13,10 @@ import {
 } from '@nestjs/common';
 import {
   AuthBodyType,
+  BodyForNewPasswordDTO,
   ConfirmationType,
+  EmailBodyType,
   refreshType,
-  ResendConfirmationType,
 } from '../auth.types';
 import { AuthService } from '../application/auth.service';
 import { JwtService } from '../application/adapters/jwt.service';
@@ -91,7 +92,7 @@ export class AuthController {
   @UseGuards(AntiDdosGuard)
   @Post('/registration-email-resending')
   @HttpCode(204)
-  async resendConfirmation(@Body() body: ResendConfirmationType) {
+  async resendConfirmation(@Body() body: EmailBodyType) {
     const dispatchCode = await this.authService.resendConfirmationCode(
       body.email,
     );
@@ -172,6 +173,36 @@ export class AuthController {
   ) {
     res.clearCookie('refreshToken');
     res.send();
+    return;
+  }
+
+  @UseGuards(AntiDdosGuard)
+  @HttpCode(204)
+  @Post('/password-recovery')
+  async recoveryPassword(@Body() body: EmailBodyType, @Ip() ip) {
+    return this.authService.recoveryPassword(body.email, ip, new Date());
+  }
+
+  @UseGuards(AntiDdosGuard)
+  @HttpCode(204)
+  @Post('/new-password')
+  async newPassword(@Body() body: BodyForNewPasswordDTO) {
+    const isChanged = await this.authService.newPassword(body);
+    if (isChanged === 'code expired') {
+      throw new BadRequestException([
+        { message: 'code expired', field: 'code' },
+      ]);
+    }
+    if (isChanged === 'incorrect') {
+      throw new BadRequestException([
+        { message: 'incorrect code', field: 'code' },
+      ]);
+    }
+    if (isChanged === 'it was changed') {
+      throw new BadRequestException([
+        { message: 'it was changed', field: 'code' },
+      ]);
+    }
     return;
   }
 

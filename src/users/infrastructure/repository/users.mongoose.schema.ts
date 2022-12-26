@@ -17,6 +17,13 @@ export const UsersSchema = new mongoose.Schema<UserDBType>(
       expirationDate: Date,
       isConfirmed: Boolean,
     },
+    passwordRecovery: {
+      recoveryCode: String,
+      expirationCode: Date,
+      ip: String,
+      recoveryDate: Date,
+      isRecovered: Boolean,
+    },
     createdAt: Date,
   },
   {

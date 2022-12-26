@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { PaginationType } from '../bloggers/bloggers.types';
-import { IsEmail, Length, Matches } from 'class-validator';
+import { IsEmail, IsMongoId, Length, Matches } from 'class-validator';
 
 export class BodyForCreateUser {
   @Length(3, 10)
@@ -27,9 +27,21 @@ export type UserDBType = {
     expirationDate: Date;
     isConfirmed: boolean;
   };
+  passwordRecovery?: {
+    recoveryCode: string;
+    expirationCode: Date;
+    ip: string;
+    recoveryDate: Date;
+    isRecovered: boolean;
+  };
   createdAt: Date;
 };
-
+type passwordRecovery = {
+  recoveryCode: string;
+  expirationCode: Date;
+  ip: string;
+  recoveryDate: Date;
+};
 export type AccountDataType = {
   login: string;
   email: string;
@@ -69,3 +81,14 @@ export type UserRequestType = {
   deviceId?: string;
   date?: Date;
 };
+
+export class newPasswordDTO {
+  newPassword: string;
+
+  recoveryCode: string;
+}
+
+export class IdValidation {
+  @IsMongoId()
+  userId: string;
+}

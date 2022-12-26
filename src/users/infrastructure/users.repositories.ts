@@ -88,6 +88,10 @@ export class UsersRepositories {
     return 'not found users';
   }
 
+  async findByEmail(email: string): Promise<UsersDocument> {
+    return this.UsersModel.findOne({ 'accountData.email': email });
+  }
+
   async findUserById(_id: ObjectId): Promise<UserRequestType | string> {
     const user = await this.UsersModel.findById(_id);
     if (!user) {
@@ -101,5 +105,14 @@ export class UsersRepositories {
       passwordSalt: user.accountData.passwordSalt,
       createdAt: user.accountData.createdAt,
     };
+  }
+
+  async findById(_id: ObjectId): Promise<UsersDocument> {
+    return this.UsersModel.findById(_id);
+  }
+
+  async saveUser(user: UsersDocument) {
+    await user.save();
+    return;
   }
 }
