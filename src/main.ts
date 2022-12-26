@@ -32,6 +32,8 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true,
       },
+      disableErrorMessages: true,
+      whitelist: true,
     }),
   );
 

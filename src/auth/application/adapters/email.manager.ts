@@ -7,14 +7,14 @@ export class EmailManager {
   constructor(protected emailAdapter: EmailAdapter) {}
 
   async sendEmailConfirmationMessage(email: string, code: string) {
-    const message = this.message(code);
+    const message = this.message(code, 'confirmation');
 
     await this.emailAdapter.sendEmail(email, 'registration', message);
     return;
   }
 
   async resentEmailConfirmationMessage(email: string, code: string) {
-    const message = this.message(code);
+    const message = this.message(code, 'confirmation');
 
     await this.emailAdapter.sendEmail(
       email,
@@ -24,9 +24,18 @@ export class EmailManager {
     return;
   }
 
-  protected message(code: string) {
-    process.env.ConfirmationCode = code;
+  async sendPasswordRecoveryCode(email: string, recoveryCode: string) {
+    const message = this.message(recoveryCode, 'recovery');
 
-    return ` <div><a href=https://some-front.com/confirm-registration?code=${code}>https://some-front.com/confirm-registration?code=${code}</a></div>`;
+    await this.emailAdapter.sendEmail(email, 'recovery Password', message);
+    return;
+  }
+
+  protected message(code: string, process: string) {
+    //process.env.ConfirmationCode = code;
+    if (process.toString() === 'confirmation') {
+      return ` <div><a href=https://some-front.com/confirm-registration?code=${code}>https://some-front.com/confirm-registration?code=${code}</a></div>`;
+    }
+    return ` <div><a href=https://some-front.com/recovery-password?recoveryCode=${code}>https://some-front.com/recovery-password?recoveryCode=${code}</a></div>`;
   }
 }

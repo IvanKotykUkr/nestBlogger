@@ -20,9 +20,17 @@ export class ConfirmationType {
   code: string;
 }
 
-export class ResendConfirmationType {
+export class EmailBodyType {
   @IsEmail()
   email: string;
+}
+
+export class BodyForNewPasswordDTO {
+  @Length(6, 20)
+  @IsString()
+  newPassword: string;
+  @IsString()
+  recoveryCode: string;
 }
 
 export type TokensType = {
