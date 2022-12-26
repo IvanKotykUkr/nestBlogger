@@ -190,17 +190,17 @@ export class AuthController {
     const isChanged = await this.authService.newPassword(body);
     if (isChanged === 'code expired') {
       throw new BadRequestException([
-        { message: 'code expired', field: 'code' },
+        { message: 'code expired', field: 'recoveryCode' },
       ]);
     }
     if (isChanged === 'incorrect') {
       throw new BadRequestException([
-        { message: 'incorrect code', field: 'code' },
+        { message: 'incorrect code', field: 'recoveryCode' },
       ]);
     }
     if (isChanged === 'it was changed') {
       throw new BadRequestException([
-        { message: 'it was changed', field: 'code' },
+        { message: 'it was changed', field: 'recoveryCode' },
       ]);
     }
     return;
