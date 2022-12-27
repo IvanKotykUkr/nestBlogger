@@ -3,7 +3,6 @@ import { ObjectId } from 'mongodb';
 
 export class AuthBodyType {
   @IsString()
-  @Length(3, 10)
   loginOrEmail: string;
   @Length(6, 20)
   @IsString()

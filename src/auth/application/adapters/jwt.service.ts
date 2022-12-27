@@ -11,7 +11,7 @@ export class JwtService {
     const access: string = jwt.sign(
       { userId: id },
       process.env.ACCESS_JWT_SECRET,
-      { expiresIn: '10s' },
+      { expiresIn: '1h' },
     );
 
     return { accessToken: access };
@@ -25,7 +25,7 @@ export class JwtService {
     const refresh: string = jwt.sign(
       { userId: id, iat: +data, deviceId },
       process.env.REFRESH_JWT_SECRET,
-      { expiresIn: '20s' },
+      { expiresIn: '2h' },
     );
 
     return refresh;

@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 import { Injectable } from '@nestjs/common';
 import { CommentResponseType } from '../comments.types';
 import { PostsRepositories } from '../../posts/infrastructure/posts.repositories';
+import { LikesHelper } from './likes.helper';
 
 @Injectable()
 export class CommentsService {
@@ -11,6 +12,7 @@ export class CommentsService {
     protected postsRepositories: PostsRepositories,
     protected commentsHelper: CommentsHelper,
     protected commentsRepositories: CommentsRepositories,
+    protected likesHelper: LikesHelper,
   ) {}
 
   async createComment(
@@ -38,5 +40,16 @@ export class CommentsService {
 
   async deleteComment(id: ObjectId): Promise<boolean> {
     return this.commentsRepositories.deleteComment(id);
+  }
+
+  async updateLikeStatus(
+    id: ObjectId,
+    likeStatus: string,
+    userId: ObjectId,
+    login: string,
+  ) {
+    const comment = await this.commentsRepositories.findCommentsById(id);
+    if (typeof comment === 'string') return 'doesnt exists';
+    return this.likesHelper.createLikeStatus(id, likeStatus, userId, login);
   }
 }

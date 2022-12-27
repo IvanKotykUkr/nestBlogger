@@ -4,6 +4,8 @@ import {
   NotFoundException,
   Param,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import {
   IdTypeForReq,
@@ -13,6 +15,9 @@ import {
 import { QueryForPaginationType } from '../../bloggers/bloggers.types';
 import { QueryPostsRepositories } from '../infrastructure/query.posts.repositories';
 import { QueryCommentsRepositories } from '../../comments/infrastructure/query.comments.repositories';
+import { ObjectId } from 'mongodb';
+import { LikesAuthGuard } from '../../auth/application/adapters/guards/likes.auth.guard';
+import { Request } from 'express';
 
 export const notFoundPost = [
   {
@@ -50,16 +55,20 @@ export class QueryPostsController {
     return posts;
   }
 
+  @UseGuards(LikesAuthGuard)
   @Get('/:id/comments')
   async getAllCommentsForPost(
     @Param() param: IdTypeForReq,
     @Query() query: QueryForPaginationType,
+    @Req() req: Request,
   ) {
     const pageNumberQuery: number = query.pageNumber || 1;
     const pageSizeQuery: number = query.pageSize || 10;
     const sortByQuery = query.sortBy || 'createdAt';
     const sortDirectionQuery = query.sortDirection || 'desc';
-    const post = await this.queryPostsRepositories.findPostById(param.id);
+    const post = await this.queryPostsRepositories.findPostById(
+      new ObjectId(param.id),
+    );
     if (typeof post == 'string') {
       throw new NotFoundException(notFoundPost);
     }
@@ -69,6 +78,7 @@ export class QueryPostsController {
       +pageSizeQuery,
       sortByQuery,
       sortDirectionQuery,
+      req.userId,
     );
   }
 }
