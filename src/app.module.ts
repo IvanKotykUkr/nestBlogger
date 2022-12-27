@@ -49,6 +49,13 @@ import { AuthDevicesRepositories } from './securitydevices/infrastructure/auth.d
 import { QueryAuthDevicesRepositories } from './securitydevices/infrastructure/query.auth.devices.repositories';
 import { DeviceGuards } from './securitydevices/application/adapters/guards/device.guards';
 import { Validator } from 'class-validator';
+import {
+  Likes,
+  LikesSchema,
+} from './comments/infrastructure/repository/likes.mongooose.schema';
+import { LikesRepositories } from './comments/infrastructure/likes.repositories';
+import { LikesHelper } from './comments/application/likes.helper';
+import { LikesAuthGuard } from './auth/application/adapters/guards/likes.auth.guard';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -114,6 +121,7 @@ const mongooseModule = [
   MongooseModule.forFeature([
     { name: 'auth devices', schema: AuthDevicesSchema },
   ]),
+  MongooseModule.forFeature([{ name: Likes.name, schema: LikesSchema }]),
 ];
 
 @Module({
@@ -159,7 +167,10 @@ const mongooseModule = [
     SecurityDevicesService,
     AuthDevicesRepositories,
     QueryAuthDevicesRepositories,
+    LikesRepositories,
     Validator,
+    LikesHelper,
+    LikesAuthGuard,
   ],
 })
 export class AppModule {}

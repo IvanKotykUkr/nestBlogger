@@ -30,6 +30,7 @@ export class QueryPostsRepositories {
     if (post) {
       return this.resPost(post);
     }
+
     return 'not found';
   }
 
