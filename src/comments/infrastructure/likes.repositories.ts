@@ -21,7 +21,6 @@ export class LikesRepositories {
     userId: ObjectId,
     entityId: ObjectId,
   ): Promise<LikesDocument> {
-    console.log(entityId);
     return this.LikesModel.findOne({ $and: [{ entityId }, { userId }] });
   }
 

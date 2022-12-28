@@ -229,7 +229,6 @@ describe('Users', () => {
     firstComment.userId = res.body.userId;
     firstComment.userLogin = res.body.userLogin;
     firstComment.createdAt = res.body.createdAt;
-    console.log(firstComment);
     expect(firstComment.userId).toBe(firstUser.id);
     expect(firstComment.userLogin).toBe(firstUser.login);
   });

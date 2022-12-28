@@ -14,14 +14,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
     const responseBody: any = exception.getResponse();
-    if (status === 500) {
-      console.log(status);
-      console.log(responseBody.field);
-      console.log(responseBody.message);
-      response
-        .status(status)
-        .send({ message: responseBody.message, field: responseBody.field });
-    }
     if (status === 400) {
       const errorsResponse = { errorsMessages: [] };
       responseBody.message.forEach((m) =>
@@ -30,13 +22,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
       response.status(status).json(errorsResponse);
     } else {
       /* if (status === 401) {
-                   const errorsResponse = { errorsMessages: [] };
-                   responseBody.message.forEach((m) =>
-                     errorsResponse.errorsMessages.push(m),
-                   );
-                   response.status(status).json(errorsResponse);
-                 }
-                  */
+                         const errorsResponse = { errorsMessages: [] };
+                         responseBody.message.forEach((m) =>
+                           errorsResponse.errorsMessages.push(m),
+                         );
+                         response.status(status).json(errorsResponse);
+                       }
+                        */
       response
         .status(status)
         .send({ message: responseBody.message, field: responseBody.field });
