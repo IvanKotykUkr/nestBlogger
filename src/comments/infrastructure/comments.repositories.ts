@@ -50,6 +50,11 @@ export class CommentsRepositories {
       userId: comment.userId,
       userLogin: comment.userLogin,
       createdAt: comment.createdAt,
+      likesInfo: {
+        dislikesCount: 0,
+        likesCount: 0,
+        myStatus: 'None',
+      },
     };
   }
 }
