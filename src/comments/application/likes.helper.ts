@@ -152,9 +152,11 @@ export class LikesHelper {
 
   private async compareStatus(like: LikesDocument, status: string) {
     if (like.status.toString() === status) return;
-    if (status === 'None') {
-      return this.likesRepositories.deleteStatus(like);
-    }
+    /* if (status === 'None') {
+                   return this.likesRepositories.deleteStatus(like);
+                 }
+                 
+             */
     like.status = status;
     return this.likesRepositories.save(like);
   }

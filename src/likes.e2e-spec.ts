@@ -262,47 +262,9 @@ describe('Users', () => {
       .expect(204);
   });
 
-  it('Get Comment', async () => {
-    const res = await request(app.getHttpServer())
-      .get('/posts/' + firstPost.id.toString() + '/comments')
-      .expect(200)
-      .expect({
-        pagesCount: 1,
-        page: 1,
-        pageSize: 10,
-        totalCount: 2,
-        items: [
-          {
-            id: secondComment.id,
-            content: secondComment.content,
-            userId: firstUser.id,
-            userLogin: firstUser.login,
-            createdAt: secondComment.createdAt,
-            likesInfo: {
-              likesCount: 0,
-              dislikesCount: 0,
-              myStatus: 'None',
-            },
-          },
-          {
-            id: firstComment.id,
-            content: firstComment.content,
-            userId: firstUser.id,
-            userLogin: firstUser.login,
-            createdAt: firstComment.createdAt,
-            likesInfo: {
-              likesCount: 1,
-              dislikesCount: 0,
-              myStatus: 'Like',
-            },
-          },
-        ],
-      });
-  });
-
   it('Dislike Second comment', async () => {
     const res = await request(app.getHttpServer())
-      .put('/comments/' + secondComment.id.toString() + '/like-status')
+      .put('/comments/' + firstComment.id.toString() + '/like-status')
       .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
       .send({
         likeStatus: 'Dislike',
@@ -310,43 +272,16 @@ describe('Users', () => {
       .expect(204);
   });
 
-  it('Get Comment', async () => {
+  it('Unlike First Comment', async () => {
     const res = await request(app.getHttpServer())
-      .get('/posts/' + firstPost.id.toString() + '/comments')
-      .expect(200)
-      .expect({
-        pagesCount: 1,
-        page: 1,
-        pageSize: 10,
-        totalCount: 2,
-        items: [
-          {
-            id: secondComment.id,
-            content: secondComment.content,
-            userId: firstUser.id,
-            userLogin: firstUser.login,
-            createdAt: secondComment.createdAt,
-            likesInfo: {
-              likesCount: 0,
-              dislikesCount: 1,
-              myStatus: 'Dislike',
-            },
-          },
-          {
-            id: firstComment.id,
-            content: firstComment.content,
-            userId: firstUser.id,
-            userLogin: firstUser.login,
-            createdAt: firstComment.createdAt,
-            likesInfo: {
-              likesCount: 1,
-              dislikesCount: 0,
-              myStatus: 'Like',
-            },
-          },
-        ],
-      });
+      .put('/comments/' + firstComment.id.toString() + '/like-status')
+      .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
+      .send({
+        likeStatus: 'None',
+      })
+      .expect(204);
   });
+
   it('Unlike First Comment', async () => {
     const res = await request(app.getHttpServer())
       .put('/comments/' + firstComment.id.toString() + '/like-status')
@@ -359,39 +294,19 @@ describe('Users', () => {
 
   it('Get Comment', async () => {
     const res = await request(app.getHttpServer())
-      .get('/posts/' + firstPost.id.toString() + '/comments')
+      .get('/comments/' + firstComment.id.toString())
       .expect(200)
       .expect({
-        pagesCount: 1,
-        page: 1,
-        pageSize: 10,
-        totalCount: 2,
-        items: [
-          {
-            id: secondComment.id,
-            content: secondComment.content,
-            userId: firstUser.id,
-            userLogin: firstUser.login,
-            createdAt: secondComment.createdAt,
-            likesInfo: {
-              likesCount: 0,
-              dislikesCount: 1,
-              myStatus: 'Dislike',
-            },
-          },
-          {
-            id: firstComment.id,
-            content: firstComment.content,
-            userId: firstUser.id,
-            userLogin: firstUser.login,
-            createdAt: firstComment.createdAt,
-            likesInfo: {
-              likesCount: 0,
-              dislikesCount: 0,
-              myStatus: 'None',
-            },
-          },
-        ],
+        id: firstComment.id,
+        content: firstComment.content,
+        userId: firstUser.id,
+        userLogin: firstUser.login,
+        createdAt: firstComment.createdAt,
+        likesInfo: {
+          likesCount: 0,
+          dislikesCount: 0,
+          myStatus: 'None',
+        },
       });
   });
   afterAll(async () => {
