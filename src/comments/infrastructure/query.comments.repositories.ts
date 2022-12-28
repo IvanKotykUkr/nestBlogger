@@ -88,11 +88,6 @@ export class QueryCommentsRepositories {
     });
     let myStatus;
     if (userId.toString() !== '63ab296b882037600d1ce455') {
-      const status = await this.LikesModel.findOne({
-        $and: [{ entityId: comment.id }, { userId }],
-      });
-      myStatus = status.status;
-    } else {
       myStatus = 'None';
     }
 
