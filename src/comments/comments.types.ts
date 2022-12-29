@@ -45,7 +45,7 @@ export type LikeDbType = {
   login: string;
 };
 export type ArrayIdType = Array<{
-  _id: ObjectId;
+  entityId: ObjectId | string;
 }>;
 export type LikeOrDislikeIdType = Array<{
   entityId: ObjectId;

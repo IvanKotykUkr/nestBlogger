@@ -37,7 +37,7 @@ export class LikesHelper {
 
   takeEntityId(items: PostsDBType[] | CommentsDBType[]): ArrayIdType {
     return items.map((e: { _id: ObjectId }) => ({
-      _id: e._id,
+      entityId: e._id.toString(),
     }));
   }
 
@@ -77,7 +77,6 @@ export class LikesHelper {
         break;
       }
     }
-
     return amount;
   }
 
@@ -153,10 +152,10 @@ export class LikesHelper {
   private async compareStatus(like: LikesDocument, status: string) {
     if (like.status.toString() === status) return;
     /* if (status === 'None') {
-                   return this.likesRepositories.deleteStatus(like);
-                 }
-                 
-             */
+                                           return this.likesRepositories.deleteStatus(like);
+                                         }
+        
+                                     */
     like.status = status;
     return this.likesRepositories.save(like);
   }
