@@ -36,16 +36,15 @@ export class LikesRepositories {
 
   async findLikesInDb(entityId: ArrayIdType): Promise<LikeOrDislikeIdType> {
     const comments = await this.LikesModel.find(
-      { $in: [{ entityId }, { status: 'Like' }] },
+      { status: 'Like' },
       { _id: 0, entityId: 1 },
     ).lean();
-
     return comments;
   }
 
   async findDislikeInDb(entityId: ArrayIdType): Promise<LikeOrDislikeIdType> {
     return this.LikesModel.find(
-      { $in: [{ entityId }, { status: 'Dislike' }] },
+      { status: 'Dislike' },
       { _id: 0, entityId: 1 },
     ).lean();
   }
@@ -55,7 +54,7 @@ export class LikesRepositories {
     entityId: ArrayIdType,
   ): Promise<StatusLikeOrDislikeType> {
     return this.LikesModel.find(
-      { $in: [{ entityId }, { userId }] },
+      { $and: [{ entityId }, { userId }] },
       { _id: 0, entityId: 1, status: 1 },
     ).lean();
   }
