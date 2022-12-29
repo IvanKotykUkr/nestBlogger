@@ -122,11 +122,13 @@ export class LikesHelper {
     id: ObjectId,
     idItems: ArrayIdType,
   ): Promise<StatusLikeOrDislikeType> {
-    if (id.toString() === '63ab296b882037600d1ce455') {
-      return [];
-    } else {
-      return this.likesRepositories.findStatusArr(id, idItems);
-    }
+    /* if (id.toString() === '63ab296b882037600d1ce455') {
+       return [];
+     } else {
+ 
+ 
+     */
+    return this.likesRepositories.findStatusArr(id, idItems);
   }
 
   async findLastThreLikes(idItems: ArrayIdType): Promise<ArrayLikesType> {
@@ -152,10 +154,10 @@ export class LikesHelper {
   private async compareStatus(like: LikesDocument, status: string) {
     if (like.status.toString() === status) return;
     /* if (status === 'None') {
-                                           return this.likesRepositories.deleteStatus(like);
-                                         }
-        
-                                     */
+                                                   return this.likesRepositories.deleteStatus(like);
+                                                 }
+                
+                                             */
     like.status = status;
     return this.likesRepositories.save(like);
   }
