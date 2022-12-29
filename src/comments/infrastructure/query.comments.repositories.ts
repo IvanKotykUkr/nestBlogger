@@ -87,12 +87,13 @@ export class QueryCommentsRepositories {
       $and: [{ entityId: comment.id }, { status: 'Dislike' }],
     });
     let myStatus;
-    if (userId.toString() === '63ab296b882037600d1ce455') myStatus = 'None';
     const status = await this.LikesModel.findOne({
       $and: [{ entityId: comment.id }, { userId }],
     });
     if (status) {
       myStatus = status.status;
+    } else {
+      myStatus = 'None';
     }
 
     return {
