@@ -61,5 +61,6 @@ export class CommentsController {
         },
       ]);
     }
+    return isUpdated;
   }
 }

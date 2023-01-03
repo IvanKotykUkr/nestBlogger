@@ -28,6 +28,7 @@ export class LikesHelper {
       userId,
       entityId,
     );
+
     if (checkStatus) {
       return this.compareStatus(checkStatus, likeStatus);
     }
@@ -81,12 +82,12 @@ export class LikesHelper {
   }
 
   findStatusInArray(
-    post: ObjectId,
+    entityId: ObjectId,
     allStatus: StatusLikeOrDislikeType,
   ): string {
     let status = 'None';
     for (let i = 0; i < allStatus.length; i++) {
-      if (post.toString() === allStatus[i].entityId.toString()) {
+      if (entityId.toString() === allStatus[i].entityId.toString()) {
         status = allStatus[i].status;
         break;
       }
@@ -123,11 +124,11 @@ export class LikesHelper {
     idItems: ArrayIdType,
   ): Promise<StatusLikeOrDislikeType> {
     /* if (id.toString() === '63ab296b882037600d1ce455') {
-       return [];
-     } else {
- 
- 
-     */
+                       return [];
+                     } else {
+                 
+                 
+                     */
     return this.likesRepositories.findStatusArr(id, idItems);
   }
 
@@ -152,12 +153,11 @@ export class LikesHelper {
   }
 
   private async compareStatus(like: LikesDocument, status: string) {
+    if (status === 'None') {
+      return this.likesRepositories.deleteStatus(like);
+    }
     if (like.status.toString() === status) return;
-    /* if (status === 'None') {
-                                                   return this.likesRepositories.deleteStatus(like);
-                                                 }
-                
-                                             */
+
     like.status = status;
     return this.likesRepositories.save(like);
   }
