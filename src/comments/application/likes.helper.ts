@@ -123,12 +123,6 @@ export class LikesHelper {
     id: ObjectId,
     idItems: ArrayIdType,
   ): Promise<StatusLikeOrDislikeType> {
-    /* if (id.toString() === '63ab296b882037600d1ce455') {
-                                   return [];
-                                 } else {
-                             
-                             
-                                 */
     return this.likesRepositories.findStatusArr(id, idItems);
   }
 
