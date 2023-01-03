@@ -64,17 +64,17 @@ export type PostsResponseType = {
   blogName: string;
   addedAt: Date;
   /* extendedLikesInfo: {
-                                           likesCount: number;
-                                           dislikesCount: number;
-                                           myStatus: string;
-                                           newestLikes: Array<{
-                                             addedAt?: Date;
-                                             userId?: ObjectId;
-                                             login?: string;
-                                           }>;
-                                         };
-                                         
-                                         */
+                                             likesCount: number;
+                                             dislikesCount: number;
+                                             myStatus: string;
+                                             newestLikes: Array<{
+                                               addedAt?: Date;
+                                               userId?: ObjectId;
+                                               login?: string;
+                                             }>;
+                                           };
+                                           
+                                           */
 };
 
 export type PostsLikeResponseType = {
@@ -102,3 +102,8 @@ export type CheckBloggerType = {
 };
 export type PostsResponseTypeWithPagination =
   PaginationType<PostsLikeResponseType>;
+export type NewestLike = {
+  addedAt: Date;
+  userId: ObjectId;
+  login: string;
+};

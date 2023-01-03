@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import {
   IdTypeForReq,
-  PostsResponseType,
+  PostsLikeResponseType,
   PostsResponseTypeWithPagination,
 } from '../posts.types';
 import { QueryForPaginationType } from '../../bloggers/bloggers.types';
@@ -35,9 +35,12 @@ export class QueryPostsController {
 
   @UseGuards(LikesAuthGuard)
   @Get('/:id')
-  async getPost(@Param() param: IdTypeForReq) {
-    const post: PostsResponseType | string =
-      await this.queryPostsRepositories.findPostById(param.id);
+  async getPost(@Param() param: IdTypeForReq, @Req() req: Request) {
+    const post: PostsLikeResponseType | string =
+      await this.queryPostsRepositories.findPostWithLikeById(
+        param.id,
+        req.userId,
+      );
     if (post === 'not found') {
       throw new NotFoundException(notFoundPost);
     }
