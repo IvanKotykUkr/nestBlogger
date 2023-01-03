@@ -15,6 +15,7 @@ import {
   BodyTypeForPost,
   IdTypeForReq,
   PostsResponseType,
+  UpdateLikeDTO,
 } from '../posts.types';
 import { notFoundBlogger } from '../../bloggers/api/bloggers.controller';
 import { BasicAuthGuard } from '../../guards/basic.auth.guard';
@@ -93,6 +94,26 @@ export class PostsController {
       throw new NotFoundException(notFoundBlogger);
     }
     throw new NotFoundException(notFoundPost);
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('/:id/like-status')
+  @HttpCode(204)
+  async updateLikeStatus(
+    @Param() param: IdTypeForReq,
+    @Body() inputModel: UpdateLikeDTO,
+    @Req() req: Request,
+  ) {
+    const isUpdated = await this.postsService.updateLikeStatus(
+      param.id,
+      inputModel.likeStatus,
+      req.user.id,
+      req.user.login,
+    );
+    if (typeof isUpdated === 'string') {
+      throw new NotFoundException(notFoundPost);
+    }
+    return isUpdated;
   }
 
   @UseGuards(BasicAuthGuard)

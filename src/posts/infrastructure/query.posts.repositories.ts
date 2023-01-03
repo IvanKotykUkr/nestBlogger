@@ -8,10 +8,19 @@ import {
 } from '../posts.types';
 import { ObjectId } from 'mongodb';
 import { PostsDocument } from './repository/posts.mongoose.schema';
+import {
+  Likes,
+  LikesDocument,
+} from '../../comments/infrastructure/repository/likes.mongooose.schema';
+import { LikesHelper } from '../../comments/application/likes.helper';
 
 @Injectable()
 export class QueryPostsRepositories {
-  constructor(@InjectModel('posts') private PostModel: Model<PostsDocument>) {}
+  constructor(
+    @InjectModel('posts') private PostModel: Model<PostsDocument>,
+    @InjectModel(Likes.name) private LikesModel: Model<LikesDocument>,
+    protected likesHelper: LikesHelper,
+  ) {}
 
   resPost(post: PostsDBType): PostsResponseType {
     return {
@@ -70,6 +79,7 @@ export class QueryPostsRepositories {
   async getAllPostsWithPagination(
     number: number,
     size: number,
+    userId: ObjectId,
     blogId?: ObjectId,
   ): Promise<PostsResponseTypeWithPagination> {
     const totalCountSearch: number = await this.findPostsByIdBloggerCount(
@@ -83,7 +93,11 @@ export class QueryPostsRepositories {
       pagenumber,
       pagesize,
     );
-
+    const idItems = this.likesHelper.takeEntityId(itemsFromDb);
+    const likes = await this.likesHelper.findLikes(idItems);
+    const dislikes = await this.likesHelper.findDislike(idItems);
+    const status = await this.likesHelper.findStatus(userId, idItems);
+    const allLikes = await this.likesHelper.findLastThreLikes(idItems);
     const items = itemsFromDb.map((p) => ({
       id: p._id,
       title: p.title,
@@ -92,6 +106,15 @@ export class QueryPostsRepositories {
       blogId: p.blogId,
       blogName: p.blogName,
       addedAt: p.addedAt,
+      extendedLikesInfo: {
+        likesCount: this.likesHelper.findAmountLikeOrDislike(p._id, likes),
+        dislikesCount: this.likesHelper.findAmountLikeOrDislike(
+          p._id,
+          dislikes,
+        ),
+        myStatus: this.likesHelper.findStatusInArray(p._id, status),
+        newestLikes: this.likesHelper.groupAndSortLikes(allLikes, p._id),
+      },
     }));
     return {
       pagesCount: pagesCountSearch,

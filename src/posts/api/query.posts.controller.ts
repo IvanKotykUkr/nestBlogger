@@ -33,6 +33,7 @@ export class QueryPostsController {
     protected queryCommentsRepositories: QueryCommentsRepositories,
   ) {}
 
+  @UseGuards(LikesAuthGuard)
   @Get('/:id')
   async getPost(@Param() param: IdTypeForReq) {
     const post: PostsResponseType | string =
@@ -43,14 +44,16 @@ export class QueryPostsController {
     return post;
   }
 
+  @UseGuards(LikesAuthGuard)
   @Get('/')
-  async getPosts(@Query() query: QueryForPaginationType) {
+  async getPosts(@Query() query: QueryForPaginationType, @Req() req: Request) {
     const pageNumber = query.pageNumber || 1;
     const pageSize = query.pageSize || 10;
     const posts: PostsResponseTypeWithPagination =
       await this.queryPostsRepositories.getAllPostsWithPagination(
         pageNumber,
         pageSize,
+        req.userId,
       );
     return posts;
   }
