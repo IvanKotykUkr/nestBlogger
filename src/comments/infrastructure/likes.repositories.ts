@@ -58,10 +58,14 @@ export class LikesRepositories {
     userId: ObjectId,
     entityId: ArrayIdType,
   ): Promise<StatusLikeOrDislikeType> {
-    return this.LikesModel.find(
-      { $and: [{ entityId }, { userId }] },
+    console.log(entityId);
+    console.log(userId);
+    const b = await this.LikesModel.find(
+      { userId },
       { _id: 0, entityId: 1, status: 1 },
     ).lean();
+    console.log(b);
+    return b;
   }
 
   async findLastLikes(entityId: ArrayIdType): Promise<ArrayLikesType> {
