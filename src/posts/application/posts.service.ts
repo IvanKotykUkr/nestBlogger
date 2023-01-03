@@ -4,6 +4,7 @@ import { PostsResponseType } from '../posts.types';
 import { BloggersHelper } from '../../bloggers/application/bloggers.helper';
 import { ObjectId } from 'mongodb';
 import { PostsRepositories } from '../infrastructure/posts.repositories';
+import { LikesHelper } from '../../comments/application/likes.helper';
 
 @Injectable()
 export class PostsService {
@@ -11,6 +12,7 @@ export class PostsService {
     protected postsHelper: PostsHelper,
     protected bloggerHelper: BloggersHelper,
     protected postRepositories: PostsRepositories,
+    protected likesHelper: LikesHelper,
   ) {}
 
   async createPost(
@@ -60,5 +62,16 @@ export class PostsService {
 
   async deletePost(postId: ObjectId): Promise<boolean | string> {
     return this.postRepositories.deletePost(postId);
+  }
+
+  async updateLikeStatus(
+    id: ObjectId,
+    likeStatus: string,
+    userId: ObjectId,
+    login: string,
+  ) {
+    const post = await this.postRepositories.findPostById(id);
+    if (typeof post === 'string') return 'not found post';
+    return this.likesHelper.createLikeStatus(id, likeStatus, userId, login);
   }
 }

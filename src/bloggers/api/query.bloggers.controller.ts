@@ -4,11 +4,15 @@ import {
   NotFoundException,
   Param,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { BloggerResponseType, QueryForPaginationType } from '../bloggers.types';
 import { IdTypeForReq } from '../../posts/posts.types';
 import { QueryBloggersRepositories } from '../infrastructure/query.bloggers.repositories';
 import { QueryPostsRepositories } from '../../posts/infrastructure/query.posts.repositories';
+import { LikesAuthGuard } from '../../auth/application/adapters/guards/likes.auth.guard';
+import { Request } from 'express';
 
 export const notFoundBlogger = [
   {
@@ -49,10 +53,12 @@ export class QueryBloggersController {
     throw new NotFoundException(notFoundBlogger);
   }
 
+  @UseGuards(LikesAuthGuard)
   @Get('/:id/posts')
   async getPostByBlogger(
     @Param() param: IdTypeForReq,
     @Query() query: QueryForPaginationType,
+    @Req() req: Request,
   ) {
     const pageNumber = query.pageNumber || 1;
     const pageSize = query.pageSize || 10;
@@ -66,6 +72,7 @@ export class QueryBloggersController {
     return this.queryPostsRepositories.getAllPostsWithPagination(
       pageNumber,
       pageSize,
+      req.userId,
       param.id,
     );
   }

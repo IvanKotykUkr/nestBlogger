@@ -76,8 +76,29 @@ export type PostsResponseType = {
                                          
                                          */
 };
+
+export type PostsLikeResponseType = {
+  id?: ObjectId;
+  title: string;
+  shortDescription: string;
+  content: string;
+  blogId: ObjectId;
+  blogName: string;
+  addedAt: Date;
+  extendedLikesInfo: {
+    likesCount: number;
+    dislikesCount: number;
+    myStatus: string;
+    newestLikes: Array<{
+      addedAt?: Date;
+      userId?: ObjectId;
+      login?: string;
+    }>;
+  };
+};
 export type CheckBloggerType = {
   _id: ObjectId;
   name: string;
 };
-export type PostsResponseTypeWithPagination = PaginationType<PostsResponseType>;
+export type PostsResponseTypeWithPagination =
+  PaginationType<PostsLikeResponseType>;
