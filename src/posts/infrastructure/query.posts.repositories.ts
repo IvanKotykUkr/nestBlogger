@@ -32,7 +32,7 @@ export class QueryPostsRepositories {
       content: post.content,
       blogId: post.blogId,
       blogName: post.blogName,
-      addedAt: post.addedAt,
+      createdAt: post.addedAt,
     };
   }
 
@@ -107,7 +107,7 @@ export class QueryPostsRepositories {
       content: p.content,
       blogId: p.blogId,
       blogName: p.blogName,
-      addedAt: p.addedAt,
+      createdAt: p.addedAt,
       extendedLikesInfo: {
         likesCount: this.likesHelper.findAmountLikeOrDislike(p._id, likes),
         dislikesCount: this.likesHelper.findAmountLikeOrDislike(
@@ -155,7 +155,7 @@ export class QueryPostsRepositories {
       content: post.content,
       blogId: post.blogId,
       blogName: post.blogName,
-      addedAt: post.addedAt,
+      createdAt: post.addedAt,
       extendedLikesInfo: {
         likesCount,
         dislikesCount,

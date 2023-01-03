@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
   PostsDBType,
+  PostsLikeResponseType,
   PostsResponseType,
   PostUpdatedType,
 } from '../posts.types';
@@ -13,7 +14,7 @@ import { PostsDocument } from './repository/posts.mongoose.schema';
 export class PostsRepositories {
   constructor(@InjectModel('posts') private PostModel: Model<PostsDocument>) {}
 
-  resPost(post: PostsDBType): PostsResponseType {
+  resPost(post: PostsDBType): PostsLikeResponseType {
     return {
       id: post._id,
       title: post.title,
@@ -21,7 +22,13 @@ export class PostsRepositories {
       content: post.content,
       blogId: post.blogId,
       blogName: post.blogName,
-      addedAt: post.addedAt,
+      createdAt: post.addedAt,
+      extendedLikesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: 'None',
+        newestLikes: [],
+      },
     };
   }
 
