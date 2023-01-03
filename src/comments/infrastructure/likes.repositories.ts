@@ -20,12 +20,17 @@ export class LikesRepositories {
   async findStatus(
     userId: ObjectId,
     entityId: ObjectId,
-  ): Promise<LikesDocument> {
-    return this.LikesModel.findOne({ $and: [{ entityId }, { userId }] });
+  ): Promise<LikesDocument | boolean> {
+    const like = await this.LikesModel.findOne({
+      $and: [{ entityId }, { userId }],
+    });
+    if (like) return like;
+    return false;
   }
 
   async save(like: LikesDocument) {
     await like.save();
+    return;
   }
 
   async createStatus(likeDTO: LikeDbType) {
@@ -78,8 +83,7 @@ export class LikesRepositories {
   }
 
   async deleteStatus(like: LikesDocument) {
-    like.deleteOne();
-    await like.save();
+    await like.deleteOne();
     return;
   }
 }

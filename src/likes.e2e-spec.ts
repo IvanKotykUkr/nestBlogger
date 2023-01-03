@@ -265,7 +265,7 @@ describe('Users', () => {
   it('Get Comment', async () => {
     const res = await request(app.getHttpServer())
       .get('/comments/' + firstComment.id.toString())
-      .set('Authorization', `Bearer ${tokensForSecondUser.accessToken}`)
+      .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
       .expect(200)
       .expect({
         id: firstComment.id,
@@ -276,21 +276,29 @@ describe('Users', () => {
         likesInfo: {
           likesCount: 1,
           dislikesCount: 0,
-          myStatus: 'None',
+          myStatus: 'Like',
         },
       });
   });
   it('Dislike Second comment', async () => {
     const res = await request(app.getHttpServer())
       .put('/comments/' + firstComment.id.toString() + '/like-status')
-      .set('Authorization', `Bearer ${tokensForSecondUser.accessToken}`)
+      .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
       .send({
         likeStatus: 'Dislike',
       })
       .expect(204);
   });
+  it('None Second comment', async () => {
+    const res = await request(app.getHttpServer())
+      .put('/comments/' + firstComment.id.toString() + '/like-status')
+      .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
+      .send({
+        likeStatus: 'None',
+      })
+      .expect(204);
+  });
   it('Get Comment', async () => {
-    console.log('after');
     const res = await request(app.getHttpServer())
       .get('/comments/' + firstComment.id.toString())
       .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
@@ -302,9 +310,9 @@ describe('Users', () => {
         userLogin: firstUser.login,
         createdAt: firstComment.createdAt,
         likesInfo: {
-          likesCount: 1,
-          dislikesCount: 1,
-          myStatus: 'Like',
+          likesCount: 0,
+          dislikesCount: 0,
+          myStatus: 'None',
         },
       });
   });

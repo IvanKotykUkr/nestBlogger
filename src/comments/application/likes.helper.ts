@@ -29,7 +29,7 @@ export class LikesHelper {
       entityId,
     );
 
-    if (checkStatus) {
+    if (typeof checkStatus !== 'boolean') {
       return this.compareStatus(checkStatus, likeStatus);
     }
     const likeDTO = this.createLikeDTO(entityId, likeStatus, userId, login);
@@ -124,11 +124,11 @@ export class LikesHelper {
     idItems: ArrayIdType,
   ): Promise<StatusLikeOrDislikeType> {
     /* if (id.toString() === '63ab296b882037600d1ce455') {
-                       return [];
-                     } else {
-                 
-                 
-                     */
+                                   return [];
+                                 } else {
+                             
+                             
+                                 */
     return this.likesRepositories.findStatusArr(id, idItems);
   }
 
