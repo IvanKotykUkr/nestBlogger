@@ -80,5 +80,6 @@ export class LikesRepositories {
   async deleteStatus(like: LikesDocument) {
     like.deleteOne();
     await like.save();
+    return;
   }
 }
