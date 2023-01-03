@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import {
+  NewestLike,
   PostsDBType,
+  PostsLikeResponseType,
   PostsResponseType,
   PostsResponseTypeWithPagination,
 } from '../posts.types';
@@ -123,5 +125,57 @@ export class QueryPostsRepositories {
       totalCount: totalCountSearch,
       items,
     };
+  }
+
+  async findPostWithLikeById(
+    _id: ObjectId,
+    userId: ObjectId,
+  ): Promise<PostsLikeResponseType | string> {
+    const post = await this.PostModel.findById(_id);
+    if (!post) return 'not found';
+    const likesCount = await this.LikesModel.countDocuments({
+      $and: [{ entityId: post.id }, { status: 'Like' }],
+    });
+    const dislikesCount = await this.LikesModel.countDocuments({
+      $and: [{ entityId: post.id }, { status: 'Dislike' }],
+    });
+    let myStatus;
+    const status = await this.LikesModel.findOne({
+      $and: [{ entityId: post.id }, { userId }],
+    });
+    if (status) {
+      myStatus = status.status;
+    } else {
+      myStatus = 'None';
+    }
+    return {
+      id: post.id,
+      title: post.title,
+      shortDescription: post.shortDescription,
+      content: post.content,
+      blogId: post.blogId,
+      blogName: post.blogName,
+      addedAt: post.addedAt,
+      extendedLikesInfo: {
+        likesCount,
+        dislikesCount,
+        myStatus,
+        newestLikes: await this.newestLike(post.id),
+      },
+    };
+  }
+
+  private async newestLike(post: ObjectId): Promise<NewestLike[]> {
+    const likeInstance = await this.LikesModel.find({
+      $and: [{ entityId: post }, { status: 'Like' }],
+    })
+      .sort({ addedAt: -1 })
+      .limit(3)
+      .lean();
+    return likeInstance.map((d) => ({
+      addedAt: d.addedAt,
+      userId: d.userId,
+      login: d.login,
+    }));
   }
 }
