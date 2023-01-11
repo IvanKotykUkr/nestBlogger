@@ -66,13 +66,16 @@ export class QueryPostsRepositories {
     blogId: undefined | ObjectId,
     number: number,
     size: number,
+    sortBy: string,
+    sortDirection: string,
   ): Promise<PostsDBType[]> {
     const filter = await this.paginationFilter(blogId);
-
+    const direction = this.getDirection(sortDirection);
     return (
       this.PostModel.find(filter)
         //.skip((number - 1) * size)
         .skip(number > 0 ? (number - 1) * size : 0)
+        .sort({ [sortBy]: direction })
         .limit(size)
         .lean()
     );
@@ -82,6 +85,8 @@ export class QueryPostsRepositories {
     number: number,
     size: number,
     userId: ObjectId,
+    sortBy: string,
+    sortDirection: string,
     blogId?: ObjectId,
   ): Promise<PostsResponseTypeWithPagination> {
     const totalCountSearch: number = await this.findPostsByIdBloggerCount(
@@ -94,6 +99,8 @@ export class QueryPostsRepositories {
       blogId,
       pagenumber,
       pagesize,
+      sortBy,
+      sortDirection,
     );
     const idItems = this.likesHelper.takeEntityId(itemsFromDb);
     const likes = await this.likesHelper.findLikes(idItems);
@@ -177,5 +184,14 @@ export class QueryPostsRepositories {
       userId: d.userId,
       login: d.login,
     }));
+  }
+
+  private getDirection(sortDirection: string) {
+    if (sortDirection.toString() === 'asc') {
+      return 1;
+    }
+    if (sortDirection.toString() === 'desc') {
+      return -1;
+    }
   }
 }

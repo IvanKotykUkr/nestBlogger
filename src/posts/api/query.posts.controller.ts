@@ -52,11 +52,15 @@ export class QueryPostsController {
   async getPosts(@Query() query: QueryForPaginationType, @Req() req: Request) {
     const pageNumber = query.pageNumber || 1;
     const pageSize = query.pageSize || 10;
+    const sortByQuery = query.sortBy || 'createdAt';
+    const sortDirectionQuery = query.sortDirection || 'desc';
     const posts: PostsResponseTypeWithPagination =
       await this.queryPostsRepositories.getAllPostsWithPagination(
         pageNumber,
         pageSize,
         req.userId,
+        sortByQuery,
+        sortDirectionQuery,
       );
     return posts;
   }
