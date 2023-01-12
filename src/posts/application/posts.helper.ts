@@ -18,7 +18,7 @@ export class PostsHelper {
       content: content,
       blogId,
       blogName,
-      addedAt: new Date(),
+      createdAt: new Date(),
     };
     return newPost;
   }

@@ -45,7 +45,7 @@ export type PostsDBType = {
   content: string;
   blogId: ObjectId;
   blogName: string;
-  addedAt: Date;
+  createdAt: Date;
 };
 export type PostUpdatedType = {
   _id: ObjectId;
@@ -64,17 +64,17 @@ export type PostsResponseType = {
   blogName: string;
   createdAt: Date;
   /* extendedLikesInfo: {
-                                                   likesCount: number;
-                                                   dislikesCount: number;
-                                                   myStatus: string;
-                                                   newestLikes: Array<{
-                                                     addedAt?: Date;
-                                                     userId?: ObjectId;
-                                                     login?: string;
-                                                   }>;
-                                                 };
-                                                 
-                                                 */
+                                                     likesCount: number;
+                                                     dislikesCount: number;
+                                                     myStatus: string;
+                                                     newestLikes: Array<{
+                                                       addedAt?: Date;
+                                                       userId?: ObjectId;
+                                                       login?: string;
+                                                     }>;
+                                                   };
+                                                   
+                                                   */
 };
 
 export type PostsLikeResponseType = {
