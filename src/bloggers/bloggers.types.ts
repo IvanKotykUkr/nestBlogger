@@ -1,13 +1,13 @@
 import { IsUrl, Length } from 'class-validator';
 import { ObjectId } from 'mongodb';
 
-export class QueryForPaginationType {
+export type QueryForPaginationType = {
   searchNameTerm: string;
   pageNumber: number;
   pageSize: number;
   sortBy: string;
   sortDirection: string;
-}
+};
 
 export class BodyForCreateBloggerType {
   @Length(4, 15)

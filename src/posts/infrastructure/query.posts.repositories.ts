@@ -32,7 +32,7 @@ export class QueryPostsRepositories {
       content: post.content,
       blogId: post.blogId,
       blogName: post.blogName,
-      createdAt: post.addedAt,
+      createdAt: post.createdAt,
     };
   }
 
@@ -73,12 +73,15 @@ export class QueryPostsRepositories {
     const direction = this.getDirection(sortDirection);
     return (
       this.PostModel.find(filter)
+        .sort({ sortBy: direction })
         //.skip((number - 1) * size)
         .skip(number > 0 ? (number - 1) * size : 0)
-        .sort({ [sortBy]: direction })
+
         .limit(size)
-        .lean()
+        .exec()
     );
+
+    //   return posts.sort(this.compareValues(sortBy, sortDirection));
   }
 
   async getAllPostsWithPagination(
@@ -102,6 +105,7 @@ export class QueryPostsRepositories {
       sortBy,
       sortDirection,
     );
+
     const idItems = this.likesHelper.takeEntityId(itemsFromDb);
     const likes = await this.likesHelper.findLikes(idItems);
     const dislikes = await this.likesHelper.findDislike(idItems);
@@ -114,7 +118,7 @@ export class QueryPostsRepositories {
       content: p.content,
       blogId: p.blogId,
       blogName: p.blogName,
-      createdAt: p.addedAt,
+      createdAt: p.createdAt,
       extendedLikesInfo: {
         likesCount: this.likesHelper.findAmountLikeOrDislike(p._id, likes),
         dislikesCount: this.likesHelper.findAmountLikeOrDislike(
@@ -162,7 +166,7 @@ export class QueryPostsRepositories {
       content: post.content,
       blogId: post.blogId,
       blogName: post.blogName,
-      createdAt: post.addedAt,
+      createdAt: post.createdAt,
       extendedLikesInfo: {
         likesCount,
         dislikesCount,
@@ -186,7 +190,7 @@ export class QueryPostsRepositories {
     }));
   }
 
-  private getDirection(sortDirection: string) {
+  private getDirection(sortDirection: string): 1 | -1 {
     if (sortDirection.toString() === 'asc') {
       return 1;
     }

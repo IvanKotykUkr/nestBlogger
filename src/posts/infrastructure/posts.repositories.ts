@@ -22,7 +22,7 @@ export class PostsRepositories {
       content: post.content,
       blogId: post.blogId,
       blogName: post.blogName,
-      createdAt: post.addedAt,
+      createdAt: post.createdAt,
       extendedLikesInfo: {
         likesCount: 0,
         dislikesCount: 0,
@@ -40,7 +40,7 @@ export class PostsRepositories {
     postsInstance.content = newPost.content;
     postsInstance.blogId = newPost.blogId;
     postsInstance.blogName = newPost.blogName;
-    postsInstance.addedAt = new Date();
+    postsInstance.createdAt = new Date();
     await postsInstance.save();
     return this.resPost(postsInstance);
   }
