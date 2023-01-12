@@ -62,6 +62,8 @@ export class QueryBloggersController {
   ) {
     const pageNumber = query.pageNumber || 1;
     const pageSize = query.pageSize || 10;
+    const sortByQuery = query.sortBy || 'createdAt';
+    const sortDirectionQuery = query.sortDirection || 'desc';
     const blogger = await this.queryBloggersRepositories.findBloggerById(
       param.id,
     );
@@ -73,6 +75,8 @@ export class QueryBloggersController {
       pageNumber,
       pageSize,
       req.userId,
+      sortByQuery,
+      sortDirectionQuery,
       param.id,
     );
   }
