@@ -73,7 +73,7 @@ export class QueryPostsRepositories {
     const direction = this.getDirection(sortDirection);
     return (
       this.PostModel.find(filter)
-        .sort({ sortBy: direction })
+        .sort({ [sortBy]: direction })
         //.skip((number - 1) * size)
         .skip(number > 0 ? (number - 1) * size : 0)
 
