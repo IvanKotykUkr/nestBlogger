@@ -105,12 +105,14 @@ export class QueryPostsRepositories {
       sortBy,
       sortDirection,
     );
+    const zoriana = 'dfs';
 
     const idItems = this.likesHelper.takeEntityId(itemsFromDb);
     const likes = await this.likesHelper.findLikes(idItems);
     const dislikes = await this.likesHelper.findDislike(idItems);
     const status = await this.likesHelper.findStatus(userId, idItems);
     const allLikes = await this.likesHelper.findLastThreLikes(idItems);
+    console.log(allLikes);
     const items = itemsFromDb.map((p) => ({
       id: p._id,
       title: p.title,
