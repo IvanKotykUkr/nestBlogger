@@ -41,7 +41,9 @@ export class LikesRepositories {
 
   async findLikesInDb(entityId: ArrayIdType): Promise<LikeOrDislikeIdType> {
     const comments = await this.LikesModel.find(
-      { status: 'Like' },
+      { $and: [{ $in: { entityId: entityId } }, { status: 'Like' }] },
+
+      //{ status: 'Like' },
       { _id: 0, entityId: 1 },
     ).lean();
     return comments;
@@ -49,7 +51,8 @@ export class LikesRepositories {
 
   async findDislikeInDb(entityId: ArrayIdType): Promise<LikeOrDislikeIdType> {
     return this.LikesModel.find(
-      { status: 'Dislike' },
+      { $and: [{ $in: { entityId: entityId } }, { status: 'Dislike' }] },
+      //{ status: 'Dislike' },
       { _id: 0, entityId: 1 },
     ).lean();
   }
@@ -59,7 +62,8 @@ export class LikesRepositories {
     entityId: ArrayIdType,
   ): Promise<StatusLikeOrDislikeType> {
     const b = await this.LikesModel.find(
-      { userId },
+      { $and: [{ $in: { entityId: entityId } }, { userId }] },
+      //{ userId },
       { _id: 0, entityId: 1, status: 1 },
     ).lean();
     return b;
@@ -68,7 +72,8 @@ export class LikesRepositories {
   async findLastLikes(entityId: ArrayIdType): Promise<ArrayLikesType> {
     return (
       this.LikesModel.find(
-        { $and: [{ entityId }, { status: 'Like' }] },
+        { $and: [{ $in: { entityId: entityId } }, { status: 'Like' }] },
+        //{ $and: [{ $elemMatch: { entityId: entityId } }, { status: 'Like' }] },
         {
           _id: 0,
           entityId: 1,
