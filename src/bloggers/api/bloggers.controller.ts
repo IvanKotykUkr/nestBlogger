@@ -10,13 +10,18 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  BloggerType,
   BodyForCreateBloggerType,
   BodyForUpdateBloggerType,
 } from '../bloggers.types';
 import { BloggersService } from '../application/bloggers.service';
 import { BodyTypeForPostBlogger, IdTypeForReq } from '../../posts/posts.types';
 import { BasicAuthGuard } from '../../guards/basic.auth.guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateBloggerCommand } from '../application/use.case/create.blogger.use.case';
+import { UpdateBloggerCommand } from '../application/use.case/update.blogger.use.case';
+import { DeleteBloggerCommand } from '../application/use.case/delete.blogger.use.case';
+import { FindBloggerCommand } from '../application/use.case/find.blogger.use.case';
+import { CreatePostCommand } from '../../posts/application/use.case/create.post.use.case';
 
 export const notFoundBlogger = [
   {
@@ -27,21 +32,22 @@ export const notFoundBlogger = [
 
 @Controller('/blogs')
 export class BloggersController {
-  constructor(protected bloggersService: BloggersService) {}
+  constructor(
+    protected bloggersService: BloggersService,
+    protected commandBus: CommandBus,
+  ) {}
 
   @UseGuards(BasicAuthGuard)
   @Post()
   @HttpCode(201)
   async createBlogger(@Body() inputModel: BodyForCreateBloggerType) {
-    const name = inputModel.name;
-    const websiteUrl = inputModel.websiteUrl;
-    const description = inputModel.description;
-    const newBlogger: BloggerType = await this.bloggersService.createBlogger(
-      name,
-      websiteUrl,
-      description,
+    return this.commandBus.execute(
+      new CreateBloggerCommand(
+        inputModel.name,
+        inputModel.websiteUrl,
+        inputModel.description,
+      ),
     );
-    return newBlogger;
   }
 
   @UseGuards(BasicAuthGuard)
@@ -51,11 +57,13 @@ export class BloggersController {
     @Param() param: IdTypeForReq,
     @Body() inputModel: BodyForUpdateBloggerType,
   ) {
-    const isUpdated = await this.bloggersService.updateBlogger(
-      param.id,
-      inputModel.name,
-      inputModel.websiteUrl,
-      inputModel.description,
+    const isUpdated = await this.commandBus.execute(
+      new UpdateBloggerCommand(
+        param.id,
+        inputModel.name,
+        inputModel.websiteUrl,
+        inputModel.description,
+      ),
     );
     if (isUpdated) {
       return isUpdated;
@@ -67,8 +75,8 @@ export class BloggersController {
   @Delete('/:id')
   @HttpCode(204)
   async deleteBlogger(@Param() param: IdTypeForReq) {
-    const isDeleited: boolean = await this.bloggersService.deleteBlogger(
-      param.id,
+    const isDeleited: boolean = await this.commandBus.execute(
+      new DeleteBloggerCommand(param.id),
     );
     if (isDeleited) {
       return isDeleited;
@@ -82,16 +90,21 @@ export class BloggersController {
     @Param() param: IdTypeForReq,
     @Body() inputModel: BodyTypeForPostBlogger,
   ) {
-    const blogger = await this.bloggersService.findBloggerById(param.id);
+    const blogger = await this.commandBus.execute(
+      new FindBloggerCommand(param.id),
+    );
     if (blogger === 'not found') {
       throw new NotFoundException(notFoundBlogger);
     }
 
-    return this.bloggersService.createPosts(
-      param.id,
-      inputModel.title,
-      inputModel.shortDescription,
-      inputModel.content,
+    return this.commandBus.execute(
+      new CreatePostCommand(
+        blogger.id,
+        inputModel.title,
+        inputModel.shortDescription,
+        inputModel.content,
+        blogger.name,
+      ),
     );
   }
 }

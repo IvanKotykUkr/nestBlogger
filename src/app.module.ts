@@ -56,6 +56,12 @@ import {
 import { LikesRepositories } from './comments/infrastructure/likes.repositories';
 import { LikesHelper } from './comments/application/likes.helper';
 import { LikesAuthGuard } from './auth/application/adapters/guards/likes.auth.guard';
+import { CqrsModule } from '@nestjs/cqrs';
+import { CreateBloggerUseCase } from './bloggers/application/use.case/create.blogger.use.case';
+import { DeleteBloggerUseCase } from './bloggers/application/use.case/delete.blogger.use.case';
+import { UpdateBloggerUseCase } from './bloggers/application/use.case/update.blogger.use.case';
+import { FindBloggerUseCase } from './bloggers/application/use.case/find.blogger.use.case';
+import { CreatePostUseCase } from './posts/application/use.case/create.post.use.case';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -105,6 +111,13 @@ const blogger = [
   BloggersRepositories,
   QueryBloggersRepositories,
 ];
+const bloggerUseCase = [
+  CreateBloggerUseCase,
+  DeleteBloggerUseCase,
+  UpdateBloggerUseCase,
+  FindBloggerUseCase,
+];
+const postUseCase = [CreatePostUseCase];
 const mongooseModule = [
   ConfigModule.forRoot(),
   MongooseModule.forRoot(
@@ -126,6 +139,7 @@ const mongooseModule = [
 
 @Module({
   imports: [
+    CqrsModule,
     ...mongooseModule,
     MailerModule.forRootAsync({
       useFactory: () => ({
@@ -159,6 +173,8 @@ const mongooseModule = [
     ...post,
     ...comment,
     ...user,
+    ...bloggerUseCase,
+    ...postUseCase,
     DeviceGuards,
     GuardHelper,
     JwtService,

@@ -11,18 +11,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from '../application/posts.service';
-import {
-  BodyTypeForPost,
-  IdTypeForReq,
-  PostsResponseType,
-  UpdateLikeDTO,
-} from '../posts.types';
+import { BodyTypeForPost, IdTypeForReq, UpdateLikeDTO } from '../posts.types';
 import { notFoundBlogger } from '../../bloggers/api/bloggers.controller';
 import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 import { CommentsService } from '../../comments/application/comments.service';
 import { BodyForComments } from '../../comments/comments.types';
 import { AuthGuard } from '../../auth/application/adapters/guards/auth.guard';
 import { Request } from 'express';
+import { CommandBus } from '@nestjs/cqrs';
+import { FindBloggerCommand } from '../../bloggers/application/use.case/find.blogger.use.case';
+import { CreatePostCommand } from '../application/use.case/create.post.use.case';
 
 export const notFoundPost = [
   {
@@ -34,6 +32,7 @@ export const notFoundPost = [
 @Controller('/posts')
 export class PostsController {
   constructor(
+    protected commandBus: CommandBus,
     protected postsService: PostsService,
     protected commentsService: CommentsService,
   ) {}
@@ -60,17 +59,22 @@ export class PostsController {
   @UseGuards(BasicAuthGuard)
   @Post('/')
   async createPost(@Body() inputModel: BodyTypeForPost) {
-    const newPost: PostsResponseType | string =
-      await this.postsService.createPost(
+    const blogger = await this.commandBus.execute(
+      new FindBloggerCommand(inputModel.blogId),
+    );
+    if (blogger === 'not found') {
+      throw new NotFoundException(notFoundBlogger);
+    }
+
+    return this.commandBus.execute(
+      new CreatePostCommand(
+        blogger.id,
         inputModel.title,
         inputModel.shortDescription,
         inputModel.content,
-        inputModel.blogId,
-      );
-    if (typeof newPost !== 'string') {
-      return newPost;
-    }
-    throw new NotFoundException(notFoundBlogger);
+        blogger.name,
+      ),
+    );
   }
 
   @UseGuards(BasicAuthGuard)

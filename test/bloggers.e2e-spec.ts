@@ -6,8 +6,8 @@ import {
   INestApplication,
   ValidationPipe,
 } from '@nestjs/common';
-import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './exeption.filter';
+import { AppModule } from '../src/app.module';
+import { HttpExceptionFilter } from '../src/exeption.filter';
 import cookieParser from 'cookie-parser';
 
 jest.setTimeout(60_0000);
@@ -17,18 +17,21 @@ describe('Bloggers', () => {
     id: '',
     name: 'Nadya',
     websiteUrl: 'https://www.youtube.com/watch?v=ez9s2N_Ra9U',
+    description: 'sdadas',
     createdAt: '',
   };
   const bloggerForTest2 = {
     id: '',
     name: 'Olya',
     websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
+    description: 'sdadas',
     createdAt: '',
   };
   const bedBloggerForTest = {
     id: '',
     name: 'Ncdfgdhfhtdghgdfhfhgdfhfdhdadyadhfjdytdfkmfjhgjh',
     websiteUrl: '11',
+    description: 'sdadas',
     createdAt: '',
   };
 
@@ -36,24 +39,28 @@ describe('Bloggers', () => {
     id: '',
     name: 'Masha',
     websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra1U',
+    description: 'sdasddas',
     createdAt: '',
   };
   const bloggerForTestPagination1 = {
     id: '',
     name: 'Dasha',
     websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra2U',
+    description: 'sdadsanas',
     createdAt: '',
   };
   const bloggerForTestPagination2 = {
     id: '',
     name: 'Pasha',
     websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra3U',
+    description: 'sdadak,ks',
     createdAt: '',
   };
   const bloggerForTestPagination3 = {
     id: '',
     name: 'Ivan',
     websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra4U',
+    description: 'sdadagyks',
     createdAt: '',
   };
   beforeAll(async () => {
@@ -92,10 +99,11 @@ describe('Bloggers', () => {
 
   it('Create Blogger for pagination ', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers')
+      .post('/blogs/')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTestPagination.name,
+        description: bloggerForTestPagination.description,
         websiteUrl: bloggerForTestPagination.websiteUrl,
       })
       .expect(201);
@@ -105,10 +113,11 @@ describe('Bloggers', () => {
   });
   it('Create Blogger for pagination ', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers')
+      .post('/blogs')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTestPagination1.name,
+        description: bloggerForTestPagination1.description,
         websiteUrl: bloggerForTestPagination1.websiteUrl,
       })
       .expect(201);
@@ -117,10 +126,11 @@ describe('Bloggers', () => {
   });
   it('Create Blogger for pagination ', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers')
+      .post('/blogs')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTestPagination2.name,
+        description: bloggerForTestPagination2.description,
         websiteUrl: bloggerForTestPagination2.websiteUrl,
       })
       .expect(201);
@@ -129,10 +139,11 @@ describe('Bloggers', () => {
   });
   it('Create Blogger for pagination ', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers')
+      .post('/blogs')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTestPagination3.name,
+        description: bloggerForTestPagination3.description,
         websiteUrl: bloggerForTestPagination3.websiteUrl,
       })
       .expect(201);
@@ -141,7 +152,7 @@ describe('Bloggers', () => {
   });
   it(`/Get Blogger with Pagination`, () => {
     return request(app.getHttpServer())
-      .get('/bloggers')
+      .get('/blogs')
       .expect(200)
       .expect({
         pagesCount: 1,
@@ -153,24 +164,28 @@ describe('Bloggers', () => {
             id: bloggerForTestPagination.id,
             name: bloggerForTestPagination.name,
             websiteUrl: bloggerForTestPagination.websiteUrl,
+            description: bloggerForTestPagination.description,
             createdAt: bloggerForTestPagination.createdAt,
           },
           {
             id: bloggerForTestPagination1.id,
             name: bloggerForTestPagination1.name,
             websiteUrl: bloggerForTestPagination1.websiteUrl,
+            description: bloggerForTestPagination1.description,
             createdAt: bloggerForTestPagination1.createdAt,
           },
           {
             id: bloggerForTestPagination2.id,
             name: bloggerForTestPagination2.name,
             websiteUrl: bloggerForTestPagination2.websiteUrl,
+            description: bloggerForTestPagination2.description,
             createdAt: bloggerForTestPagination2.createdAt,
           },
           {
             id: bloggerForTestPagination3.id,
             name: bloggerForTestPagination3.name,
             websiteUrl: bloggerForTestPagination3.websiteUrl,
+            description: bloggerForTestPagination3.description,
             createdAt: bloggerForTestPagination3.createdAt,
           },
         ],
@@ -178,9 +193,9 @@ describe('Bloggers', () => {
   });
   it(`/Get Blogger with Pagination`, () => {
     return request(app.getHttpServer())
-      .get('/bloggers')
-      .query({ PageSize: '2' })
-      .query({ PageNumber: '2' })
+      .get('/blogs')
+      .query({ pageSize: '2' })
+      .query({ pageNumber: '2' })
 
       .expect(200)
       .expect({
@@ -193,12 +208,14 @@ describe('Bloggers', () => {
             id: bloggerForTestPagination2.id,
             name: bloggerForTestPagination2.name,
             websiteUrl: bloggerForTestPagination2.websiteUrl,
+            description: bloggerForTestPagination2.description,
             createdAt: bloggerForTestPagination2.createdAt,
           },
           {
             id: bloggerForTestPagination3.id,
             name: bloggerForTestPagination3.name,
             websiteUrl: bloggerForTestPagination3.websiteUrl,
+            description: bloggerForTestPagination3.description,
             createdAt: bloggerForTestPagination3.createdAt,
           },
         ],
@@ -207,10 +224,11 @@ describe('Bloggers', () => {
 
   it('Create Blogger ', async () => {
     await request(app.getHttpServer())
-      .post('/bloggers')
+      .post('/blogs')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bedBloggerForTest.name,
+        description: bedBloggerForTest.description,
         websiteUrl: bedBloggerForTest.websiteUrl,
       })
       .expect(400)
@@ -230,10 +248,11 @@ describe('Bloggers', () => {
 
   it('Create Blogger ', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers')
+      .post('/blogs')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTest1.name,
+        description: bloggerForTest1.description,
         websiteUrl: bloggerForTest1.websiteUrl,
       })
       .expect(201);
@@ -247,20 +266,22 @@ describe('Bloggers', () => {
 
   it('Update Blogger', async () => {
     await request(app.getHttpServer())
-      .put('/bloggers/' + bloggerForTest1.id.toString())
+      .put('/blogs/' + bloggerForTest1.id.toString())
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTest2.name,
+        description: bloggerForTest2.description,
         websiteUrl: bloggerForTest2.websiteUrl,
       })
       .expect(204);
   });
   it('Update Blogger', async () => {
     await request(app.getHttpServer())
-      .put('/bloggers/' + bloggerForTest1.id.toString())
+      .put('/blogs/' + bloggerForTest1.id.toString())
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bedBloggerForTest.name,
+        description: bedBloggerForTest.description,
         websiteUrl: bedBloggerForTest.websiteUrl,
       })
       .expect(400)
@@ -279,21 +300,23 @@ describe('Bloggers', () => {
   });
   it(`/Get Blogger`, () => {
     return request(app.getHttpServer())
-      .get('/bloggers/' + bloggerForTest1.id.toString())
+      .get('/blogs/' + bloggerForTest1.id.toString())
       .expect(200)
       .expect({
         id: bloggerForTest1.id,
         name: bloggerForTest2.name,
         websiteUrl: bloggerForTest2.websiteUrl,
+        description: bloggerForTest2.description,
         createdAt: bloggerForTest1.createdAt,
       });
   });
   it('Create Blogger ', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers')
+      .post('/blogs')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: bloggerForTest2.name,
+        description: bloggerForTest2.description,
         websiteUrl: bloggerForTest2.websiteUrl,
       })
       .expect(201);
@@ -306,36 +329,37 @@ describe('Bloggers', () => {
   });
   it(`/Get Blogger`, () => {
     return request(app.getHttpServer())
-      .get('/bloggers/' + bloggerForTest2.id.toString())
+      .get('/blogs/' + bloggerForTest2.id.toString())
       .expect(200)
       .expect({
         id: bloggerForTest2.id,
         name: bloggerForTest2.name,
         websiteUrl: bloggerForTest2.websiteUrl,
+        description: bloggerForTest2.description,
         createdAt: bloggerForTest2.createdAt,
       });
   });
   it('Delete Blogger', async () => {
     await request(app.getHttpServer())
-      .delete('/bloggers/' + bloggerForTest2.id.toString())
+      .delete('/blogs/' + bloggerForTest2.id.toString())
       .expect(401);
   });
   it('Delete Blogger', async () => {
     await request(app.getHttpServer())
-      .delete('/bloggers/' + bloggerForTest2.id.toString())
+      .delete('/blogs/' + bloggerForTest2.id.toString())
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .expect(204);
   });
   it('Delete Blogger', async () => {
     await request(app.getHttpServer())
-      .delete('/bloggers/' + bloggerForTest2.id.toString())
+      .delete('/blogs/' + bloggerForTest2.id.toString())
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .expect(404);
   });
 
   it(`/Get Blogger`, () => {
     return request(app.getHttpServer())
-      .get('/bloggers/' + bloggerForTest2.id.toString())
+      .get('/blogs/' + bloggerForTest2.id.toString())
       .expect(404);
   });
   it('Delete all', async () => {

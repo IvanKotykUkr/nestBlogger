@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { PostsHelper } from './posts.helper';
-import { PostsResponseType } from '../posts.types';
 import { BloggersHelper } from '../../bloggers/application/bloggers.helper';
 import { ObjectId } from 'mongodb';
 import { PostsRepositories } from '../infrastructure/posts.repositories';
@@ -14,29 +13,6 @@ export class PostsService {
     protected postRepositories: PostsRepositories,
     protected likesHelper: LikesHelper,
   ) {}
-
-  async createPost(
-    title: string,
-    shortDescription: string,
-    content: string,
-    blogId: ObjectId,
-  ): Promise<PostsResponseType | string> {
-    const blogger = await this.bloggerHelper.checkBlogger(blogId);
-    if (typeof blogger === 'string') return 'not find blogger';
-    const madePost = this.postsHelper.makePost(
-      title,
-      shortDescription,
-      content,
-      blogger._id,
-      blogger.name,
-    );
-
-    const post: PostsResponseType = await this.postRepositories.createPost(
-      madePost,
-    );
-    return post;
-    //return this.postsHelper.makePostResponse(post);
-  }
 
   async updatePost(
     postId: ObjectId,
