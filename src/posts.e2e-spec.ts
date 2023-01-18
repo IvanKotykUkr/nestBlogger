@@ -96,7 +96,7 @@ describe('Posts', () => {
   });
   it('Create Blogger ', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers')
+      .post('/blogs')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: blogger.name,
@@ -112,7 +112,7 @@ describe('Posts', () => {
   });
   it('Create Different Blogger ', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers')
+      .post('/blogs')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: differentBlogger.name,
@@ -128,7 +128,7 @@ describe('Posts', () => {
   });
   it('Create Post', async () => {
     await request(app.getHttpServer())
-      .post('/bloggers/' + blogger.id.toString() + '/posts')
+      .post('/blogs/' + blogger.id.toString() + '/posts')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         title: bedPost.title,
@@ -156,7 +156,7 @@ describe('Posts', () => {
   });
   it('Create Post', async () => {
     await request(app.getHttpServer())
-      .post('/bloggers/' + blogger.id.toString() + '/posts')
+      .post('/blogs/' + blogger.id.toString() + '/posts')
 
       .send({
         title: bedPost.title,
@@ -167,7 +167,7 @@ describe('Posts', () => {
   });
   it('should be 404 not correct id', async () => {
     await request(app.getHttpServer())
-      .post('/bloggers/' + new ObjectId() + '/posts')
+      .post('/blogs/' + new ObjectId() + '/posts')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         title: secondPost.title,
@@ -178,7 +178,7 @@ describe('Posts', () => {
   });
   it('Create Post for blogger', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers/' + blogger.id.toString() + '/posts')
+      .post('/blogs/' + blogger.id.toString() + '/posts')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         title: secondPost.title,
@@ -198,7 +198,7 @@ describe('Posts', () => {
   });
   it('Create Post for blogger', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers/' + blogger.id.toString() + '/posts')
+      .post('/blogs/' + blogger.id.toString() + '/posts')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         title: firstPost.title,
@@ -218,7 +218,7 @@ describe('Posts', () => {
   });
   it('Create Post for different blogger', async () => {
     const res = await request(app.getHttpServer())
-      .post('/bloggers/' + differentBlogger.id.toString() + '/posts')
+      .post('/blogs/' + differentBlogger.id.toString() + '/posts')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         title: differentPost.title,
@@ -238,7 +238,7 @@ describe('Posts', () => {
   });
   it('Get post by blogger', async () => {
     await request(app.getHttpServer())
-      .get('/bloggers/' + blogger.id.toString() + '/posts')
+      .get('/blogs/' + blogger.id.toString() + '/posts')
 
       .expect(200);
     expect({
@@ -270,7 +270,7 @@ describe('Posts', () => {
   });
   it('Get post by blogger', async () => {
     await request(app.getHttpServer())
-      .get('/bloggers/' + new ObjectId() + '/posts')
+      .get('/blogs/' + new ObjectId() + '/posts')
 
       .expect(404);
   });

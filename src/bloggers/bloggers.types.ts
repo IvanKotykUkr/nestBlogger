@@ -8,6 +8,13 @@ export type QueryForPaginationType = {
   sortBy: string;
   sortDirection: string;
 };
+export type createBloggerType = {
+  name: string;
+
+  description: string;
+
+  websiteUrl: string;
+};
 
 export class BodyForCreateBloggerType {
   @Length(4, 15)
