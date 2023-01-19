@@ -17,10 +17,18 @@ import {
   CheckOwnGuard,
 } from '../../auth/application/adapters/guards/auth.guard';
 import { Request } from 'express';
+import { CommandBus } from '@nestjs/cqrs';
+import { UpdateCommentCommand } from '../application/use.case/update.comment.use.case';
+import { DeleteCommentCommand } from '../application/use.case/delete.comment.use.case';
+import { FindCommentCommand } from '../application/use.case/find.comment.use.case';
+import { UpdateLikeCommand } from '../application/use.case/update.like.use.case';
 
 @Controller('/comments')
 export class CommentsController {
-  constructor(protected commentsService: CommentsService) {}
+  constructor(
+    protected commandBus: CommandBus,
+    protected commentsService: CommentsService,
+  ) {}
 
   @UseGuards(AuthGuard, CheckOwnGuard)
   @Put('/:id')
@@ -29,14 +37,16 @@ export class CommentsController {
     @Body() body: BodyForComments,
     @Param() param: IdTypeForReq,
   ) {
-    return this.commentsService.updateComment(param.id, body.content);
+    return this.commandBus.execute(
+      new UpdateCommentCommand(param.id, body.content),
+    );
   }
 
   @UseGuards(AuthGuard, CheckOwnGuard)
   @Delete('/:id')
   @HttpCode(204)
   async deleteComment(@Param() param: IdTypeForReq) {
-    return this.commentsService.deleteComment(param.id);
+    return this.commandBus.execute(new DeleteCommentCommand(param.id));
   }
 
   @UseGuards(AuthGuard)
@@ -47,13 +57,10 @@ export class CommentsController {
     @Body() body: UpdateLikeDTO,
     @Req() req: Request,
   ) {
-    const isUpdated = await this.commentsService.updateLikeStatus(
-      param.id,
-      body.likeStatus,
-      req.user.id,
-      req.user.login,
+    const comment = await this.commandBus.execute(
+      new FindCommentCommand(param.id),
     );
-    if (isUpdated === 'doesnt exists') {
+    if (typeof comment === 'string') {
       throw new NotFoundException([
         {
           message: 'comment with specified id doesnt exists',
@@ -61,6 +68,14 @@ export class CommentsController {
         },
       ]);
     }
-    return isUpdated;
+
+    return this.commandBus.execute(
+      new UpdateLikeCommand(
+        param.id,
+        body.likeStatus,
+        req.user.id,
+        req.user.login,
+      ),
+    );
   }
 }

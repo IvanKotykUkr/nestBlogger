@@ -6,35 +6,15 @@ import {
   ArrayIdType,
   ArrayLikesType,
   CommentsDBType,
-  LikeDbType,
   LikeOrDislikeIdType,
   NewestThreeLikes,
   StatusLikeOrDislikeType,
 } from '../comments.types';
-import { LikesDocument } from '../infrastructure/repository/likes.mongooose.schema';
 import { PostsDBType } from '../../posts/posts.types';
 
 @Injectable()
 export class LikesHelper {
   constructor(protected likesRepositories: LikesRepositories) {}
-
-  async createLikeStatus(
-    entityId: ObjectId,
-    likeStatus: string,
-    userId: ObjectId,
-    login: string,
-  ) {
-    const checkStatus = await this.likesRepositories.findStatus(
-      userId,
-      entityId,
-    );
-
-    if (typeof checkStatus !== 'boolean') {
-      return this.compareStatus(checkStatus, likeStatus);
-    }
-    const likeDTO = this.createLikeDTO(entityId, likeStatus, userId, login);
-    return this.likesRepositories.createStatus(likeDTO);
-  }
 
   takeEntityId(items: PostsDBType[] | CommentsDBType[]): ArrayIdType {
     return items.map((e: { _id: ObjectId }) => ({
@@ -128,31 +108,5 @@ export class LikesHelper {
 
   async findLastThreLikes(idItems: ArrayIdType): Promise<ArrayLikesType> {
     return this.likesRepositories.findLastLikes(idItems);
-  }
-
-  private createLikeDTO(
-    entityId: ObjectId,
-    status: string,
-    userId: ObjectId,
-    login: string,
-  ): LikeDbType {
-    return {
-      _id: new ObjectId(),
-      entityId,
-      status,
-      userId,
-      login,
-      addedAt: new Date(),
-    };
-  }
-
-  private async compareStatus(like: LikesDocument, status: string) {
-    if (status === 'None') {
-      return this.likesRepositories.deleteStatus(like);
-    }
-    if (like.status.toString() === status) return;
-
-    like.status = status;
-    return this.likesRepositories.save(like);
   }
 }

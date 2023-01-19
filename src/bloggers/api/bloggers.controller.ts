@@ -13,7 +13,6 @@ import {
   BodyForCreateBloggerType,
   BodyForUpdateBloggerType,
 } from '../bloggers.types';
-import { BloggersService } from '../application/bloggers.service';
 import { BodyTypeForPostBlogger, IdTypeForReq } from '../../posts/posts.types';
 import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 import { CommandBus } from '@nestjs/cqrs';
@@ -32,10 +31,7 @@ export const notFoundBlogger = [
 
 @Controller('/blogs')
 export class BloggersController {
-  constructor(
-    protected bloggersService: BloggersService,
-    protected commandBus: CommandBus,
-  ) {}
+  constructor(protected commandBus: CommandBus) {}
 
   @UseGuards(BasicAuthGuard)
   @Post()
