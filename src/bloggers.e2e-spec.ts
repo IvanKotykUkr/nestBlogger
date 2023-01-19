@@ -6,8 +6,8 @@ import {
   INestApplication,
   ValidationPipe,
 } from '@nestjs/common';
-import { AppModule } from '../src/app.module';
-import { HttpExceptionFilter } from '../src/exeption.filter';
+import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './exeption.filter';
 import cookieParser from 'cookie-parser';
 
 jest.setTimeout(60_0000);
