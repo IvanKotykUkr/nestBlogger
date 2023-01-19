@@ -62,6 +62,14 @@ import { DeleteBloggerUseCase } from './bloggers/application/use.case/delete.blo
 import { UpdateBloggerUseCase } from './bloggers/application/use.case/update.blogger.use.case';
 import { FindBloggerUseCase } from './bloggers/application/use.case/find.blogger.use.case';
 import { CreatePostUseCase } from './posts/application/use.case/create.post.use.case';
+import { UpdatePostUseCase } from './posts/application/use.case/update.post.use.case';
+import { DeletePostUseCase } from './posts/application/use.case/delete.post.use.case';
+import { FindPostUseCase } from './posts/application/use.case/find.post.use.case';
+import { CreateCommentUseCase } from './comments/application/use.case/create.comment.use.case';
+import { UpdateCommentUseCase } from './comments/application/use.case/update.comment.use.case';
+import { DeleteCommentUseCase } from './comments/application/use.case/delete.comment.use.case';
+import { FindCommentUseCase } from './comments/application/use.case/find.comment.use.case';
+import { UpdateLikeUseCase } from './comments/application/use.case/update.like.use.case';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -117,7 +125,19 @@ const bloggerUseCase = [
   UpdateBloggerUseCase,
   FindBloggerUseCase,
 ];
-const postUseCase = [CreatePostUseCase];
+const postUseCase = [
+  CreatePostUseCase,
+  UpdatePostUseCase,
+  DeletePostUseCase,
+  FindPostUseCase,
+];
+const commentUseCase = [
+  CreateCommentUseCase,
+  UpdateCommentUseCase,
+  DeleteCommentUseCase,
+  FindCommentUseCase,
+  UpdateLikeUseCase,
+];
 const mongooseModule = [
   ConfigModule.forRoot(),
   MongooseModule.forRoot(
@@ -175,6 +195,7 @@ const mongooseModule = [
     ...user,
     ...bloggerUseCase,
     ...postUseCase,
+    ...commentUseCase,
     DeviceGuards,
     GuardHelper,
     JwtService,
