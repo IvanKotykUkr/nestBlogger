@@ -1,6 +1,6 @@
-import { ObjectId } from 'mongodb';
-import { Length } from 'class-validator';
-import { PaginationType } from '../bloggers/bloggers.types';
+import { ObjectId } from "mongodb";
+import { Length } from "class-validator";
+import { PaginationType } from "../bloggers/bloggers.types";
 
 export class BodyForComments {
   @Length(20, 300)

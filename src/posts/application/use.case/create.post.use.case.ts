@@ -1,7 +1,7 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ObjectId } from 'mongodb';
-import { PostsDBType, PostsResponseType } from '../../posts.types';
-import { PostsRepositories } from '../../infrastructure/posts.repositories';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { ObjectId } from "mongodb";
+import { PostsDBType, PostsResponseType } from "../../posts.types";
+import { PostsRepositories } from "../../infrastructure/posts.repositories";
 
 export class CreatePostCommand {
   constructor(
@@ -9,7 +9,7 @@ export class CreatePostCommand {
     public title: string,
     public shortDescription: string,
     public content: string,
-    public bloggerName: string,
+    public bloggerName: string
   ) {}
 }
 
@@ -18,14 +18,14 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
   constructor(protected postRepositories: PostsRepositories) {}
 
   async execute(
-    command: CreatePostCommand,
+    command: CreatePostCommand
   ): Promise<PostsResponseType | string> {
     const post = this.makePost(
       command.title,
       command.shortDescription,
       command.content,
       command.id,
-      command.bloggerName,
+      command.bloggerName
     );
     return this.postRepositories.createPost(post);
   }
@@ -35,7 +35,7 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
     shortDescription: string,
     content: string,
     blogId: ObjectId,
-    blogName: string,
+    blogName: string
   ): PostsDBType {
     const newPost: PostsDBType = {
       _id: new ObjectId(),

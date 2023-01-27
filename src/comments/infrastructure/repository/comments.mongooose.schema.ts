@@ -1,6 +1,6 @@
-import mongoose, { Document } from 'mongoose';
-import { ObjectId } from 'mongodb';
-import { CommentsDBType } from '../../comments.types';
+import mongoose, { Document } from "mongoose";
+import { ObjectId } from "mongodb";
+import { CommentsDBType } from "../../comments.types";
 
 export const CommentsSchema = new mongoose.Schema<CommentsDBType>(
   {
@@ -13,7 +13,7 @@ export const CommentsSchema = new mongoose.Schema<CommentsDBType>(
   },
   {
     versionKey: false,
-  },
+  }
 );
 
 export type CommentsDocument = CommentsDBType & Document;

@@ -2,64 +2,64 @@ import {
   BadRequestException,
   INestApplication,
   ValidationPipe,
-} from '@nestjs/common';
-import { HttpExceptionFilter } from './exeption.filter';
-import cookieParser from 'cookie-parser';
-import { Test } from '@nestjs/testing';
-import { AppModule } from './app.module';
-import { ObjectId } from 'mongodb';
-import request = require('supertest');
+} from "@nestjs/common";
+import { HttpExceptionFilter } from "./exeption.filter";
+import cookieParser from "cookie-parser";
+import { Test } from "@nestjs/testing";
+import { AppModule } from "./app.module";
+import { ObjectId } from "mongodb";
+import request = require("supertest");
 
 jest.setTimeout(60_0000);
-describe('Posts', () => {
+describe("Posts", () => {
   let app: INestApplication;
 
   const blogger = {
-    id: '',
-    name: 'Olya',
-    websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
-    createdAt: '',
+    id: "",
+    name: "Olya",
+    websiteUrl: "https://www.youtube.com/watch?v=ez7s3N_Ra9U",
+    createdAt: "",
   };
   const differentBlogger = {
-    id: '',
-    name: 'Vasya',
-    websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra4U',
-    createdAt: '',
+    id: "",
+    name: "Vasya",
+    websiteUrl: "https://www.youtube.com/watch?v=ez7s3N_Ra4U",
+    createdAt: "",
   };
   const firstPost = {
-    id: '',
-    title: 'ddfddfdfdfs',
-    shortDescription: 'Post from add post by blogger',
-    content: 'cвісавvxvx',
-    createdAt: '',
+    id: "",
+    title: "ddfddfdfdfs",
+    shortDescription: "Post from add post by blogger",
+    content: "cвісавvxvx",
+    createdAt: "",
   };
   const differentPost = {
-    id: '',
-    title: 'different',
-    shortDescription: 'Post from add post by blogger',
-    content: 'adwqsdadsafdsa',
-    createdAt: '',
+    id: "",
+    title: "different",
+    shortDescription: "Post from add post by blogger",
+    content: "adwqsdadsafdsa",
+    createdAt: "",
   };
   const secondPost = {
-    id: '',
-    title: 'new',
-    shortDescription: 'Post from add post  blogger',
-    content: 'second post',
-    createdAt: '',
+    id: "",
+    title: "new",
+    shortDescription: "Post from add post  blogger",
+    content: "second post",
+    createdAt: "",
   };
   const thirdPost = {
-    id: '',
-    title: 'fds',
-    shortDescription: 'Post from add post  dsfsdfsdblogger',
-    content: 'secondsfsd post',
-    createdAt: '',
+    id: "",
+    title: "fds",
+    shortDescription: "Post from add post  dsfsdfsdblogger",
+    content: "secondsfsd post",
+    createdAt: "",
   };
   const bedPost = {
-    id: '',
-    title: '',
-    shortDescription: '',
-    content: '',
-    createdAt: '',
+    id: "",
+    title: "",
+    shortDescription: "",
+    content: "",
+    createdAt: "",
   };
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -87,17 +87,17 @@ describe('Posts', () => {
         transformOptions: {
           enableImplicitConversion: true,
         },
-      }),
+      })
     );
     app.useGlobalFilters(new HttpExceptionFilter());
     app.use(cookieParser());
     await app.init();
-    await request(app.getHttpServer()).delete('/testing/all-data');
+    await request(app.getHttpServer()).delete("/testing/all-data");
   });
-  it('Create Blogger ', async () => {
+  it("Create Blogger ", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: blogger.name,
         websiteUrl: blogger.websiteUrl,
@@ -110,10 +110,10 @@ describe('Posts', () => {
     blogger.id = res.body.id;
     blogger.createdAt = res.body.createdAt;
   });
-  it('Create Different Blogger ', async () => {
+  it("Create Different Blogger ", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: differentBlogger.name,
         websiteUrl: differentBlogger.websiteUrl,
@@ -126,10 +126,10 @@ describe('Posts', () => {
     differentBlogger.id = res.body.id;
     differentBlogger.createdAt = res.body.createdAt;
   });
-  it('Create Post', async () => {
+  it("Create Post", async () => {
     await request(app.getHttpServer())
-      .post('/blogs/' + blogger.id.toString() + '/posts')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs/" + blogger.id.toString() + "/posts")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         title: bedPost.title,
         shortDescription: bedPost.shortDescription,
@@ -139,24 +139,24 @@ describe('Posts', () => {
       .expect({
         errorsMessages: [
           {
-            message: 'title must be longer than or equal to 1 characters',
-            field: 'title',
+            message: "title must be longer than or equal to 1 characters",
+            field: "title",
           },
           {
             message:
-              'shortDescription must be longer than or equal to 1 characters',
-            field: 'shortDescription',
+              "shortDescription must be longer than or equal to 1 characters",
+            field: "shortDescription",
           },
           {
-            message: 'content must be longer than or equal to 1 characters',
-            field: 'content',
+            message: "content must be longer than or equal to 1 characters",
+            field: "content",
           },
         ],
       });
   });
-  it('Create Post', async () => {
+  it("Create Post", async () => {
     await request(app.getHttpServer())
-      .post('/blogs/' + blogger.id.toString() + '/posts')
+      .post("/blogs/" + blogger.id.toString() + "/posts")
 
       .send({
         title: bedPost.title,
@@ -165,10 +165,10 @@ describe('Posts', () => {
       })
       .expect(401);
   });
-  it('should be 404 not correct id', async () => {
+  it("should be 404 not correct id", async () => {
     await request(app.getHttpServer())
-      .post('/blogs/' + new ObjectId() + '/posts')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs/" + new ObjectId() + "/posts")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         title: secondPost.title,
         shortDescription: secondPost.shortDescription,
@@ -176,10 +176,10 @@ describe('Posts', () => {
       })
       .expect(404);
   });
-  it('Create Post for blogger', async () => {
+  it("Create Post for blogger", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs/' + blogger.id.toString() + '/posts')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs/" + blogger.id.toString() + "/posts")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         title: secondPost.title,
         shortDescription: secondPost.shortDescription,
@@ -196,10 +196,10 @@ describe('Posts', () => {
     expect(res.body.blogName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(secondPost.createdAt);
   });
-  it('Create Post for blogger', async () => {
+  it("Create Post for blogger", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs/' + blogger.id.toString() + '/posts')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs/" + blogger.id.toString() + "/posts")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         title: firstPost.title,
         shortDescription: firstPost.shortDescription,
@@ -216,10 +216,10 @@ describe('Posts', () => {
     expect(res.body.blogName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(firstPost.createdAt);
   });
-  it('Create Post for different blogger', async () => {
+  it("Create Post for different blogger", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs/' + differentBlogger.id.toString() + '/posts')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs/" + differentBlogger.id.toString() + "/posts")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         title: differentPost.title,
         shortDescription: differentPost.shortDescription,
@@ -236,9 +236,9 @@ describe('Posts', () => {
     expect(res.body.blogName).toBe(differentBlogger.name);
     expect(res.body.createdAt).toBe(differentPost.createdAt);
   });
-  it('Get post by blogger', async () => {
+  it("Get post by blogger", async () => {
     await request(app.getHttpServer())
-      .get('/blogs/' + blogger.id.toString() + '/posts')
+      .get("/blogs/" + blogger.id.toString() + "/posts")
 
       .expect(200);
     expect({
@@ -268,15 +268,15 @@ describe('Posts', () => {
       ],
     });
   });
-  it('Get post by blogger', async () => {
+  it("Get post by blogger", async () => {
     await request(app.getHttpServer())
-      .get('/blogs/' + new ObjectId() + '/posts')
+      .get("/blogs/" + new ObjectId() + "/posts")
 
       .expect(404);
   });
-  it('Get all post', async () => {
+  it("Get all post", async () => {
     await request(app.getHttpServer())
-      .get('/posts')
+      .get("/posts")
 
       .expect(200);
     expect({
@@ -316,10 +316,10 @@ describe('Posts', () => {
     });
   });
 
-  it('Create Post', async () => {
+  it("Create Post", async () => {
     const res = await request(app.getHttpServer())
-      .post('/posts')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/posts")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         title: thirdPost.title,
         shortDescription: thirdPost.shortDescription,
@@ -337,9 +337,9 @@ describe('Posts', () => {
     expect(res.body.blogName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(thirdPost.createdAt);
   });
-  it('Get post', async () => {
+  it("Get post", async () => {
     const res = await request(app.getHttpServer())
-      .get('/posts/' + thirdPost.id.toString())
+      .get("/posts/" + thirdPost.id.toString())
       .expect(200);
     expect(res.body.id).toBe(thirdPost.id);
     expect(res.body.title).toBe(thirdPost.title);
@@ -349,10 +349,10 @@ describe('Posts', () => {
     expect(res.body.blogName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(thirdPost.createdAt);
   });
-  it('Update  Post', async () => {
+  it("Update  Post", async () => {
     await request(app.getHttpServer())
-      .put('/posts/' + thirdPost.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .put("/posts/" + thirdPost.id.toString())
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         title: firstPost.title,
         shortDescription: firstPost.shortDescription,
@@ -361,9 +361,9 @@ describe('Posts', () => {
       })
       .expect(204);
   });
-  it('Update  Post', async () => {
+  it("Update  Post", async () => {
     await request(app.getHttpServer())
-      .put('/posts/' + thirdPost.id.toString())
+      .put("/posts/" + thirdPost.id.toString())
       .send({
         title: firstPost.title,
         shortDescription: firstPost.shortDescription,
@@ -372,10 +372,10 @@ describe('Posts', () => {
       })
       .expect(401);
   });
-  it('Update  Post', async () => {
+  it("Update  Post", async () => {
     await request(app.getHttpServer())
-      .put('/posts/' + thirdPost.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .put("/posts/" + thirdPost.id.toString())
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         title: bedPost.title,
         shortDescription: bedPost.shortDescription,
@@ -384,9 +384,9 @@ describe('Posts', () => {
       })
       .expect(400);
   });
-  it('Get post', async () => {
+  it("Get post", async () => {
     const res = await request(app.getHttpServer())
-      .get('/posts/' + thirdPost.id.toString())
+      .get("/posts/" + thirdPost.id.toString())
       .expect(200);
     expect(res.body.id).toBe(thirdPost.id);
     expect(res.body.title).toBe(firstPost.title);
@@ -396,21 +396,21 @@ describe('Posts', () => {
     expect(res.body.blogName).toBe(differentBlogger.name);
     expect(res.body.createdAt).toBe(thirdPost.createdAt);
   });
-  it('Delete  Post', async () => {
+  it("Delete  Post", async () => {
     await request(app.getHttpServer())
-      .delete('/posts/' + firstPost.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .delete("/posts/" + firstPost.id.toString())
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .expect(204);
   });
-  it('Get post', async () => {
+  it("Get post", async () => {
     const res = await request(app.getHttpServer())
-      .get('/posts/' + firstPost.id.toString())
+      .get("/posts/" + firstPost.id.toString())
       .expect(404);
   });
-  it('Delete  Post', async () => {
+  it("Delete  Post", async () => {
     await request(app.getHttpServer())
-      .delete('/posts/' + firstPost.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .delete("/posts/" + firstPost.id.toString())
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .expect(404);
   });
   afterAll(async () => {

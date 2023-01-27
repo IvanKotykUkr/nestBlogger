@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { LimitingDocument } from './repository/rate.limiting.mongoose';
-import { RecordType } from '../auth.types';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { LimitingDocument } from "./repository/rate.limiting.mongoose";
+import { RecordType } from "../auth.types";
 
 @Injectable()
 export class RateRecordRepositories {
   constructor(
-    @InjectModel('rate record') protected RecordModel: Model<LimitingDocument>,
+    @InjectModel("rate record") protected RecordModel: Model<LimitingDocument>
   ) {}
 
   async createRecord(record: RecordType) {

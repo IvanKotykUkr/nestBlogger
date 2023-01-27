@@ -1,5 +1,5 @@
-import { IsUrl, Length } from 'class-validator';
-import { ObjectId } from 'mongodb';
+import { IsUrl, Length } from "class-validator";
+import { ObjectId } from "mongodb";
 
 export type QueryForPaginationType = {
   searchNameTerm: string;

@@ -8,63 +8,63 @@ import {
   Put,
   Req,
   UseGuards,
-} from '@nestjs/common';
-import { CommentsService } from '../application/comments.service';
-import { BodyForComments } from '../comments.types';
-import { IdTypeForReq, UpdateLikeDTO } from '../../posts/posts.types';
+} from "@nestjs/common";
+import { CommentsService } from "../application/comments.service";
+import { BodyForComments } from "../comments.types";
+import { IdTypeForReq, UpdateLikeDTO } from "../../posts/posts.types";
 import {
   AuthGuard,
   CheckOwnGuard,
-} from '../../auth/application/adapters/guards/auth.guard';
-import { Request } from 'express';
-import { CommandBus } from '@nestjs/cqrs';
-import { UpdateCommentCommand } from '../application/use.case/update.comment.use.case';
-import { DeleteCommentCommand } from '../application/use.case/delete.comment.use.case';
-import { FindCommentCommand } from '../application/use.case/find.comment.use.case';
-import { UpdateLikeCommand } from '../application/use.case/update.like.use.case';
+} from "../../auth/application/adapters/guards/auth.guard";
+import { Request } from "express";
+import { CommandBus } from "@nestjs/cqrs";
+import { UpdateCommentCommand } from "../application/use.case/update.comment.use.case";
+import { DeleteCommentCommand } from "../application/use.case/delete.comment.use.case";
+import { FindCommentCommand } from "../application/use.case/find.comment.use.case";
+import { UpdateLikeCommand } from "../application/use.case/update.like.use.case";
 
-@Controller('/comments')
+@Controller("/comments")
 export class CommentsController {
   constructor(
     protected commandBus: CommandBus,
-    protected commentsService: CommentsService,
+    protected commentsService: CommentsService
   ) {}
 
   @UseGuards(AuthGuard, CheckOwnGuard)
-  @Put('/:id')
+  @Put("/:id")
   @HttpCode(204)
   async updateComment(
     @Body() body: BodyForComments,
-    @Param() param: IdTypeForReq,
+    @Param() param: IdTypeForReq
   ) {
     return this.commandBus.execute(
-      new UpdateCommentCommand(param.id, body.content),
+      new UpdateCommentCommand(param.id, body.content)
     );
   }
 
   @UseGuards(AuthGuard, CheckOwnGuard)
-  @Delete('/:id')
+  @Delete("/:id")
   @HttpCode(204)
   async deleteComment(@Param() param: IdTypeForReq) {
     return this.commandBus.execute(new DeleteCommentCommand(param.id));
   }
 
   @UseGuards(AuthGuard)
-  @Put('/:id/like-status')
+  @Put("/:id/like-status")
   @HttpCode(204)
   async updateLike(
     @Param() param: IdTypeForReq,
     @Body() body: UpdateLikeDTO,
-    @Req() req: Request,
+    @Req() req: Request
   ) {
     const comment = await this.commandBus.execute(
-      new FindCommentCommand(param.id),
+      new FindCommentCommand(param.id)
     );
-    if (typeof comment === 'string') {
+    if (typeof comment === "string") {
       throw new NotFoundException([
         {
-          message: 'comment with specified id doesnt exists',
-          field: 'comment Id',
+          message: "comment with specified id doesnt exists",
+          field: "comment Id",
         },
       ]);
     }
@@ -74,8 +74,8 @@ export class CommentsController {
         param.id,
         body.likeStatus,
         req.user.id,
-        req.user.login,
-      ),
+        req.user.login
+      )
     );
   }
 }

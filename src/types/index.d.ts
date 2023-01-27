@@ -1,6 +1,6 @@
-import { UserRequestType } from '../users/users.types';
-import { DevicesRequestType } from '../securitydevices/infrastructure/device.types';
-import { ObjectId } from 'mongodb';
+import { UserRequestType } from "../users/users.types";
+import { DevicesRequestType } from "../securitydevices/infrastructure/device.types";
+import { ObjectId } from "mongodb";
 
 declare global {
   declare namespace Express {

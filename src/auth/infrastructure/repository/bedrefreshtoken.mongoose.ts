@@ -1,5 +1,5 @@
-import { TokensType } from '../../auth.types';
-import mongoose from 'mongoose';
+import { TokensType } from "../../auth.types";
+import mongoose from "mongoose";
 
 export const TokesSchema = new mongoose.Schema<TokensType>(
   {
@@ -8,7 +8,7 @@ export const TokesSchema = new mongoose.Schema<TokensType>(
   },
   {
     versionKey: false,
-  },
+  }
 );
 
 export type TokensDocument = TokensType & Document;

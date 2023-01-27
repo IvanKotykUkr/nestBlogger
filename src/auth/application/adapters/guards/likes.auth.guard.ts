@@ -1,8 +1,8 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { JwtService } from '../jwt.service';
-import { Request } from 'express';
-import { UserFromTokenType } from '../../../../users/users.types';
-import { ObjectId } from 'mongodb';
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { JwtService } from "../jwt.service";
+import { Request } from "express";
+import { UserFromTokenType } from "../../../../users/users.types";
+import { ObjectId } from "mongodb";
 
 @Injectable()
 export class LikesAuthGuard implements CanActivate {
@@ -11,15 +11,15 @@ export class LikesAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const req: Request = context.switchToHttp().getRequest();
     if (!req.headers.authorization) {
-      req.userId = new ObjectId('63ab296b882037600d1ce455');
+      req.userId = new ObjectId("63ab296b882037600d1ce455");
       return true;
     }
-    const token: string = req.headers.authorization.split(' ')[1];
+    const token: string = req.headers.authorization.split(" ")[1];
     const user: UserFromTokenType | string =
       this.jwtService.getUserIdByAccessToken(token);
 
-    if (typeof user == 'string') {
-      req.userId = new ObjectId('63ab296b882037600d1ce455');
+    if (typeof user == "string") {
+      req.userId = new ObjectId("63ab296b882037600d1ce455");
       return true;
     }
 
