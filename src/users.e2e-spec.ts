@@ -2,38 +2,38 @@ import {
   BadRequestException,
   INestApplication,
   ValidationPipe,
-} from '@nestjs/common';
+} from "@nestjs/common";
 
-import cookieParser from 'cookie-parser';
-import { Test } from '@nestjs/testing';
-import { HttpExceptionFilter } from './exeption.filter';
-import { AppModule } from './app.module';
-import { ObjectId } from 'mongodb';
-import request = require('supertest');
+import cookieParser from "cookie-parser";
+import { Test } from "@nestjs/testing";
+import { HttpExceptionFilter } from "./exeption.filter";
+import { AppModule } from "./app.module";
+import { ObjectId } from "mongodb";
+import request = require("supertest");
 
 jest.setTimeout(60_0000);
-describe('Users', () => {
+describe("Users", () => {
   let app: INestApplication;
   const firstUser = {
-    id: '',
-    login: 'Vasa',
-    email: 'beefier_tangos0q@icloud.com',
-    password: 'Qwerty1234',
-    createdAt: '',
+    id: "",
+    login: "Vasa",
+    email: "beefier_tangos0q@icloud.com",
+    password: "Qwerty1234",
+    createdAt: "",
   };
   const secondUser = {
-    id: '',
-    login: 'Masha',
-    email: 'beefier_taos0q@icloud.com',
-    password: 'Qw1234qw',
-    createdAt: '',
+    id: "",
+    login: "Masha",
+    email: "beefier_taos0q@icloud.com",
+    password: "Qw1234qw",
+    createdAt: "",
   };
   const bedUser = {
-    id: '',
-    login: 'w',
-    email: 'beefisd',
-    password: '12345',
-    createdAt: '',
+    id: "",
+    login: "w",
+    email: "beefisd",
+    password: "12345",
+    createdAt: "",
   };
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -61,17 +61,17 @@ describe('Users', () => {
         transformOptions: {
           enableImplicitConversion: true,
         },
-      }),
+      })
     );
     app.useGlobalFilters(new HttpExceptionFilter());
     app.use(cookieParser());
     await app.init();
-    await request(app.getHttpServer()).delete('/testing/all-data');
+    await request(app.getHttpServer()).delete("/testing/all-data");
   });
-  it('Create User', async () => {
+  it("Create User", async () => {
     const res = await request(app.getHttpServer())
-      .post('/users')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/users")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         login: firstUser.login,
         password: firstUser.password,
@@ -86,10 +86,10 @@ describe('Users', () => {
     expect(res.body.email).toBe(firstUser.email);
     expect(res.body.createdAt).toBe(firstUser.createdAt);
   });
-  it('Create User', async () => {
+  it("Create User", async () => {
     const res = await request(app.getHttpServer())
-      .post('/users')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/users")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         login: secondUser.login,
         password: secondUser.password,
@@ -104,10 +104,10 @@ describe('Users', () => {
     expect(res.body.email).toBe(secondUser.email);
     expect(res.body.createdAt).toBe(secondUser.createdAt);
   });
-  it('Create User', async () => {
+  it("Create User", async () => {
     const res = await request(app.getHttpServer())
-      .post('/users')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/users")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         login: bedUser.login,
         password: bedUser.password,
@@ -117,20 +117,20 @@ describe('Users', () => {
       .expect({
         errorsMessages: [
           {
-            message: 'login must be longer than or equal to 3 characters',
-            field: 'login',
+            message: "login must be longer than or equal to 3 characters",
+            field: "login",
           },
-          { message: 'email must be an email', field: 'email' },
+          { message: "email must be an email", field: "email" },
           {
-            message: 'password must be longer than or equal to 6 characters',
-            field: 'password',
+            message: "password must be longer than or equal to 6 characters",
+            field: "password",
           },
         ],
       });
   });
-  it('Get Users', async () => {
+  it("Get Users", async () => {
     const res = await request(app.getHttpServer())
-      .get('/users')
+      .get("/users")
       .expect(200)
       .expect({
         pagesCount: 1,
@@ -153,26 +153,26 @@ describe('Users', () => {
         ],
       });
   });
-  it('Delete User', async () => {
+  it("Delete User", async () => {
     const res = await request(app.getHttpServer())
-      .delete('/users/' + firstUser.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .delete("/users/" + firstUser.id.toString())
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .expect(204);
   });
-  it('Delete User', async () => {
+  it("Delete User", async () => {
     const res = await request(app.getHttpServer())
-      .delete('/users/' + new ObjectId())
+      .delete("/users/" + new ObjectId())
       .expect(401);
   });
-  it('Delete User', async () => {
+  it("Delete User", async () => {
     const res = await request(app.getHttpServer())
-      .delete('/users/' + new ObjectId())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .delete("/users/" + new ObjectId())
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .expect(404);
   });
-  it('Get Users', async () => {
+  it("Get Users", async () => {
     const res = await request(app.getHttpServer())
-      .get('/users')
+      .get("/users")
       .expect(200)
       .expect({
         pagesCount: 1,

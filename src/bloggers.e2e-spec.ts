@@ -1,67 +1,67 @@
-import request = require('supertest');
-import { Test } from '@nestjs/testing';
+import request = require("supertest");
+import { Test } from "@nestjs/testing";
 
 import {
   BadRequestException,
   INestApplication,
   ValidationPipe,
-} from '@nestjs/common';
-import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './exeption.filter';
-import cookieParser from 'cookie-parser';
+} from "@nestjs/common";
+import { AppModule } from "./app.module";
+import { HttpExceptionFilter } from "./exeption.filter";
+import cookieParser from "cookie-parser";
 
 jest.setTimeout(60_0000);
-describe('Bloggers', () => {
+describe("Bloggers", () => {
   let app: INestApplication;
   const bloggerForTest1 = {
-    id: '',
-    name: 'Nadya',
-    websiteUrl: 'https://www.youtube.com/watch?v=ez9s2N_Ra9U',
-    description: 'sdadas',
-    createdAt: '',
+    id: "",
+    name: "Nadya",
+    websiteUrl: "https://www.youtube.com/watch?v=ez9s2N_Ra9U",
+    description: "sdadas",
+    createdAt: "",
   };
   const bloggerForTest2 = {
-    id: '',
-    name: 'Olya',
-    websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
-    description: 'sdadas',
-    createdAt: '',
+    id: "",
+    name: "Olya",
+    websiteUrl: "https://www.youtube.com/watch?v=ez7s3N_Ra9U",
+    description: "sdadas",
+    createdAt: "",
   };
   const bedBloggerForTest = {
-    id: '',
-    name: 'Ncdfgdhfhtdghgdfhfhgdfhfdhdadyadhfjdytdfkmfjhgjh',
-    websiteUrl: '11',
-    description: 'sdadas',
-    createdAt: '',
+    id: "",
+    name: "Ncdfgdhfhtdghgdfhfhgdfhfdhdadyadhfjdytdfkmfjhgjh",
+    websiteUrl: "11",
+    description: "sdadas",
+    createdAt: "",
   };
 
   const bloggerForTestPagination = {
-    id: '',
-    name: 'Masha',
-    websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra1U',
-    description: 'sdasddas',
-    createdAt: '',
+    id: "",
+    name: "Masha",
+    websiteUrl: "https://www.youtube.com/watch?v=ez0s3N_Ra1U",
+    description: "sdasddas",
+    createdAt: "",
   };
   const bloggerForTestPagination1 = {
-    id: '',
-    name: 'Dasha',
-    websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra2U',
-    description: 'sdadsanas',
-    createdAt: '',
+    id: "",
+    name: "Dasha",
+    websiteUrl: "https://www.youtube.com/watch?v=ez0s3N_Ra2U",
+    description: "sdadsanas",
+    createdAt: "",
   };
   const bloggerForTestPagination2 = {
-    id: '',
-    name: 'Pasha',
-    websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra3U',
-    description: 'sdadak,ks',
-    createdAt: '',
+    id: "",
+    name: "Pasha",
+    websiteUrl: "https://www.youtube.com/watch?v=ez0s3N_Ra3U",
+    description: "sdadak,ks",
+    createdAt: "",
   };
   const bloggerForTestPagination3 = {
-    id: '',
-    name: 'Ivan',
-    websiteUrl: 'https://www.youtube.com/watch?v=ez0s3N_Ra4U',
-    description: 'sdadagyks',
-    createdAt: '',
+    id: "",
+    name: "Ivan",
+    websiteUrl: "https://www.youtube.com/watch?v=ez0s3N_Ra4U",
+    description: "sdadagyks",
+    createdAt: "",
   };
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -89,18 +89,18 @@ describe('Bloggers', () => {
         transformOptions: {
           enableImplicitConversion: true,
         },
-      }),
+      })
     );
     app.useGlobalFilters(new HttpExceptionFilter());
     app.use(cookieParser());
     await app.init();
-    await request(app.getHttpServer()).delete('/testing/all-data');
+    await request(app.getHttpServer()).delete("/testing/all-data");
   });
 
-  it('Create Blogger for pagination ', async () => {
+  it("Create Blogger for pagination ", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs/')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs/")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: bloggerForTestPagination.name,
         description: bloggerForTestPagination.description,
@@ -111,10 +111,10 @@ describe('Bloggers', () => {
     bloggerForTestPagination.id = res.body.id;
     bloggerForTestPagination.createdAt = res.body.createdAt;
   });
-  it('Create Blogger for pagination ', async () => {
+  it("Create Blogger for pagination ", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: bloggerForTestPagination1.name,
         description: bloggerForTestPagination1.description,
@@ -124,10 +124,10 @@ describe('Bloggers', () => {
     bloggerForTestPagination1.id = res.body.id;
     bloggerForTestPagination1.createdAt = res.body.createdAt;
   });
-  it('Create Blogger for pagination ', async () => {
+  it("Create Blogger for pagination ", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: bloggerForTestPagination2.name,
         description: bloggerForTestPagination2.description,
@@ -137,10 +137,10 @@ describe('Bloggers', () => {
     bloggerForTestPagination2.id = res.body.id;
     bloggerForTestPagination2.createdAt = res.body.createdAt;
   });
-  it('Create Blogger for pagination ', async () => {
+  it("Create Blogger for pagination ", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: bloggerForTestPagination3.name,
         description: bloggerForTestPagination3.description,
@@ -152,7 +152,7 @@ describe('Bloggers', () => {
   });
   it(`/Get Blogger with Pagination`, () => {
     return request(app.getHttpServer())
-      .get('/blogs')
+      .get("/blogs")
       .expect(200)
       .expect({
         pagesCount: 1,
@@ -193,9 +193,9 @@ describe('Bloggers', () => {
   });
   it(`/Get Blogger with Pagination`, () => {
     return request(app.getHttpServer())
-      .get('/blogs')
-      .query({ pageSize: '2' })
-      .query({ pageNumber: '2' })
+      .get("/blogs")
+      .query({ pageSize: "2" })
+      .query({ pageNumber: "2" })
 
       .expect(200)
       .expect({
@@ -222,10 +222,10 @@ describe('Bloggers', () => {
       });
   });
 
-  it('Create Blogger ', async () => {
+  it("Create Blogger ", async () => {
     await request(app.getHttpServer())
-      .post('/blogs')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: bedBloggerForTest.name,
         description: bedBloggerForTest.description,
@@ -235,21 +235,21 @@ describe('Bloggers', () => {
       .expect({
         errorsMessages: [
           {
-            message: 'name must be shorter than or equal to 15 characters',
-            field: 'name',
+            message: "name must be shorter than or equal to 15 characters",
+            field: "name",
           },
           {
-            message: 'websiteUrl must be an URL address',
-            field: 'websiteUrl',
+            message: "websiteUrl must be an URL address",
+            field: "websiteUrl",
           },
         ],
       });
   });
 
-  it('Create Blogger ', async () => {
+  it("Create Blogger ", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: bloggerForTest1.name,
         description: bloggerForTest1.description,
@@ -264,10 +264,10 @@ describe('Bloggers', () => {
     bloggerForTest1.createdAt = res.body.createdAt;
   });
 
-  it('Update Blogger', async () => {
+  it("Update Blogger", async () => {
     await request(app.getHttpServer())
-      .put('/blogs/' + bloggerForTest1.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .put("/blogs/" + bloggerForTest1.id.toString())
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: bloggerForTest2.name,
         description: bloggerForTest2.description,
@@ -275,10 +275,10 @@ describe('Bloggers', () => {
       })
       .expect(204);
   });
-  it('Update Blogger', async () => {
+  it("Update Blogger", async () => {
     await request(app.getHttpServer())
-      .put('/blogs/' + bloggerForTest1.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .put("/blogs/" + bloggerForTest1.id.toString())
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: bedBloggerForTest.name,
         description: bedBloggerForTest.description,
@@ -288,19 +288,19 @@ describe('Bloggers', () => {
       .expect({
         errorsMessages: [
           {
-            message: 'name must be shorter than or equal to 15 characters',
-            field: 'name',
+            message: "name must be shorter than or equal to 15 characters",
+            field: "name",
           },
           {
-            message: 'websiteUrl must be an URL address',
-            field: 'websiteUrl',
+            message: "websiteUrl must be an URL address",
+            field: "websiteUrl",
           },
         ],
       });
   });
   it(`/Get Blogger`, () => {
     return request(app.getHttpServer())
-      .get('/blogs/' + bloggerForTest1.id.toString())
+      .get("/blogs/" + bloggerForTest1.id.toString())
       .expect(200)
       .expect({
         id: bloggerForTest1.id,
@@ -310,10 +310,10 @@ describe('Bloggers', () => {
         createdAt: bloggerForTest1.createdAt,
       });
   });
-  it('Create Blogger ', async () => {
+  it("Create Blogger ", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: bloggerForTest2.name,
         description: bloggerForTest2.description,
@@ -329,7 +329,7 @@ describe('Bloggers', () => {
   });
   it(`/Get Blogger`, () => {
     return request(app.getHttpServer())
-      .get('/blogs/' + bloggerForTest2.id.toString())
+      .get("/blogs/" + bloggerForTest2.id.toString())
       .expect(200)
       .expect({
         id: bloggerForTest2.id,
@@ -339,35 +339,35 @@ describe('Bloggers', () => {
         createdAt: bloggerForTest2.createdAt,
       });
   });
-  it('Delete Blogger', async () => {
+  it("Delete Blogger", async () => {
     await request(app.getHttpServer())
-      .delete('/blogs/' + bloggerForTest2.id.toString())
+      .delete("/blogs/" + bloggerForTest2.id.toString())
       .expect(401);
   });
-  it('Delete Blogger', async () => {
+  it("Delete Blogger", async () => {
     await request(app.getHttpServer())
-      .delete('/blogs/' + bloggerForTest2.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .delete("/blogs/" + bloggerForTest2.id.toString())
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .expect(204);
   });
-  it('Delete Blogger', async () => {
+  it("Delete Blogger", async () => {
     await request(app.getHttpServer())
-      .delete('/blogs/' + bloggerForTest2.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .delete("/blogs/" + bloggerForTest2.id.toString())
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .expect(404);
   });
 
   it(`/Get Blogger`, () => {
     return request(app.getHttpServer())
-      .get('/blogs/' + bloggerForTest2.id.toString())
+      .get("/blogs/" + bloggerForTest2.id.toString())
       .expect(404);
   });
-  it('Delete all', async () => {
-    await request(app.getHttpServer()).delete('/testing/all-data');
+  it("Delete all", async () => {
+    await request(app.getHttpServer()).delete("/testing/all-data");
   });
 
   afterAll(async () => {
-    await request(app.getHttpServer()).delete('/testing/all-data');
+    await request(app.getHttpServer()).delete("/testing/all-data");
     await app.close();
   });
 });

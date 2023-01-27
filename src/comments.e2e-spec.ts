@@ -2,80 +2,80 @@ import {
   BadRequestException,
   INestApplication,
   ValidationPipe,
-} from '@nestjs/common';
+} from "@nestjs/common";
 
-import cookieParser from 'cookie-parser';
-import { Test } from '@nestjs/testing';
-import { EmailAdapter } from './auth/application/adapters/email.adaptor';
-import { AppModule } from './app.module';
-import { HttpExceptionFilter } from './exeption.filter';
-import request = require('supertest');
+import cookieParser from "cookie-parser";
+import { Test } from "@nestjs/testing";
+import { EmailAdapter } from "./auth/application/adapters/email.adaptor";
+import { AppModule } from "./app.module";
+import { HttpExceptionFilter } from "./exeption.filter";
+import request = require("supertest");
 
 jest.setTimeout(60_0000);
-describe('Users', () => {
+describe("Users", () => {
   let emailAdapter: EmailAdapter;
   let app: INestApplication;
   const firstUser = {
-    id: '',
-    login: 'Vasa',
-    email: 'beefier_tangos0q@icloud.com',
-    password: 'Qwerty1234',
-    createdAt: '',
-    confirmCode: '',
+    id: "",
+    login: "Vasa",
+    email: "beefier_tangos0q@icloud.com",
+    password: "Qwerty1234",
+    createdAt: "",
+    confirmCode: "",
   };
   const secondUser = {
-    id: '',
-    login: 'Masha',
-    email: 'differenrtemail@icloud.com',
-    password: 'Qwerty1234',
-    createdAt: '',
-    confirmCode: '',
+    id: "",
+    login: "Masha",
+    email: "differenrtemail@icloud.com",
+    password: "Qwerty1234",
+    createdAt: "",
+    confirmCode: "",
   };
 
   const tokensForFirstUser = {
-    accessToken: '',
-    refreshToken: '',
+    accessToken: "",
+    refreshToken: "",
   };
   const tokensForSecondUser = {
-    accessToken: '',
-    refreshToken: '',
+    accessToken: "",
+    refreshToken: "",
   };
   const blogger = {
-    id: '',
-    name: 'Olya',
-    websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
-    createdAt: '',
+    id: "",
+    name: "Olya",
+    websiteUrl: "https://www.youtube.com/watch?v=ez7s3N_Ra9U",
+    createdAt: "",
   };
 
   const firstPost = {
-    id: '',
-    title: 'ddfddfdfdfs',
-    shortDescription: 'Post from add post by blogger',
-    content: 'cвісавvxvx',
-    createdAt: '',
+    id: "",
+    title: "ddfddfdfdfs",
+    shortDescription: "Post from add post by blogger",
+    content: "cвісавvxvx",
+    createdAt: "",
   };
   const firstComment = {
-    userId: '',
-    content: 'fldgmdfmggdthgfhfghfhgfhod',
-    id: '',
-    userLogin: '',
-    createdAt: '',
+    userId: "",
+    content: "fldgmdfmggdthgfhfghfhgfhod",
+    id: "",
+    userLogin: "",
+    createdAt: "",
   };
   const secondComment = {
-    userId: '',
-    content: 'This is a second comment for that post',
-    id: '',
-    userLogin: '',
-    createdAt: '',
+    userId: "",
+    content: "This is a second comment for that post",
+    id: "",
+    userLogin: "",
+    createdAt: "",
   };
   const thirdComment = {
-    userId: '',
-    content: 'This is a third comment for that post',
-    id: '',
-    userLogin: '',
-    createdAt: '',
+    userId: "",
+    content: "This is a third comment for that post",
+    id: "",
+    userLogin: "",
+    createdAt: "",
   };
-  const content = 'Difent conntent for comment';
+  const content = "Difent conntent for comment";
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
@@ -102,17 +102,17 @@ describe('Users', () => {
         transformOptions: {
           enableImplicitConversion: true,
         },
-      }),
+      })
     );
     app.useGlobalFilters(new HttpExceptionFilter());
     app.use(cookieParser());
     await app.init();
 
-    await request(app.getHttpServer()).delete('/testing/all-data');
+    await request(app.getHttpServer()).delete("/testing/all-data");
   });
-  it('Registration User', async () => {
+  it("Registration User", async () => {
     await request(app.getHttpServer())
-      .post('/auth/registration')
+      .post("/auth/registration")
       .send({
         login: firstUser.login,
         password: firstUser.password,
@@ -121,9 +121,9 @@ describe('Users', () => {
       .expect(204);
     firstUser.confirmCode = process.env.ConfirmationCode;
   });
-  it('Registration User', async () => {
+  it("Registration User", async () => {
     await request(app.getHttpServer())
-      .post('/auth/registration')
+      .post("/auth/registration")
       .send({
         login: secondUser.login,
         password: secondUser.password,
@@ -132,58 +132,58 @@ describe('Users', () => {
       .expect(204);
     secondUser.confirmCode = process.env.ConfirmationCode;
   });
-  it('Confirmation User', async () => {
+  it("Confirmation User", async () => {
     await request(app.getHttpServer())
-      .post('/auth/registration-confirmation')
+      .post("/auth/registration-confirmation")
       .send({
         code: firstUser.confirmCode,
       })
       .expect(204);
   });
-  it('Confirmation User', async () => {
+  it("Confirmation User", async () => {
     await request(app.getHttpServer())
-      .post('/auth/registration-confirmation')
+      .post("/auth/registration-confirmation")
       .send({
         code: secondUser.confirmCode,
       })
       .expect(204);
   });
-  it('Login User', async () => {
+  it("Login User", async () => {
     const res = await request(app.getHttpServer())
-      .post('/auth/login')
+      .post("/auth/login")
       .send({
         login: firstUser.login,
         password: firstUser.password,
       })
       .expect(200);
-    const cookies = res.headers['set-cookie'][0]
-      .split(',')
-      .map((item) => item.split(';')[0])
-      .map((item) => item.split('=')[1]);
+    const cookies = res.headers["set-cookie"][0]
+      .split(",")
+      .map((item) => item.split(";")[0])
+      .map((item) => item.split("=")[1]);
 
     tokensForFirstUser.accessToken = res.body.accessToken;
     tokensForFirstUser.refreshToken = cookies.toString();
   });
-  it('Login User', async () => {
+  it("Login User", async () => {
     const res = await request(app.getHttpServer())
-      .post('/auth/login')
+      .post("/auth/login")
       .send({
         login: secondUser.login,
         password: secondUser.password,
       })
       .expect(200);
-    const cookies = res.headers['set-cookie'][0]
-      .split(',')
-      .map((item) => item.split(';')[0])
-      .map((item) => item.split('=')[1]);
+    const cookies = res.headers["set-cookie"][0]
+      .split(",")
+      .map((item) => item.split(";")[0])
+      .map((item) => item.split("=")[1]);
 
     tokensForSecondUser.accessToken = res.body.accessToken;
     tokensForSecondUser.refreshToken = cookies.toString();
   });
-  it('Create Blogger ', async () => {
+  it("Create Blogger ", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         name: blogger.name,
         websiteUrl: blogger.websiteUrl,
@@ -196,10 +196,10 @@ describe('Users', () => {
     blogger.id = res.body.id;
     blogger.createdAt = res.body.createdAt;
   });
-  it('Create Post for blogger', async () => {
+  it("Create Post for blogger", async () => {
     const res = await request(app.getHttpServer())
-      .post('/blogs/' + blogger.id.toString() + '/posts')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .post("/blogs/" + blogger.id.toString() + "/posts")
+      .set({ Authorization: "Basic YWRtaW46cXdlcnR5" })
       .send({
         title: firstPost.title,
         shortDescription: firstPost.shortDescription,
@@ -216,10 +216,10 @@ describe('Users', () => {
     expect(res.body.blogName).toBe(blogger.name);
     expect(res.body.createdAt).toBe(firstPost.createdAt);
   });
-  it('Add Comment', async () => {
+  it("Add Comment", async () => {
     const res = await request(app.getHttpServer())
-      .post('/posts/' + firstPost.id.toString() + '/comments')
-      .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
+      .post("/posts/" + firstPost.id.toString() + "/comments")
+      .set("Authorization", `Bearer ${tokensForFirstUser.accessToken}`)
       .send({
         content: firstComment.content,
       })
@@ -232,10 +232,10 @@ describe('Users', () => {
     expect(firstComment.userId).toBe(firstUser.id);
     expect(firstComment.userLogin).toBe(firstUser.login);
   });
-  it('Add Second Comment', async () => {
+  it("Add Second Comment", async () => {
     const res = await request(app.getHttpServer())
-      .post('/posts/' + firstPost.id.toString() + '/comments')
-      .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
+      .post("/posts/" + firstPost.id.toString() + "/comments")
+      .set("Authorization", `Bearer ${tokensForFirstUser.accessToken}`)
       .send({
         content: secondComment.content,
       })
@@ -247,9 +247,9 @@ describe('Users', () => {
     expect(secondComment.userId).toBe(firstUser.id);
     expect(secondComment.userLogin).toBe(firstUser.login);
   });
-  it('Get Comment', async () => {
+  it("Get Comment", async () => {
     const res = await request(app.getHttpServer())
-      .get('/posts/' + firstPost.id.toString() + '/comments')
+      .get("/posts/" + firstPost.id.toString() + "/comments")
       .expect(200)
       .expect({
         pagesCount: 1,
@@ -274,10 +274,10 @@ describe('Users', () => {
         ],
       });
   });
-  it('Add Third Comment', async () => {
+  it("Add Third Comment", async () => {
     const res = await request(app.getHttpServer())
-      .post('/posts/' + firstPost.id.toString() + '/comments')
-      .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
+      .post("/posts/" + firstPost.id.toString() + "/comments")
+      .set("Authorization", `Bearer ${tokensForFirstUser.accessToken}`)
       .send({
         content: thirdComment.content,
       })
@@ -289,19 +289,19 @@ describe('Users', () => {
     expect(thirdComment.userId).toBe(firstUser.id);
     expect(thirdComment.userLogin).toBe(firstUser.login);
   });
-  it('Update Third Comment', async () => {
+  it("Update Third Comment", async () => {
     const res = await request(app.getHttpServer())
-      .put('/comments/' + thirdComment.id.toString())
-      .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
+      .put("/comments/" + thirdComment.id.toString())
+      .set("Authorization", `Bearer ${tokensForFirstUser.accessToken}`)
       .send({
         content: content,
       })
       .expect(204);
     thirdComment.content = content;
   });
-  it('Update Third Comment', async () => {
+  it("Update Third Comment", async () => {
     const res = await request(app.getHttpServer())
-      .put('/comments/' + thirdComment.id.toString())
+      .put("/comments/" + thirdComment.id.toString())
       .send({
         content: content,
       })
@@ -309,35 +309,35 @@ describe('Users', () => {
       .expect({
         message: [
           {
-            message: 'there are no authorizations in the header ',
-            field: 'headers authorization',
+            message: "there are no authorizations in the header ",
+            field: "headers authorization",
           },
         ],
       });
   });
-  it('Update Third Comment', async () => {
+  it("Update Third Comment", async () => {
     const res = await request(app.getHttpServer())
-      .put('/comments/' + thirdComment.id.toString())
-      .set('Authorization', `Bearer ${tokensForSecondUser.accessToken}`)
+      .put("/comments/" + thirdComment.id.toString())
+      .set("Authorization", `Bearer ${tokensForSecondUser.accessToken}`)
       .send({
         content: content,
       })
       .expect(403)
-      .expect({ message: [{ message: 'not your own', field: 'user' }] });
+      .expect({ message: [{ message: "not your own", field: "user" }] });
   });
-  it('Update Third Comment', async () => {
+  it("Update Third Comment", async () => {
     const res = await request(app.getHttpServer())
-      .put('/comments/' + firstUser.id.toString())
-      .set('Authorization', `Bearer ${tokensForSecondUser.accessToken}`)
+      .put("/comments/" + firstUser.id.toString())
+      .set("Authorization", `Bearer ${tokensForSecondUser.accessToken}`)
       .send({
         content: content,
       })
       .expect(404)
-      .expect({ message: [{ message: 'no comment', field: 'id' }] });
+      .expect({ message: [{ message: "no comment", field: "id" }] });
   });
-  it('Get Comment', async () => {
+  it("Get Comment", async () => {
     const res = await request(app.getHttpServer())
-      .get('/comments/' + thirdComment.id.toString())
+      .get("/comments/" + thirdComment.id.toString())
       .expect(200)
       .expect({
         id: thirdComment.id,
@@ -347,48 +347,48 @@ describe('Users', () => {
         createdAt: thirdComment.createdAt,
       });
   });
-  it('Delete Comment', async () => {
+  it("Delete Comment", async () => {
     const res = await request(app.getHttpServer())
-      .delete('/comments/' + secondComment.id.toString())
+      .delete("/comments/" + secondComment.id.toString())
       .expect(401)
       .expect({
         message: [
           {
-            message: 'there are no authorizations in the header ',
-            field: 'headers authorization',
+            message: "there are no authorizations in the header ",
+            field: "headers authorization",
           },
         ],
       });
   });
-  it('Delete Comment', async () => {
+  it("Delete Comment", async () => {
     const res = await request(app.getHttpServer())
-      .delete('/comments/' + secondComment.id.toString())
-      .set('Authorization', `Bearer ${tokensForSecondUser.accessToken}`)
+      .delete("/comments/" + secondComment.id.toString())
+      .set("Authorization", `Bearer ${tokensForSecondUser.accessToken}`)
       .expect(403)
-      .expect({ message: [{ message: 'not your own', field: 'user' }] });
+      .expect({ message: [{ message: "not your own", field: "user" }] });
   });
-  it('Delete Comment', async () => {
+  it("Delete Comment", async () => {
     const res = await request(app.getHttpServer())
-      .delete('/comments/' + firstUser.id.toString())
-      .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
+      .delete("/comments/" + firstUser.id.toString())
+      .set("Authorization", `Bearer ${tokensForFirstUser.accessToken}`)
       .expect(404)
-      .expect({ message: [{ message: 'no comment', field: 'id' }] });
+      .expect({ message: [{ message: "no comment", field: "id" }] });
   });
-  it('Delete Comment', async () => {
+  it("Delete Comment", async () => {
     const res = await request(app.getHttpServer())
-      .delete('/comments/' + secondComment.id.toString())
-      .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
+      .delete("/comments/" + secondComment.id.toString())
+      .set("Authorization", `Bearer ${tokensForFirstUser.accessToken}`)
       .expect(204);
   });
-  it('Get Comment', async () => {
+  it("Get Comment", async () => {
     const res = await request(app.getHttpServer())
-      .get('/comments/' + secondComment.id.toString())
+      .get("/comments/" + secondComment.id.toString())
       .expect(404)
-      .expect({ message: [{ message: 'no comment', field: 'id' }] });
+      .expect({ message: [{ message: "no comment", field: "id" }] });
   });
-  it('Get Comment', async () => {
+  it("Get Comment", async () => {
     const res = await request(app.getHttpServer())
-      .get('/posts/' + firstPost.id.toString() + '/comments')
+      .get("/posts/" + firstPost.id.toString() + "/comments")
       .expect(200)
       .expect({
         pagesCount: 1,
@@ -413,9 +413,9 @@ describe('Users', () => {
         ],
       });
   });
-  it('Get Comment', async () => {
+  it("Get Comment", async () => {
     const res = await request(app.getHttpServer())
-      .get('/posts/' + firstUser.id.toString() + '/comments')
+      .get("/posts/" + firstUser.id.toString() + "/comments")
       .expect(404);
   });
 

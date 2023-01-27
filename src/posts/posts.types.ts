@@ -1,6 +1,6 @@
-import { PaginationType } from '../bloggers/bloggers.types';
-import { IsEnum, IsMongoId, Length } from 'class-validator';
-import { ObjectId } from 'mongodb';
+import { PaginationType } from "../bloggers/bloggers.types";
+import { IsEnum, IsMongoId, Length } from "class-validator";
+import { ObjectId } from "mongodb";
 
 export class IdTypeForReq {
   @IsMongoId()
@@ -8,9 +8,9 @@ export class IdTypeForReq {
 }
 
 enum LikeStatus {
-  None = 'None',
-  Like = 'Like',
-  Dislike = 'Dislike',
+  None = "None",
+  Like = "Like",
+  Dislike = "Dislike",
 }
 
 export class UpdateLikeDTO {

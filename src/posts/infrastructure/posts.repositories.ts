@@ -1,18 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
 import {
   PostsDBType,
   PostsLikeResponseType,
   PostsResponseType,
   PostUpdatedType,
-} from '../posts.types';
-import { ObjectId } from 'mongodb';
-import { PostsDocument } from './repository/posts.mongoose.schema';
+} from "../posts.types";
+import { ObjectId } from "mongodb";
+import { PostsDocument } from "./repository/posts.mongoose.schema";
 
 @Injectable()
 export class PostsRepositories {
-  constructor(@InjectModel('posts') private PostModel: Model<PostsDocument>) {}
+  constructor(@InjectModel("posts") private PostModel: Model<PostsDocument>) {}
 
   resPost(post: PostsDBType): PostsLikeResponseType {
     return {
@@ -26,7 +26,7 @@ export class PostsRepositories {
       extendedLikesInfo: {
         likesCount: 0,
         dislikesCount: 0,
-        myStatus: 'None',
+        myStatus: "None",
         newestLikes: [],
       },
     };
@@ -47,7 +47,7 @@ export class PostsRepositories {
 
   async updatePost(newPost: PostUpdatedType): Promise<boolean | string> {
     const post = await this.PostModel.findById(newPost._id);
-    if (!post) return 'not found post';
+    if (!post) return "not found post";
     post.title = newPost.title;
     post.shortDescription = newPost.shortDescription;
     post.content = newPost.content;
@@ -59,7 +59,7 @@ export class PostsRepositories {
 
   async deletePost(postId: ObjectId) {
     const post = await this.PostModel.findById(postId);
-    if (!post) return 'not found';
+    if (!post) return "not found";
 
     await post.deleteOne();
 
@@ -71,6 +71,6 @@ export class PostsRepositories {
     if (post) {
       return this.resPost(post);
     }
-    return 'not found';
+    return "not found";
   }
 }

@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { DevicesDocument } from './repository/auth.devices.sessions.mongoose';
-import { Model } from 'mongoose';
-import { AuthDevicesTypeDTO, DevicesInfo } from './device.types';
-import { ObjectId } from 'mongodb';
-import process from 'process';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { DevicesDocument } from "./repository/auth.devices.sessions.mongoose";
+import { Model } from "mongoose";
+import { AuthDevicesTypeDTO, DevicesInfo } from "./device.types";
+import { ObjectId } from "mongodb";
+import process from "process";
 
 @Injectable()
 export class AuthDevicesRepositories {
   constructor(
-    @InjectModel('auth devices')
-    private AuthDevicesModel: Model<DevicesDocument>,
+    @InjectModel("auth devices")
+    private AuthDevicesModel: Model<DevicesDocument>
   ) {}
 
   async saveDevice(device: AuthDevicesTypeDTO): Promise<DevicesInfo> {
@@ -26,16 +26,16 @@ export class AuthDevicesRepositories {
   async checkDeviceForUser(
     title: string,
     userId: ObjectId,
-    lastActiveDate: Date,
+    lastActiveDate: Date
   ): Promise<string | DevicesInfo> {
     const device = await this.AuthDevicesModel.findOneAndUpdate(
       {
         $and: [{ userId }, { title }],
       },
-      { lastActiveDate },
+      { lastActiveDate }
     ).lean();
     if (!device) {
-      return ' not used';
+      return " not used";
     }
     //for test
     process.env.DATEDEVICE = lastActiveDate.toJSON();
@@ -50,14 +50,14 @@ export class AuthDevicesRepositories {
   async checkToken(
     iat: number,
     deviceId: string,
-    date: Date,
+    date: Date
   ): Promise<DevicesInfo | string> {
     const device = await this.AuthDevicesModel.findOne({ deviceId });
     if (!device) {
-      return 'dont have device id';
+      return "dont have device id";
     }
     if (+device.lastActiveDate !== iat) {
-      return 'invalid refreshToken';
+      return "invalid refreshToken";
     }
     device.lastActiveDate = date;
     await device.save();
@@ -82,9 +82,9 @@ export class AuthDevicesRepositories {
 
   async deleteDevice(id: ObjectId, deviceId: string): Promise<string> {
     const device = await this.AuthDevicesModel.findOne({ deviceId });
-    if (device === null) return 'not found';
-    if (device.userId.toString() !== id.toString()) return 'forbidden';
+    if (device === null) return "not found";
+    if (device.userId.toString() !== id.toString()) return "forbidden";
     await device.deleteOne();
-    return 'all good';
+    return "all good";
   }
 }

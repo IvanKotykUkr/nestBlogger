@@ -4,11 +4,11 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-} from '@nestjs/common';
-import { Request } from 'express';
-import { RecordType } from '../../../auth.types';
-import { ObjectId } from 'mongodb';
-import { RateRecordRepositories } from '../../../infrastructure/rate-record-repositories';
+} from "@nestjs/common";
+import { Request } from "express";
+import { RecordType } from "../../../auth.types";
+import { ObjectId } from "mongodb";
+import { RateRecordRepositories } from "../../../infrastructure/rate-record-repositories";
 
 @Injectable()
 export class AntiDdosGuard implements CanActivate {
@@ -19,7 +19,7 @@ export class AntiDdosGuard implements CanActivate {
     const record = this.makeRecord(req.ip, new Date(), req.url);
     const recordsForIpAndUrl = await this.rateRecordRepositories.findRecords(
       req.ip,
-      req.url,
+      req.url
     );
     this.checkRecord(recordsForIpAndUrl);
 
@@ -43,12 +43,12 @@ export class AntiDdosGuard implements CanActivate {
     if (recordsForIpAndUrl.length < 5) {
       return true;
     }
-    const timeOfFirstReq: number = recordsForIpAndUrl[4]['date'].getTime();
+    const timeOfFirstReq: number = recordsForIpAndUrl[4]["date"].getTime();
 
     if (Date.now() - timeOfFirstReq <= 10000) {
       throw new HttpException(
-        'TOO_MANY_REQUESTS',
-        HttpStatus.TOO_MANY_REQUESTS,
+        "TOO_MANY_REQUESTS",
+        HttpStatus.TOO_MANY_REQUESTS
       );
     }
     return;

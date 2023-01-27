@@ -1,15 +1,15 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { ObjectId } from 'mongodb';
-import { LikeDbType } from '../../comments.types';
-import { LikesRepositories } from '../../infrastructure/likes.repositories';
-import { LikesDocument } from '../../infrastructure/repository/likes.mongooose.schema';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { ObjectId } from "mongodb";
+import { LikeDbType } from "../../comments.types";
+import { LikesRepositories } from "../../infrastructure/likes.repositories";
+import { LikesDocument } from "../../infrastructure/repository/likes.mongooose.schema";
 
 export class UpdateLikeCommand {
   constructor(
     public entityId: ObjectId,
     public likeStatus: string,
     public userId: ObjectId,
-    public login: string,
+    public login: string
   ) {}
 }
 
@@ -20,17 +20,17 @@ export class UpdateLikeUseCase implements ICommandHandler<UpdateLikeCommand> {
   async execute(command: UpdateLikeCommand) {
     const checkStatus = await this.likesRepositories.findStatus(
       command.userId,
-      command.entityId,
+      command.entityId
     );
 
-    if (typeof checkStatus !== 'boolean') {
+    if (typeof checkStatus !== "boolean") {
       return this.compareStatus(checkStatus, command.likeStatus);
     }
     const likeDTO = this.createLikeDTO(
       command.entityId,
       command.likeStatus,
       command.userId,
-      command.login,
+      command.login
     );
     return this.likesRepositories.createStatus(likeDTO);
   }
@@ -39,7 +39,7 @@ export class UpdateLikeUseCase implements ICommandHandler<UpdateLikeCommand> {
     entityId: ObjectId,
     status: string,
     userId: ObjectId,
-    login: string,
+    login: string
   ): LikeDbType {
     return {
       _id: new ObjectId(),
@@ -52,7 +52,7 @@ export class UpdateLikeUseCase implements ICommandHandler<UpdateLikeCommand> {
   }
 
   private async compareStatus(like: LikesDocument, status: string) {
-    if (status === 'None') {
+    if (status === "None") {
       return this.likesRepositories.deleteStatus(like);
     }
     if (like.status.toString() === status) return;

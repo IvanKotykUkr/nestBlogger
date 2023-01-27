@@ -1,14 +1,14 @@
-import { BloggersRepositories } from '../../infrastructure/bloggers.repositories';
-import { ObjectId } from 'mongodb';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BloggerType, BloggerTypeForUpdate } from '../../bloggers.types';
+import { BloggersRepositories } from "../../infrastructure/bloggers.repositories";
+import { ObjectId } from "mongodb";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { BloggerType, BloggerTypeForUpdate } from "../../bloggers.types";
 
 export class UpdateBloggerCommand {
   constructor(
     public blogId: ObjectId,
     public name: string,
     public websiteUrl: string,
-    public description: string,
+    public description: string
   ) {}
 }
 
@@ -23,7 +23,7 @@ export class UpdateBloggerUseCase
       command.blogId,
       command.name,
       command.websiteUrl,
-      command.description,
+      command.description
     );
     return this.bloggersRepositories.updateBlogger(newBlogger);
   }
@@ -32,7 +32,7 @@ export class UpdateBloggerUseCase
     blogId: ObjectId,
     name: string,
     websiteUrl: string,
-    description: string,
+    description: string
   ): BloggerTypeForUpdate {
     const newBlogger: BloggerType = {
       _id: blogId,
