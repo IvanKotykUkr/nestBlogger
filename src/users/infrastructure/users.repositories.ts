@@ -1,13 +1,13 @@
 import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from './repository/users.mongoose.schema';
 import { Model } from 'mongoose';
 import { UserDBType, UserRequestType } from '../users.types';
-import { Injectable } from '@nestjs/common';
 import { ObjectId } from 'mongodb';
-import { UsersDocument } from './repository/users.mongoose.schema';
 
-@Injectable()
 export class UsersRepositories {
-  constructor(@InjectModel('users') private UsersModel: Model<UsersDocument>) {}
+  constructor(
+    @InjectModel(User.name) private UsersModel: Model<UserDocument>,
+  ) {}
 
   reqUsers(user: UserDBType) {
     return {
@@ -32,43 +32,12 @@ export class UsersRepositories {
     return true;
   }
 
-  async confirmUser(code: string): Promise<string | boolean> {
-    const user = await this.UsersModel.findOne({
-      'emailConfirmation.confirmationCode': code,
-    });
-    if (!user) return 'not found';
-    if (user.emailConfirmation.isConfirmed === true) return 'already confirmed';
-    if (user.emailConfirmation.expirationDate < new Date()) {
-      return 'code expired';
-    }
-    user.emailConfirmation.isConfirmed = true;
-    await user.save();
-    return true;
-  }
-
-  async renewConfirmationCode(
-    email: string,
-    confirmationCode: string,
-    expirationDate: Date,
-  ): Promise<boolean> {
-    const result = await this.UsersModel.findOneAndUpdate(
-      { 'accountData.email': email },
-      {
-        $set: {
-          'emailConfirmation.confirmationCode': confirmationCode,
-          'emailConfirmation.expirationDate': expirationDate,
-        },
-      },
-    );
-    return true;
-  }
-
-  async findUserByEmailOrLogin(login: string): Promise<UserDBType | string> {
+  async findUserByEmailOrLogin(login: string): Promise<UserDocument | string> {
     const user = await this.UsersModel.findOne({
       $or: [{ 'accountData.login': login }, { 'accountData.email': login }],
     });
     if (user) {
-      return this.reqUsers(user);
+      return user;
     }
 
     return 'not found users';
@@ -82,13 +51,13 @@ export class UsersRepositories {
       $or: [{ 'accountData.login': login }, { 'accountData.email': email }],
     });
     if (user) {
-      return this.reqUsers(user);
+      return user;
     }
 
     return 'not found users';
   }
 
-  async findByEmail(email: string): Promise<UsersDocument> {
+  async findByEmail(email: string): Promise<UserDocument> {
     return this.UsersModel.findOne({ 'accountData.email': email });
   }
 
@@ -97,6 +66,7 @@ export class UsersRepositories {
     if (!user) {
       return 'not found';
     }
+
     return {
       id: user.id,
       login: user.accountData.login,
@@ -107,12 +77,18 @@ export class UsersRepositories {
     };
   }
 
-  async findById(_id: ObjectId): Promise<UsersDocument> {
+  async findById(_id: ObjectId): Promise<UserDocument> {
     return this.UsersModel.findById(_id);
   }
 
-  async saveUser(user: UsersDocument) {
+  async saveUser(user: UserDocument) {
     await user.save();
     return;
+  }
+
+  async findUserByConfirmationCode(code: string): Promise<UserDocument> {
+    return this.UsersModel.findOne({
+      'emailConfirmation.confirmationCode': code,
+    });
   }
 }

@@ -1,10 +1,13 @@
 import { Controller, Delete, HttpCode } from '@nestjs/common';
-import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { BloggerDocument } from './bloggers/infrastructure/repository/blogger.mongoose';
 import { CommentsDocument } from './comments/infrastructure/repository/comments.mongooose.schema';
 import { PostsDocument } from './posts/infrastructure/repository/posts.mongoose.schema';
-import { UsersDocument } from './users/infrastructure/repository/users.mongoose.schema';
+import {
+  User,
+  UserDocument,
+} from './users/infrastructure/repository/users.mongoose.schema';
 import { DevicesDocument } from './securitydevices/infrastructure/repository/auth.devices.sessions.mongoose';
 import {
   Likes,
@@ -17,7 +20,7 @@ export class DeleteTest {
     @InjectModel('bloggers') private BloggerModel: Model<BloggerDocument>,
     @InjectModel('comments') private CommentsModel: Model<CommentsDocument>,
     @InjectModel('posts') private PostModel: Model<PostsDocument>,
-    @InjectModel('users') private UsersModel: Model<UsersDocument>,
+    @InjectModel(User.name) private UsersModel: Model<UserDocument>,
     @InjectModel('auth devices')
     private AuthDevicesModel: Model<DevicesDocument>,
     @InjectModel(Likes.name) private LikesModel: Model<LikesDocument>,
