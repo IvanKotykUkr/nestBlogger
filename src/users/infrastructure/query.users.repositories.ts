@@ -1,14 +1,17 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { User, UserDocument } from './repository/users.mongoose.schema';
 import {
   UserDBType,
   UsersResponseType,
   UsersWithPaginationResponseType,
 } from '../users.types';
-import { UsersDocument } from './repository/users.mongoose.schema';
+import { Model } from 'mongoose';
 
 export class QueryUsersRepositories {
-  constructor(@InjectModel('users') private UsersModel: Model<UsersDocument>) {}
+  constructor(
+    @InjectModel(User.name) private UsersModel: Model<UserDocument>,
+  ) {
+  }
 
   reqUsers(user: UserDBType) {
     return {
