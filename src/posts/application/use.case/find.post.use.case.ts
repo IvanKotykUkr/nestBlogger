@@ -1,7 +1,7 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { ObjectId } from "mongodb";
-import { PostsRepositories } from "../../infrastructure/posts.repositories";
-import { PostsResponseType } from "../../posts.types";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { ObjectId } from 'mongodb';
+import { PostsRepositories } from '../../infrastructure/posts.repositories';
+import { PostsResponseType } from '../../posts.types';
 
 export class FindPostCommand {
   constructor(public id: ObjectId) {}

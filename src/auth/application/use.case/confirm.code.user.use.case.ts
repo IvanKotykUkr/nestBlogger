@@ -1,6 +1,6 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { UsersRepositories } from "../../../users/infrastructure/users.repositories";
-import { BadRequestException } from "@nestjs/common";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { UsersRepositories } from '../../../users/infrastructure/users.repositories';
+import { BadRequestException } from '@nestjs/common';
 
 export class ConfirmCodeUserCommand {
   constructor(public code: string) {}
@@ -16,11 +16,11 @@ export class ConfirmCodeUserUseCase
 
   async execute(command: ConfirmCodeUserCommand) {
     const user = await this.usersRepositories.findUserByConfirmationCode(
-      command.code
+      command.code,
     );
     if (user === undefined) {
       throw new BadRequestException([
-        { message: " code doesnt exist", field: "code" },
+        { message: ' code doesnt exist', field: 'code' },
       ]);
     }
     await user.checkConfirmed();

@@ -8,28 +8,28 @@ import {
   Post,
   Put,
   UseGuards,
-} from "@nestjs/common";
+} from '@nestjs/common';
 import {
   BodyForCreateBloggerType,
   BodyForUpdateBloggerType,
-} from "../bloggers.types";
-import { BodyTypeForPostBlogger, IdTypeForReq } from "../../posts/posts.types";
-import { BasicAuthGuard } from "../../guards/basic.auth.guard";
-import { CommandBus } from "@nestjs/cqrs";
-import { CreateBloggerCommand } from "../application/use.case/create.blogger.use.case";
-import { UpdateBloggerCommand } from "../application/use.case/update.blogger.use.case";
-import { DeleteBloggerCommand } from "../application/use.case/delete.blogger.use.case";
-import { FindBloggerCommand } from "../application/use.case/find.blogger.use.case";
-import { CreatePostCommand } from "../../posts/application/use.case/create.post.use.case";
+} from '../bloggers.types';
+import { BodyTypeForPostBlogger, IdTypeForReq } from '../../posts/posts.types';
+import { BasicAuthGuard } from '../../guards/basic.auth.guard';
+import { CommandBus } from '@nestjs/cqrs';
+import { CreateBloggerCommand } from '../application/use.case/create.blogger.use.case';
+import { UpdateBloggerCommand } from '../application/use.case/update.blogger.use.case';
+import { DeleteBloggerCommand } from '../application/use.case/delete.blogger.use.case';
+import { FindBloggerCommand } from '../application/use.case/find.blogger.use.case';
+import { CreatePostCommand } from '../../posts/application/use.case/create.post.use.case';
 
 export const notFoundBlogger = [
   {
-    message: "NOT FOUND",
-    field: "blogId",
+    message: 'NOT FOUND',
+    field: 'blogId',
   },
 ];
 
-@Controller("/blogs")
+@Controller('/blogs')
 export class BloggersController {
   constructor(protected commandBus: CommandBus) {}
 
@@ -41,25 +41,25 @@ export class BloggersController {
       new CreateBloggerCommand(
         inputModel.name,
         inputModel.websiteUrl,
-        inputModel.description
-      )
+        inputModel.description,
+      ),
     );
   }
 
   @UseGuards(BasicAuthGuard)
-  @Put("/:id")
+  @Put('/:id')
   @HttpCode(204)
   async updateBlogger(
     @Param() param: IdTypeForReq,
-    @Body() inputModel: BodyForUpdateBloggerType
+    @Body() inputModel: BodyForUpdateBloggerType,
   ) {
     const isUpdated = await this.commandBus.execute(
       new UpdateBloggerCommand(
         param.id,
         inputModel.name,
         inputModel.websiteUrl,
-        inputModel.description
-      )
+        inputModel.description,
+      ),
     );
     if (isUpdated) {
       return isUpdated;
@@ -68,11 +68,11 @@ export class BloggersController {
   }
 
   @UseGuards(BasicAuthGuard)
-  @Delete("/:id")
+  @Delete('/:id')
   @HttpCode(204)
   async deleteBlogger(@Param() param: IdTypeForReq) {
     const isDeleited: boolean = await this.commandBus.execute(
-      new DeleteBloggerCommand(param.id)
+      new DeleteBloggerCommand(param.id),
     );
     if (isDeleited) {
       return isDeleited;
@@ -81,15 +81,15 @@ export class BloggersController {
   }
 
   @UseGuards(BasicAuthGuard)
-  @Post("/:id/posts")
+  @Post('/:id/posts')
   async createPostByBlogger(
     @Param() param: IdTypeForReq,
-    @Body() inputModel: BodyTypeForPostBlogger
+    @Body() inputModel: BodyTypeForPostBlogger,
   ) {
     const blogger = await this.commandBus.execute(
-      new FindBloggerCommand(param.id)
+      new FindBloggerCommand(param.id),
     );
-    if (blogger === "not found") {
+    if (blogger === 'not found') {
       throw new NotFoundException(notFoundBlogger);
     }
 
@@ -99,8 +99,8 @@ export class BloggersController {
         inputModel.title,
         inputModel.shortDescription,
         inputModel.content,
-        blogger.name
-      )
+        blogger.name,
+      ),
     );
   }
 }

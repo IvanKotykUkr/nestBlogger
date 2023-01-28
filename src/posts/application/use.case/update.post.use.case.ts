@@ -1,7 +1,7 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { ObjectId } from "mongodb";
-import { PostUpdatedType } from "../../posts.types";
-import { PostsRepositories } from "../../infrastructure/posts.repositories";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { ObjectId } from 'mongodb';
+import { PostUpdatedType } from '../../posts.types';
+import { PostsRepositories } from '../../infrastructure/posts.repositories';
 
 export class UpdatePostCommand {
   constructor(
@@ -10,7 +10,7 @@ export class UpdatePostCommand {
     public shortDescription: string,
     public content: string,
     public blogId: ObjectId,
-    public blogName: string
+    public blogName: string,
   ) {}
 }
 
@@ -25,7 +25,7 @@ export class UpdatePostUseCase implements ICommandHandler<UpdatePostCommand> {
       command.shortDescription,
       command.content,
       command.blogId,
-      command.blogName
+      command.blogName,
     );
 
     return this.postRepositories.updatePost(newPost);
@@ -37,7 +37,7 @@ export class UpdatePostUseCase implements ICommandHandler<UpdatePostCommand> {
     shortDescription: string,
     content: string,
     blogId: ObjectId,
-    blogName: string
+    blogName: string,
   ): PostUpdatedType {
     const newPost: PostUpdatedType = {
       _id: postId,

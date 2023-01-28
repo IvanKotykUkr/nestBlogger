@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { AuthDevicesRepositories } from "../infrastructure/auth.devices.repositories";
-import { ObjectId } from "mongodb";
+import { Injectable } from '@nestjs/common';
+import { AuthDevicesRepositories } from '../infrastructure/auth.devices.repositories';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class SecurityDevicesService {
@@ -9,7 +9,7 @@ export class SecurityDevicesService {
   async terminateAllSessionExceptCurrent(userId: ObjectId, deviceId: string) {
     return this.authDevicesRepositories.terminateAllSessionExceptCurrent(
       userId,
-      deviceId
+      deviceId,
     );
   }
 

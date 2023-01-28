@@ -1,5 +1,5 @@
-import { IsEmail, IsJWT, IsString, IsUUID, Length } from "class-validator";
-import { ObjectId } from "mongodb";
+import { IsEmail, IsJWT, IsString, IsUUID, Length } from 'class-validator';
+import { ObjectId } from 'mongodb';
 
 export class AuthBodyType {
   @IsString()

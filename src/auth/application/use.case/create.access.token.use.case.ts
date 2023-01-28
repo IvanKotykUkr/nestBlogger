@@ -1,6 +1,6 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { JwtService } from "../adapters/jwt.service";
-import { ObjectId } from "mongodb";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { JwtService } from '../adapters/jwt.service';
+import { ObjectId } from 'mongodb';
 
 export class CreateAccessTokenCommand {
   constructor(public id: ObjectId) {}

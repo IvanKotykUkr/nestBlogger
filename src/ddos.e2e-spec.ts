@@ -2,48 +2,48 @@ import {
   BadRequestException,
   INestApplication,
   ValidationPipe,
-} from "@nestjs/common";
+} from '@nestjs/common';
 
-import cookieParser from "cookie-parser";
-import { Test } from "@nestjs/testing";
-import { EmailAdapter } from "./auth/application/adapters/email.adaptor";
-import { AppModule } from "./app.module";
-import { HttpExceptionFilter } from "./exeption.filter";
-import request = require("supertest");
+import cookieParser from 'cookie-parser';
+import { Test } from '@nestjs/testing';
+import { EmailAdapter } from './auth/application/adapters/email.adaptor';
+import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './exeption.filter';
+import request = require('supertest');
 
 jest.setTimeout(60_0000);
-describe("Users", () => {
+describe('Users', () => {
   let emailAdapter: EmailAdapter;
   let app: INestApplication;
   const firstUser = {
-    id: "",
-    login: "Vasa",
-    email: "beefier_tangos0q@icloud.com",
-    password: "Qwerty1234",
-    createdAt: "",
-    confirmCode: "",
+    id: '',
+    login: 'Vasa',
+    email: 'beefier_tangos0q@icloud.com',
+    password: 'Qwerty1234',
+    createdAt: '',
+    confirmCode: '',
   };
   const secondUser = {
-    id: "",
-    login: "Masha",
-    email: "beefier_taos0q@icloud.com",
-    password: "Qw1234qw",
-    createdAt: "",
-    confirmCode: "",
+    id: '',
+    login: 'Masha',
+    email: 'beefier_taos0q@icloud.com',
+    password: 'Qw1234qw',
+    createdAt: '',
+    confirmCode: '',
   };
   const bedUser = {
-    id: "",
-    login: "w",
-    email: "beefisd",
-    password: "12345",
-    createdAt: "",
+    id: '',
+    login: 'w',
+    email: 'beefisd',
+    password: '12345',
+    createdAt: '',
   };
   const tokensForFirstUser = {
-    accessToken: "",
-    refreshToken: "",
+    accessToken: '',
+    refreshToken: '',
   };
   const wrongRefresh =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzU5N2UxOTA5ODEwNmE2YzhjYWNmNTgiLCJpYXQiOjE2NjY4MDkzNjksImV4cCI6MTY2NjgxMjk2OX0.P2lZ2aSjvkvvTYsNzfRJuVpa-eiD5nrY6ZRdg_qq_BI";
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzU5N2UxOTA5ODEwNmE2YzhjYWNmNTgiLCJpYXQiOjE2NjY4MDkzNjksImV4cCI6MTY2NjgxMjk2OX0.P2lZ2aSjvkvvTYsNzfRJuVpa-eiD5nrY6ZRdg_qq_BI';
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -54,11 +54,11 @@ describe("Users", () => {
     emailAdapter = moduleRef.get<EmailAdapter>(EmailAdapter);
     app.useGlobalPipes(
       new ValidationPipe({
-        exceptionFactory: (errors) => {
+        exceptionFactory: errors => {
           const errorsForResponse = [];
-          errors.forEach((e) => {
+          errors.forEach(e => {
             const constraintsKeys = Object.keys(e.constraints);
-            constraintsKeys.forEach((ckey) => {
+            constraintsKeys.forEach(ckey => {
               errorsForResponse.push({
                 message: e.constraints[ckey],
                 field: e.property,
@@ -71,17 +71,17 @@ describe("Users", () => {
         transformOptions: {
           enableImplicitConversion: true,
         },
-      })
+      }),
     );
     app.useGlobalFilters(new HttpExceptionFilter());
     app.use(cookieParser());
     await app.init();
 
-    await request(app.getHttpServer()).delete("/testing/all-data");
+    await request(app.getHttpServer()).delete('/testing/all-data');
   });
-  it("Registration User", async () => {
+  it('Registration User', async () => {
     await request(app.getHttpServer())
-      .post("/auth/registration")
+      .post('/auth/registration')
       .send({
         login: firstUser.login,
         password: firstUser.password,
@@ -90,69 +90,69 @@ describe("Users", () => {
       .expect(204);
     firstUser.confirmCode = process.env.ConfirmationCode;
   });
-  it("Confirmation User", async () => {
+  it('Confirmation User', async () => {
     await request(app.getHttpServer())
-      .post("/auth/registration-confirmation")
+      .post('/auth/registration-confirmation')
       .send({
         code: firstUser.confirmCode,
       })
       .expect(204);
   });
-  it("Login User", async () => {
+  it('Login User', async () => {
     const res = await request(app.getHttpServer())
-      .post("/auth/login")
+      .post('/auth/login')
       .send({
         login: firstUser.login,
         password: firstUser.password,
       })
       .expect(200);
-    const cookies = res.headers["set-cookie"][0]
-      .split(",")
-      .map((item) => item.split(";")[0])
-      .map((item) => item.split("=")[1]);
+    const cookies = res.headers['set-cookie'][0]
+      .split(',')
+      .map(item => item.split(';')[0])
+      .map(item => item.split('=')[1]);
 
     tokensForFirstUser.accessToken = res.body.accessToken;
     tokensForFirstUser.refreshToken = cookies.toString();
   });
-  it("Login User", async () => {
+  it('Login User', async () => {
     const res = await request(app.getHttpServer())
-      .post("/auth/login")
+      .post('/auth/login')
       .send({
         login: firstUser.login,
         password: firstUser.password,
       })
       .expect(200);
   });
-  it("Login User", async () => {
+  it('Login User', async () => {
     const res = await request(app.getHttpServer())
-      .post("/auth/login")
+      .post('/auth/login')
       .send({
         login: firstUser.login,
         password: firstUser.password,
       })
       .expect(200);
   });
-  it("Login User", async () => {
+  it('Login User', async () => {
     const res = await request(app.getHttpServer())
-      .post("/auth/login")
+      .post('/auth/login')
       .send({
         login: firstUser.login,
         password: firstUser.password,
       })
       .expect(200);
   });
-  it("Login User", async () => {
+  it('Login User', async () => {
     const res = await request(app.getHttpServer())
-      .post("/auth/login")
+      .post('/auth/login')
       .send({
         login: firstUser.login,
         password: firstUser.password,
       })
       .expect(200);
   });
-  it("Login User", async () => {
+  it('Login User', async () => {
     const res = await request(app.getHttpServer())
-      .post("/auth/login")
+      .post('/auth/login')
       .send({
         login: firstUser.login,
         password: firstUser.password,

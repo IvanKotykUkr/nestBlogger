@@ -1,12 +1,12 @@
-import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import { CommentsDocument } from "./repository/comments.mongooose.schema";
-import { CommentResponseType, CommentsDBType } from "../comments.types";
-import { ObjectId } from "mongodb";
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CommentsDocument } from './repository/comments.mongooose.schema';
+import { CommentResponseType, CommentsDBType } from '../comments.types';
+import { ObjectId } from 'mongodb';
 
 export class CommentsRepositories {
   constructor(
-    @InjectModel("comments") private CommentsModel: Model<CommentsDocument>
+    @InjectModel('comments') private CommentsModel: Model<CommentsDocument>,
   ) {}
 
   async createComment(comment: CommentsDBType): Promise<CommentResponseType> {
@@ -40,7 +40,7 @@ export class CommentsRepositories {
     if (comment) {
       return this.reqComment(comment);
     }
-    return "not found";
+    return 'not found';
   }
 
   private reqComment(comment: CommentsDBType) {
@@ -53,7 +53,7 @@ export class CommentsRepositories {
       likesInfo: {
         dislikesCount: 0,
         likesCount: 0,
-        myStatus: "None",
+        myStatus: 'None',
       },
     };
   }

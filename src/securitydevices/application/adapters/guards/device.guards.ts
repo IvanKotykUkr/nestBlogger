@@ -1,6 +1,6 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { GuardHelper } from "../../../../auth/application/adapters/guards/guard.helper";
-import { Request, Response } from "express";
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { GuardHelper } from '../../../../auth/application/adapters/guards/guard.helper';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class DeviceGuards implements CanActivate {
@@ -12,7 +12,7 @@ export class DeviceGuards implements CanActivate {
     const refreshToken = this.guardHelper.checkCookie(req.cookies.refreshToken);
     const userMeta = this.guardHelper.getUserMetaRefreshToken(
       refreshToken,
-      res
+      res,
     );
     req.device = {
       userId: userMeta.userId,

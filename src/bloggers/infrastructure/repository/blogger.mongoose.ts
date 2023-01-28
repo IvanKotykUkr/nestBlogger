@@ -14,9 +14,9 @@ export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
 
 
  */
-import mongoose, { Document } from "mongoose";
-import { ObjectId } from "mongodb";
-import { BloggerDBType } from "../../bloggers.types";
+import mongoose, { Document } from 'mongoose';
+import { ObjectId } from 'mongodb';
+import { BloggerDBType } from '../../bloggers.types';
 
 export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
   {
@@ -28,7 +28,7 @@ export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
   },
   {
     versionKey: false,
-  }
+  },
 );
 
 //export const BloggerSchema = SchemaFactory.createForClass(BloggerMongoose);

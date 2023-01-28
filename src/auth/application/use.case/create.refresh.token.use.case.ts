@@ -1,12 +1,12 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { JwtService } from "../adapters/jwt.service";
-import { ObjectId } from "mongodb";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { JwtService } from '../adapters/jwt.service';
+import { ObjectId } from 'mongodb';
 
 export class CreateRefreshTokenCommand {
   constructor(
     public id: ObjectId,
     public deviceId: string,
-    public data: Date
+    public data: Date,
   ) {}
 }
 
@@ -22,7 +22,7 @@ export class CreateRefreshTokenUseCase
     return this.jwtService.createRefreshToken(
       command.id,
       command.deviceId,
-      command.data
+      command.data,
     );
   }
 }

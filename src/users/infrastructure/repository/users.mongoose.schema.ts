@@ -70,6 +70,8 @@ export class User extends Document {
 
   confirm: (...args: any) => any;
   comparePassword: (passwordHash: string) => ObjectId;
+  checkPasswordRecoveryStatus: (...args: any) => any;
+  checkExpirationPasswordRecoveryCode: (...args: any) => any;
 }
 
 export const UsersSchema = SchemaFactory.createForClass(User);
@@ -101,4 +103,16 @@ UsersSchema.methods.comparePassword = async function (passwordHash: string) {
     ]);
   }
   return;
+};
+UsersSchema.methods.checkExpirationPasswordRecoveryCode = async function () {
+  if (this.passwordRecovery.expirationCode < new Date()) {
+    throw new BadRequestException([{ message: 'code expired', field: 'code' }]);
+  }
+};
+UsersSchema.methods.checkPasswordRecoveryStatus = async function () {
+  if (this.passwordRecovery.isRecovered === true) {
+    throw new BadRequestException([
+      { message: 'code already confirmed', field: 'code' },
+    ]);
+  }
 };

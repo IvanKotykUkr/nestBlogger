@@ -1,30 +1,30 @@
-import { QueryUsersRepositories } from "../infrastructure/query.users.repositories";
-import { Controller, Get, Query } from "@nestjs/common";
+import { QueryUsersRepositories } from '../infrastructure/query.users.repositories';
+import { Controller, Get, Query } from '@nestjs/common';
 import {
   QueryForGetUsers,
   UsersWithPaginationResponseType,
-} from "../users.types";
+} from '../users.types';
 
 export const notFoundUser = [
   {
-    message: "NOT FOUND",
-    field: "userId",
+    message: 'NOT FOUND',
+    field: 'userId',
   },
 ];
 
-@Controller("/users")
+@Controller('/users')
 export class QueryUsersController {
   constructor(protected queryUsersRepositories: QueryUsersRepositories) {}
 
-  @Get("/")
+  @Get('/')
   async getUsers(
-    @Query() query: QueryForGetUsers
+    @Query() query: QueryForGetUsers,
   ): Promise<UsersWithPaginationResponseType> {
     const pageNumber = query.PageNumber || 1;
     const pageSize = query.PageSize || 10;
     return this.queryUsersRepositories.findAllUsersWithPagination(
       pageNumber,
-      pageSize
+      pageSize,
     );
   }
 }

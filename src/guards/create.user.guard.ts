@@ -3,9 +3,9 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-} from "@nestjs/common";
-import { Request } from "express";
-import { UsersRepositories } from "../users/infrastructure/users.repositories";
+} from '@nestjs/common';
+import { Request } from 'express';
+import { UsersRepositories } from '../users/infrastructure/users.repositories';
 
 @Injectable()
 export class CreateUserGuard implements CanActivate {
@@ -15,17 +15,17 @@ export class CreateUserGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     const user = await this.usersRepositories.checkUseLoginOrEmail(
       request.body.login,
-      request.body.email
+      request.body.email,
     );
-    if (typeof user === "string") return true;
+    if (typeof user === 'string') return true;
     if (user.accountData.login === request.body.login) {
       throw new BadRequestException([
-        { message: "login already exist", field: "login" },
+        { message: 'login already exist', field: 'login' },
       ]);
     }
     if (user.accountData.email === request.body.email) {
       throw new BadRequestException([
-        { message: "email is already used", field: "email" },
+        { message: 'email is already used', field: 'email' },
       ]);
     }
   }
