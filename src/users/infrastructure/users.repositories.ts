@@ -1,14 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { User, UserDocument } from "./repository/users.mongoose.schema";
-import { Model } from "mongoose";
-import { UserDBType, UserRequestType } from "../users.types";
-import { ObjectId } from "mongodb";
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from './repository/users.mongoose.schema';
+import { Model } from 'mongoose';
+import { UserDBType, UserRequestType } from '../users.types';
+import { ObjectId } from 'mongodb';
 
-@Injectable()
 export class UsersRepositories {
   constructor(
-    @InjectModel(User.name) private UsersModel: Model<UserDocument>
+    @InjectModel(User.name) private UsersModel: Model<UserDocument>,
   ) {}
 
   reqUsers(user: UserDBType) {
@@ -36,37 +34,37 @@ export class UsersRepositories {
 
   async findUserByEmailOrLogin(login: string): Promise<UserDocument | string> {
     const user = await this.UsersModel.findOne({
-      $or: [{ "accountData.login": login }, { "accountData.email": login }],
+      $or: [{ 'accountData.login': login }, { 'accountData.email': login }],
     });
     if (user) {
       return user;
     }
 
-    return "not found users";
+    return 'not found users';
   }
 
   async checkUseLoginOrEmail(
     login: string,
-    email: string
+    email: string,
   ): Promise<UserDBType | string> {
     const user = await this.UsersModel.findOne({
-      $or: [{ "accountData.login": login }, { "accountData.email": email }],
+      $or: [{ 'accountData.login': login }, { 'accountData.email': email }],
     });
     if (user) {
       return user;
     }
 
-    return "not found users";
+    return 'not found users';
   }
 
   async findByEmail(email: string): Promise<UserDocument> {
-    return this.UsersModel.findOne({ "accountData.email": email });
+    return this.UsersModel.findOne({ 'accountData.email': email });
   }
 
   async findUserById(_id: ObjectId): Promise<UserRequestType | string> {
     const user = await this.UsersModel.findById(_id);
     if (!user) {
-      return "not found";
+      return 'not found';
     }
 
     return {
@@ -90,7 +88,7 @@ export class UsersRepositories {
 
   async findUserByConfirmationCode(code: string): Promise<UserDocument> {
     return this.UsersModel.findOne({
-      "emailConfirmation.confirmationCode": code,
+      'emailConfirmation.confirmationCode': code,
     });
   }
 }

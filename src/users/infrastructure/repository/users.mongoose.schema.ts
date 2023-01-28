@@ -1,7 +1,7 @@
-import { Document, HydratedDocument } from "mongoose";
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { ObjectId } from "mongodb";
-import { BadRequestException, UnauthorizedException } from "@nestjs/common";
+import { HydratedDocument } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -77,14 +77,14 @@ export const UsersSchema = SchemaFactory.createForClass(User);
 UsersSchema.methods.checkConfirmed = async function () {
   if (this.emailConfirmation.isConfirmed === true) {
     throw new BadRequestException([
-      { message: "code already confirmed", field: "code" },
+      { message: 'code already confirmed', field: 'code' },
     ]);
   }
 };
 
 UsersSchema.methods.checkExpirationCode = async function () {
   if (this.emailConfirmation.expirationDate < new Date()) {
-    throw new BadRequestException([{ message: "code expired", field: "code" }]);
+    throw new BadRequestException([{ message: 'code expired', field: 'code' }]);
   }
 };
 
@@ -95,8 +95,8 @@ UsersSchema.methods.comparePassword = async function (passwordHash: string) {
   if (passwordHash !== this.accountData.passwordHash) {
     throw new UnauthorizedException([
       {
-        message: "WRONG PASSWORD",
-        field: "password",
+        message: 'WRONG PASSWORD',
+        field: 'password',
       },
     ]);
   }
