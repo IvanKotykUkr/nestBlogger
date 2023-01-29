@@ -21,7 +21,7 @@ import {
   LogoutTokenGuards,
   RefreshTokenGuards,
 } from '../application/adapters/guards/refresh.token.guards';
-import { AuthGuard } from '../application/adapters/guards/auth.guard';
+import { AuthorizationGuard } from '../application/adapters/guards/autherisation-guard.service';
 import { Cookies } from '../../types/decorator';
 import { BodyForCreateUser } from '../../users/users.types';
 import { CreateUserGuard } from '../../guards/create.user.guard';
@@ -145,7 +145,7 @@ export class AuthController {
     );
   }
 
-  @UseGuards(AntiDdosGuard, AuthGuard)
+  @UseGuards(AntiDdosGuard, AuthorizationGuard)
   @Get('/me')
   async getUserFromAccessesToken(@Req() req: Request) {
     return {

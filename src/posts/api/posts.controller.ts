@@ -14,7 +14,7 @@ import { BodyTypeForPost, IdTypeForReq, UpdateLikeDTO } from '../posts.types';
 import { notFoundBlogger } from '../../bloggers/api/bloggers.controller';
 import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 import { BodyForComments } from '../../comments/comments.types';
-import { AuthGuard } from '../../auth/application/adapters/guards/auth.guard';
+import { AuthorizationGuard } from '../../auth/application/adapters/guards/autherisation-guard.service';
 import { Request } from 'express';
 import { CommandBus } from '@nestjs/cqrs';
 import { FindBloggerCommand } from '../../bloggers/application/use.case/find.blogger.use.case';
@@ -36,7 +36,7 @@ export const notFoundPost = [
 export class PostsController {
   constructor(protected commandBus: CommandBus) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthorizationGuard)
   @Post('/:id/comments')
   async createComment(
     @Body() body: BodyForComments,
@@ -107,7 +107,7 @@ export class PostsController {
     throw new NotFoundException(notFoundPost);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthorizationGuard)
   @Put('/:id/like-status')
   @HttpCode(204)
   async updateLikeStatus(

@@ -12,9 +12,9 @@ import {
 import { BodyForComments } from '../comments.types';
 import { IdTypeForReq, UpdateLikeDTO } from '../../posts/posts.types';
 import {
-  AuthGuard,
+  AuthorizationGuard,
   CheckOwnGuard,
-} from '../../auth/application/adapters/guards/auth.guard';
+} from '../../auth/application/adapters/guards/autherisation-guard.service';
 import { Request } from 'express';
 import { CommandBus } from '@nestjs/cqrs';
 import { UpdateCommentCommand } from '../application/use.case/update.comment.use.case';
@@ -26,7 +26,7 @@ import { UpdateLikeCommand } from '../application/use.case/update.like.use.case'
 export class CommentsController {
   constructor(protected commandBus: CommandBus) {}
 
-  @UseGuards(AuthGuard, CheckOwnGuard)
+  @UseGuards(AuthorizationGuard, CheckOwnGuard)
   @Put('/:id')
   @HttpCode(204)
   async updateComment(
@@ -38,14 +38,14 @@ export class CommentsController {
     );
   }
 
-  @UseGuards(AuthGuard, CheckOwnGuard)
+  @UseGuards(AuthorizationGuard, CheckOwnGuard)
   @Delete('/:id')
   @HttpCode(204)
   async deleteComment(@Param() param: IdTypeForReq) {
     return this.commandBus.execute(new DeleteCommentCommand(param.id));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthorizationGuard)
   @Put('/:id/like-status')
   @HttpCode(204)
   async updateLike(

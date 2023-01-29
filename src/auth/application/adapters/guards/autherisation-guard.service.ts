@@ -14,7 +14,7 @@ import { GuardHelper } from './guard.helper';
 import { CommentsRepositories } from '../../../../comments/infrastructure/comments.repositories';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AuthorizationGuard implements CanActivate {
   constructor(
     protected jwtService: JwtService,
     protected guardHelper: GuardHelper,
