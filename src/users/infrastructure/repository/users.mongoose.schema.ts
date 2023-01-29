@@ -6,7 +6,7 @@ import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ versionKey: false, _id: false })
-export class AccountData extends Document {
+export class AccountData {
   @Prop()
   login: string;
   @Prop()
@@ -22,7 +22,7 @@ export class AccountData extends Document {
 //export const AccountDataSchema = SchemaFactory.createForClass(AccountData);
 
 @Schema({ versionKey: false, _id: false })
-export class EmailConfirmation extends Document {
+export class EmailConfirmation {
   @Prop()
   confirmationCode: string;
   @Prop()
@@ -35,7 +35,7 @@ export class EmailConfirmation extends Document {
 //  SchemaFactory.createForClass(EmailConfirmation);
 
 @Schema({ versionKey: false })
-export class PasswordRecovery extends Document {
+export class PasswordRecovery {
   @Prop()
   recoveryCode: string;
   @Prop()
@@ -52,7 +52,7 @@ export class PasswordRecovery extends Document {
 //SchemaFactory.createForClass(PasswordRecovery);
 
 @Schema({ versionKey: false })
-export class User extends Document {
+export class User {
   @Prop()
   _id: ObjectId;
   @Prop({ type: AccountData })
