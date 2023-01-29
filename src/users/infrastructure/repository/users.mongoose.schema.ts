@@ -1,4 +1,4 @@
-import { HydratedDocument } from 'mongoose';
+import { Document, HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
@@ -6,7 +6,7 @@ import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ versionKey: false, _id: false })
-export class AccountData {
+export class AccountData extends Document {
   @Prop()
   login: string;
   @Prop()
@@ -22,7 +22,7 @@ export class AccountData {
 //export const AccountDataSchema = SchemaFactory.createForClass(AccountData);
 
 @Schema({ versionKey: false, _id: false })
-export class EmailConfirmation {
+export class EmailConfirmation extends Document {
   @Prop()
   confirmationCode: string;
   @Prop()
@@ -35,7 +35,7 @@ export class EmailConfirmation {
 //  SchemaFactory.createForClass(EmailConfirmation);
 
 @Schema({ versionKey: false })
-export class PasswordRecovery {
+export class PasswordRecovery extends Document {
   @Prop()
   recoveryCode: string;
   @Prop()
@@ -52,7 +52,7 @@ export class PasswordRecovery {
 //SchemaFactory.createForClass(PasswordRecovery);
 
 @Schema({ versionKey: false })
-export class User {
+export class User extends Document {
   @Prop()
   _id: ObjectId;
   @Prop({ type: AccountData })
