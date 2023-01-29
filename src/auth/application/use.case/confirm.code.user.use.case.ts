@@ -18,7 +18,7 @@ export class ConfirmCodeUserUseCase
     const user = await this.usersRepositories.findUserByConfirmationCode(
       command.code,
     );
-    if (user === undefined) {
+    if (!user) {
       throw new BadRequestException([
         { message: ' code doesnt exist', field: 'code' },
       ]);
