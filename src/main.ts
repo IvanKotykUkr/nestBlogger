@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './exeption.filter';
-import cookieParser from 'cookie-parser';
+import * as cookieParser from 'cookie-parser';
 
 const PORT = process.env.PORT;
 
