@@ -1,15 +1,15 @@
-import { ObjectId } from "mongodb";
-import { PaginationType } from "../bloggers/bloggers.types";
-import { IsEmail, IsMongoId, Length, Matches } from "class-validator";
+import { ObjectId } from 'mongodb';
+import { PaginationType } from '../bloggers/bloggers.types';
+import { IsEmail, IsMongoId, Length, Matches } from 'class-validator';
 
 export class BodyForCreateUser {
   @Length(3, 10)
-  @Matches(/[a-zA-Z0-9_-]/, { message: "Should be not Empty" })
+  @Matches(/[a-zA-Z0-9_-]/, { message: 'Should be not Empty' })
   login: string;
   @IsEmail()
   email: string;
   @Length(6, 20)
-  @Matches(/[a-zA-Z0-9_-]/, { message: "Should be not Empty" })
+  @Matches(/[a-zA-Z0-9_-]/, { message: 'Should be not Empty' })
   password: string;
 }
 

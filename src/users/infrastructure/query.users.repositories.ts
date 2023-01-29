@@ -32,6 +32,7 @@ export class QueryUsersRepositories {
       pageSize,
       page,
     );
+
     return {
       pagesCount: pagesCountSearch,
       page,

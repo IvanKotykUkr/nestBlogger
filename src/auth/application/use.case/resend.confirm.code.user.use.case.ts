@@ -1,9 +1,9 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { UsersRepositories } from "../../../users/infrastructure/users.repositories";
-import { BadRequestException } from "@nestjs/common";
-import { v4 as uuidv4 } from "uuid";
-import add from "date-fns/add";
-import { EmailManager } from "../adapters/email.manager";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { UsersRepositories } from '../../../users/infrastructure/users.repositories';
+import { BadRequestException } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
+import add from 'date-fns/add';
+import { EmailManager } from '../adapters/email.manager';
 
 export class ResendConfirmCodeUserCommand {
   constructor(public email: string) {}
@@ -13,20 +13,18 @@ export class ResendConfirmCodeUserCommand {
 export class ResendConfirmCodeUserUseCase
   implements ICommandHandler<ResendConfirmCodeUserCommand>
 {
-  return;
-
   constructor(
     protected usersRepositories: UsersRepositories,
-    protected emailManager: EmailManager
+    protected emailManager: EmailManager,
   ) {}
 
   async execute(command: ResendConfirmCodeUserCommand) {
     const user = await this.usersRepositories.findUserByEmailOrLogin(
-      command.email
+      command.email,
     );
-    if (typeof user === "string") {
+    if (typeof user === 'string') {
       throw new BadRequestException([
-        { message: "user email doesnt exist", field: "email" },
+        { message: 'user email doesnt exist', field: 'email' },
       ]);
     }
 
@@ -42,7 +40,7 @@ export class ResendConfirmCodeUserUseCase
     try {
       await this.emailManager.resentEmailConfirmationMessage(
         command.email,
-        confirmationCode
+        confirmationCode,
       );
       return;
     } catch (error) {

@@ -1,27 +1,27 @@
-import { Injectable } from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import {
   NewestLike,
   PostsDBType,
   PostsLikeResponseType,
   PostsResponseType,
   PostsResponseTypeWithPagination,
-} from "../posts.types";
-import { ObjectId } from "mongodb";
-import { PostsDocument } from "./repository/posts.mongoose.schema";
+} from '../posts.types';
+import { ObjectId } from 'mongodb';
+import { PostsDocument } from './repository/posts.mongoose.schema';
 import {
   Likes,
   LikesDocument,
-} from "../../comments/infrastructure/repository/likes.mongooose.schema";
-import { LikesHelper } from "../../comments/application/likes.helper";
+} from '../../comments/infrastructure/repository/likes.mongooose.schema';
+import { LikesHelper } from '../../comments/application/likes.helper';
 
 @Injectable()
 export class QueryPostsRepositories {
   constructor(
-    @InjectModel("posts") private PostModel: Model<PostsDocument>,
+    @InjectModel('posts') private PostModel: Model<PostsDocument>,
     @InjectModel(Likes.name) private LikesModel: Model<LikesDocument>,
-    protected likesHelper: LikesHelper
+    protected likesHelper: LikesHelper,
   ) {}
 
   resPost(post: PostsDBType): PostsResponseType {
@@ -42,7 +42,7 @@ export class QueryPostsRepositories {
       return this.resPost(post);
     }
 
-    return "not found";
+    return 'not found';
   }
 
   paginationFilter(blogId: undefined | ObjectId) {
@@ -55,7 +55,7 @@ export class QueryPostsRepositories {
   }
 
   async findPostsByIdBloggerCount(
-    blogId: undefined | ObjectId
+    blogId: undefined | ObjectId,
   ): Promise<number> {
     const filter = this.paginationFilter(blogId);
 
@@ -67,7 +67,7 @@ export class QueryPostsRepositories {
     number: number,
     size: number,
     sortBy: string,
-    sortDirection: string
+    sortDirection: string,
   ): Promise<PostsDBType[]> {
     const filter = await this.paginationFilter(blogId);
     const direction = this.getDirection(sortDirection);
@@ -90,10 +90,10 @@ export class QueryPostsRepositories {
     userId: ObjectId,
     sortBy: string,
     sortDirection: string,
-    blogId?: ObjectId
+    blogId?: ObjectId,
   ): Promise<PostsResponseTypeWithPagination> {
     const totalCountSearch: number = await this.findPostsByIdBloggerCount(
-      blogId
+      blogId,
     );
     const pagenumber: number = number;
     const pagesize: number = size;
@@ -103,17 +103,15 @@ export class QueryPostsRepositories {
       pagenumber,
       pagesize,
       sortBy,
-      sortDirection
+      sortDirection,
     );
-    const zoriana = "dfs";
 
     const idItems = this.likesHelper.takeEntityId(itemsFromDb);
     const likes = await this.likesHelper.findLikes(idItems);
     const dislikes = await this.likesHelper.findDislike(idItems);
     const status = await this.likesHelper.findStatus(userId, idItems);
     const allLikes = await this.likesHelper.findLastThreLikes(idItems);
-    console.log(allLikes);
-    const items = itemsFromDb.map((p) => ({
+    const items = itemsFromDb.map(p => ({
       id: p._id,
       title: p.title,
       shortDescription: p.shortDescription,
@@ -125,7 +123,7 @@ export class QueryPostsRepositories {
         likesCount: this.likesHelper.findAmountLikeOrDislike(p._id, likes),
         dislikesCount: this.likesHelper.findAmountLikeOrDislike(
           p._id,
-          dislikes
+          dislikes,
         ),
         myStatus: this.likesHelper.findStatusInArray(p._id, status),
         newestLikes: this.likesHelper.groupAndSortLikes(allLikes, p._id),
@@ -142,15 +140,15 @@ export class QueryPostsRepositories {
 
   async findPostWithLikeById(
     _id: ObjectId,
-    userId: ObjectId
+    userId: ObjectId,
   ): Promise<PostsLikeResponseType | string> {
     const post = await this.PostModel.findById(_id);
-    if (!post) return "not found";
+    if (!post) return 'not found';
     const likesCount = await this.LikesModel.countDocuments({
-      $and: [{ entityId: post.id }, { status: "Like" }],
+      $and: [{ entityId: post.id }, { status: 'Like' }],
     });
     const dislikesCount = await this.LikesModel.countDocuments({
-      $and: [{ entityId: post.id }, { status: "Dislike" }],
+      $and: [{ entityId: post.id }, { status: 'Dislike' }],
     });
     let myStatus;
     const status = await this.LikesModel.findOne({
@@ -159,7 +157,7 @@ export class QueryPostsRepositories {
     if (status) {
       myStatus = status.status;
     } else {
-      myStatus = "None";
+      myStatus = 'None';
     }
     return {
       id: post.id,
@@ -180,12 +178,12 @@ export class QueryPostsRepositories {
 
   private async newestLike(post: ObjectId): Promise<NewestLike[]> {
     const likeInstance = await this.LikesModel.find({
-      $and: [{ entityId: post }, { status: "Like" }],
+      $and: [{ entityId: post }, { status: 'Like' }],
     })
       .sort({ addedAt: -1 })
       .limit(3)
       .lean();
-    return likeInstance.map((d) => ({
+    return likeInstance.map(d => ({
       addedAt: d.addedAt,
       userId: d.userId,
       login: d.login,
@@ -193,10 +191,10 @@ export class QueryPostsRepositories {
   }
 
   private getDirection(sortDirection: string): 1 | -1 {
-    if (sortDirection.toString() === "asc") {
+    if (sortDirection.toString() === 'asc') {
       return 1;
     }
-    if (sortDirection.toString() === "desc") {
+    if (sortDirection.toString() === 'desc') {
       return -1;
     }
   }

@@ -1,31 +1,31 @@
-import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import { CommentsDocument } from "./repository/comments.mongooose.schema";
-import { ObjectId } from "mongodb";
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CommentsDocument } from './repository/comments.mongooose.schema';
+import { ObjectId } from 'mongodb';
 import {
   CommentResponseType,
   CommentsResponseTypeWithPagination,
   CommentWithLikeResponseType,
-} from "../comments.types";
-import { Likes, LikesDocument } from "./repository/likes.mongooose.schema";
-import { LikesHelper } from "../application/likes.helper";
+} from '../comments.types';
+import { Likes, LikesDocument } from './repository/likes.mongooose.schema';
+import { LikesHelper } from '../application/likes.helper';
 
 export class QueryCommentsRepositories {
   constructor(
-    @InjectModel("comments") private CommentsModel: Model<CommentsDocument>,
+    @InjectModel('comments') private CommentsModel: Model<CommentsDocument>,
     @InjectModel(Likes.name) private LikesModel: Model<LikesDocument>,
-    protected likesHelper: LikesHelper
+    protected likesHelper: LikesHelper,
   ) {}
 
   async findCommentsById(
     _id: ObjectId,
-    userId: ObjectId
+    userId: ObjectId,
   ): Promise<CommentResponseType | string> {
     const comment = await this.CommentsModel.findById(_id);
     if (comment) {
       return this.reqComment(comment, userId);
     }
-    return "not found";
+    return 'not found';
   }
 
   async findAllComments(
@@ -34,7 +34,7 @@ export class QueryCommentsRepositories {
     pageSize: number,
     sortBy: string,
     sortDirection: string,
-    userId: ObjectId
+    userId: ObjectId,
   ): Promise<CommentsResponseTypeWithPagination> {
     const pagenumber: number = page;
     const pagesize: number = pageSize;
@@ -45,13 +45,13 @@ export class QueryCommentsRepositories {
       page,
       id,
       sortBy,
-      sortDirection
+      sortDirection,
     );
     const commentsId = this.likesHelper.takeEntityId(itemsSearch);
     const likes = await this.likesHelper.findLikes(commentsId);
     const dislikes = await this.likesHelper.findDislike(commentsId);
     const status = await this.likesHelper.findStatus(userId, commentsId);
-    const items: CommentWithLikeResponseType[] = itemsSearch.map((c) => ({
+    const items: CommentWithLikeResponseType[] = itemsSearch.map(c => ({
       id: c._id,
       content: c.content,
       userId: c.userId,
@@ -61,7 +61,7 @@ export class QueryCommentsRepositories {
         likesCount: this.likesHelper.findAmountLikeOrDislike(c._id, likes),
         dislikesCount: this.likesHelper.findAmountLikeOrDislike(
           c._id,
-          dislikes
+          dislikes,
         ),
         myStatus: this.likesHelper.findStatusInArray(c._id, status),
       },
@@ -78,13 +78,13 @@ export class QueryCommentsRepositories {
 
   protected async reqComment(
     comment: CommentsDocument,
-    userId: ObjectId
+    userId: ObjectId,
   ): Promise<CommentWithLikeResponseType> {
     const likesCount = await this.LikesModel.countDocuments({
-      $and: [{ entityId: comment.id }, { status: "Like" }],
+      $and: [{ entityId: comment.id }, { status: 'Like' }],
     });
     const dislikesCount = await this.LikesModel.countDocuments({
-      $and: [{ entityId: comment.id }, { status: "Dislike" }],
+      $and: [{ entityId: comment.id }, { status: 'Dislike' }],
     });
     let myStatus;
     const status = await this.LikesModel.findOne({
@@ -93,7 +93,7 @@ export class QueryCommentsRepositories {
     if (status) {
       myStatus = status.status;
     } else {
-      myStatus = "None";
+      myStatus = 'None';
     }
 
     return {
@@ -119,7 +119,7 @@ export class QueryCommentsRepositories {
     page: number,
     postId: ObjectId,
     sortBy: string,
-    sortDirection: string
+    sortDirection: string,
   ) {
     const direction = this.getDirection(sortDirection);
     return this.CommentsModel.find({ postId })
@@ -130,10 +130,10 @@ export class QueryCommentsRepositories {
   }
 
   private getDirection(sortDirection: string) {
-    if (sortDirection.toString() === "asc") {
+    if (sortDirection.toString() === 'asc') {
       return 1;
     }
-    if (sortDirection.toString() === "desc") {
+    if (sortDirection.toString() === 'desc') {
       return -1;
     }
   }

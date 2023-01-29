@@ -3,20 +3,20 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from "@nestjs/common";
-import { Observable } from "rxjs";
-import { Request } from "express";
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { Request } from 'express';
 
 @Injectable()
 export class BasicAuthGuard implements CanActivate {
   canActivate(
-    context: ExecutionContext
+    context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-    const b64auth = (request.headers.authorization || "").split(" ")[1] || "";
-    const [username, password] = Buffer.from(b64auth, "base64")
+    const b64auth = (request.headers.authorization || '').split(' ')[1] || '';
+    const [username, password] = Buffer.from(b64auth, 'base64')
       .toString()
-      .split(":");
+      .split(':');
     if (
       b64auth === undefined ||
       username !== process.env.USERNAME ||

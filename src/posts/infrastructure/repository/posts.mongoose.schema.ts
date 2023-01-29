@@ -1,6 +1,6 @@
-import mongoose, { Document } from "mongoose";
-import { PostsDBType } from "../../posts.types";
-import { ObjectId } from "mongodb";
+import mongoose, { Document } from 'mongoose';
+import { PostsDBType } from '../../posts.types';
+import { ObjectId } from 'mongodb';
 
 export const PostsSchema = new mongoose.Schema<PostsDBType>(
   {
@@ -14,6 +14,6 @@ export const PostsSchema = new mongoose.Schema<PostsDBType>(
   },
   {
     versionKey: false,
-  }
+  },
 );
 export type PostsDocument = PostsDBType & Document;

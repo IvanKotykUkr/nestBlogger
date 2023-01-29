@@ -1,14 +1,14 @@
-import { Injectable } from "@nestjs/common";
-import { Model } from "mongoose";
-import { BloggerResponseType, BloggerType } from "../bloggers.types";
-import { ObjectId } from "mongodb";
-import { InjectModel } from "@nestjs/mongoose";
-import { BloggerDocument } from "./repository/blogger.mongoose";
+import { Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { BloggerResponseType, BloggerType } from '../bloggers.types';
+import { ObjectId } from 'mongodb';
+import { InjectModel } from '@nestjs/mongoose';
+import { BloggerDocument } from './repository/blogger.mongoose';
 
 @Injectable()
 export class BloggersRepositories {
   constructor(
-    @InjectModel("bloggers") private BloggerModel: Model<BloggerDocument>
+    @InjectModel('bloggers') private BloggerModel: Model<BloggerDocument>,
   ) {}
 
   reqBlogger(blogger: BloggerType) {
@@ -57,6 +57,6 @@ export class BloggersRepositories {
     if (blogger) {
       return this.reqBlogger(blogger);
     }
-    return "not found";
+    return 'not found';
   }
 }

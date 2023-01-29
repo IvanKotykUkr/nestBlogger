@@ -1,20 +1,20 @@
-import { Injectable } from "@nestjs/common";
-import { Model } from "mongoose";
+import { Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
 import {
   BloggerResponseType,
   BloggerResponseTypeWithPagination,
   BloggerType,
-} from "../bloggers.types";
-import { InjectModel } from "@nestjs/mongoose";
-import { ObjectId } from "mongodb";
-import { BloggerDocument } from "./repository/blogger.mongoose";
+} from '../bloggers.types';
+import { InjectModel } from '@nestjs/mongoose';
+import { ObjectId } from 'mongodb';
+import { BloggerDocument } from './repository/blogger.mongoose';
 
 @Injectable()
 export class QueryBloggersRepositories {
   async;
 
   constructor(
-    @InjectModel("bloggers") private BloggerModel: Model<BloggerDocument>
+    @InjectModel('bloggers') private BloggerModel: Model<BloggerDocument>,
   ) {}
 
   reqBlogger(blogger: BloggerType) {
@@ -44,7 +44,7 @@ export class QueryBloggersRepositories {
   async getBloggers(
     name: string | null,
     size: number,
-    number: number
+    number: number,
   ): Promise<BloggerResponseType[]> {
     const filter = await this.paginationFilter(name);
 
@@ -52,7 +52,7 @@ export class QueryBloggersRepositories {
       .skip(number > 0 ? (number - 1) * size : 0)
       .limit(size)
       .lean();
-    return bloggers.map((d) => ({
+    return bloggers.map(d => ({
       id: d._id,
       name: d.name,
       description: d.description,
@@ -67,24 +67,24 @@ export class QueryBloggersRepositories {
     if (blogger) {
       return this.reqBlogger(blogger);
     }
-    return "not found";
+    return 'not found';
   }
 
   async findAllBloggers(
     searchnameterm: string | null,
     pagenumber: number,
-    pagesize: number
+    pagesize: number,
   ): Promise<BloggerResponseTypeWithPagination> {
     const page: number = pagenumber;
     const pageSize: number = pagesize;
     const totalCountSearch: number = await this.bloggersSearchCount(
-      searchnameterm
+      searchnameterm,
     );
     const pagesCountSearch: number = Math.ceil(totalCountSearch / pageSize);
     const itemsSearch: BloggerResponseType[] = await this.getBloggers(
       searchnameterm,
       pageSize,
-      page
+      page,
     );
 
     return {

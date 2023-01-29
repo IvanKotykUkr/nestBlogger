@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { LikesRepositories } from "../infrastructure/likes.repositories";
-import { ObjectId } from "mongodb";
+import { Injectable } from '@nestjs/common';
+import { LikesRepositories } from '../infrastructure/likes.repositories';
+import { ObjectId } from 'mongodb';
 import {
   ArrayCountIdType,
   ArrayIdType,
@@ -9,8 +9,8 @@ import {
   LikeOrDislikeIdType,
   NewestThreeLikes,
   StatusLikeOrDislikeType,
-} from "../comments.types";
-import { PostsDBType } from "../../posts/posts.types";
+} from '../comments.types';
+import { PostsDBType } from '../../posts/posts.types';
 
 @Injectable()
 export class LikesHelper {
@@ -23,10 +23,10 @@ export class LikesHelper {
   }
 
   countLikesOrDislikesFromArray(
-    likesOrDislikesId: LikeOrDislikeIdType
+    likesOrDislikesId: LikeOrDislikeIdType,
   ): ArrayCountIdType {
     const res = {};
-    likesOrDislikesId.forEach((obj) => {
+    likesOrDislikesId.forEach(obj => {
       const key: ObjectId = obj.entityId;
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -45,7 +45,7 @@ export class LikesHelper {
 
   findAmountLikeOrDislike(
     id: ObjectId,
-    likesOrDislikesId: LikeOrDislikeIdType
+    likesOrDislikesId: LikeOrDislikeIdType,
   ): number {
     const likesOrDislikes =
       this.countLikesOrDislikesFromArray(likesOrDislikesId);
@@ -63,9 +63,9 @@ export class LikesHelper {
 
   findStatusInArray(
     entityId: ObjectId,
-    allStatus: StatusLikeOrDislikeType
+    allStatus: StatusLikeOrDislikeType,
   ): string {
-    let status = "None";
+    let status = 'None';
     for (let i = 0; i < allStatus.length; i++) {
       if (entityId.toString() === allStatus[i].entityId.toString()) {
         status = allStatus[i].status;
@@ -84,7 +84,7 @@ export class LikesHelper {
       if (lastThreeLikes.length === 3) break;
     }
 
-    return lastThreeLikes.map((d) => ({
+    return lastThreeLikes.map(d => ({
       addedAt: d.addedAt,
       userId: d.userId,
       login: d.login,
@@ -101,7 +101,7 @@ export class LikesHelper {
 
   async findStatus(
     id: ObjectId,
-    idItems: ArrayIdType
+    idItems: ArrayIdType,
   ): Promise<StatusLikeOrDislikeType> {
     return this.likesRepositories.findStatusArr(id, idItems);
   }
