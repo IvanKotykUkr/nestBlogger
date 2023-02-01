@@ -26,7 +26,7 @@ export class LikesHelper {
     likesOrDislikesId: LikeOrDislikeIdType,
   ): ArrayCountIdType {
     const res = {};
-    likesOrDislikesId.forEach(obj => {
+    likesOrDislikesId.forEach((obj) => {
       const key: ObjectId = obj.entityId;
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -84,7 +84,7 @@ export class LikesHelper {
       if (lastThreeLikes.length === 3) break;
     }
 
-    return lastThreeLikes.map(d => ({
+    return lastThreeLikes.map((d) => ({
       addedAt: d.addedAt,
       userId: d.userId,
       login: d.login,

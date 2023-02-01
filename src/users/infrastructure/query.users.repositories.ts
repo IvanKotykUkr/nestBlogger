@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './repository/users.mongoose.schema';
 import { Model } from 'mongoose';
@@ -7,6 +8,7 @@ import {
   UsersWithPaginationResponseType,
 } from '../users.types';
 
+@Injectable()
 export class QueryUsersRepositories {
   constructor(
     @InjectModel(User.name) private UsersModel: Model<UserDocument>,
@@ -50,7 +52,7 @@ export class QueryUsersRepositories {
       .skip(number > 0 ? (number - 1) * size : 0)
       .limit(size)
       .lean();
-    return users.map(u => ({
+    return users.map((u) => ({
       id: u._id,
       login: u.accountData.login,
       email: u.accountData.email,

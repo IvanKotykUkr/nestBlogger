@@ -23,9 +23,11 @@ export class ConfirmCodeUserUseCase
         { message: ' code doesnt exist', field: 'code' },
       ]);
     }
-    await user.checkConfirmed();
-    await user.checkExpirationCode();
-    await user.confirm();
-    return this.usersRepositories.saveUser(user);
+    user.checkConfirmed();
+    user.checkExpirationCode();
+    user.confirm();
+
+    await this.usersRepositories.saveUser(user);
+    return;
   }
 }

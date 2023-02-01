@@ -44,11 +44,11 @@ describe('Users', () => {
 
     app.useGlobalPipes(
       new ValidationPipe({
-        exceptionFactory: errors => {
+        exceptionFactory: (errors) => {
           const errorsForResponse = [];
-          errors.forEach(e => {
+          errors.forEach((e) => {
             const constraintsKeys = Object.keys(e.constraints);
-            constraintsKeys.forEach(ckey => {
+            constraintsKeys.forEach((ckey) => {
               errorsForResponse.push({
                 message: e.constraints[ckey],
                 field: e.property,

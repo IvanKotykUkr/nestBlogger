@@ -2,6 +2,8 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { GuardHelper } from './guard.helper';
 
+import { ObjectId } from 'mongodb';
+
 @Injectable()
 export class RefreshTokenGuards implements CanActivate {
   constructor(protected guardHelper: GuardHelper) {}
@@ -19,7 +21,9 @@ export class RefreshTokenGuards implements CanActivate {
       userMeta.deviceId,
       res,
     );
-    const user = await this.guardHelper.findUserById(userMeta.userId);
+    const user = await this.guardHelper.findUserById(
+      new ObjectId(userMeta.userId),
+    );
     req.user = {
       id: user.id,
       passwordHash: user.passwordHash,

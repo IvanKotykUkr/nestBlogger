@@ -16,7 +16,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const responseBody: any = exception.getResponse();
     if (status === 400) {
       const errorsResponse = { errorsMessages: [] };
-      responseBody.message.forEach(m => errorsResponse.errorsMessages.push(m));
+      responseBody.message.forEach((m) =>
+        errorsResponse.errorsMessages.push(m),
+      );
       response.status(status).json(errorsResponse);
     } else {
       /* if (status === 401) {

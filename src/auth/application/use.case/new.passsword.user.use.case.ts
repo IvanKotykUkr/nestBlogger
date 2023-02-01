@@ -54,7 +54,7 @@ export class NewPasswordUserUseCase
   private validateId(userId: string) {
     const id = new IdValidation();
     id.userId = userId;
-    return validate(id).then(errors => {
+    return validate(id).then((errors) => {
       if (errors.length > 0) {
         return 'incorrect';
       } else {

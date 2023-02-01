@@ -3,9 +3,10 @@ import { UserRequestType } from '../../../../users/users.types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '../jwt.service';
 import { Response } from 'express';
-import { UsersRepositories } from '../../../../users/infrastructure/users.repositories';
+
 import { AuthDevicesRepositories } from '../../../../securitydevices/infrastructure/auth.devices.repositories';
 import { DevicesInfo } from '../../../../securitydevices/infrastructure/device.types';
+import { UsersRepositories } from '../../../../users/infrastructure/users.repositories';
 
 @Injectable()
 export class GuardHelper {
@@ -43,6 +44,7 @@ export class GuardHelper {
         { message: 'expired', field: 'refreshToken' },
       ]);
     }
+
     return metaFromRefreshToken;
   }
 

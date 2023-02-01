@@ -51,7 +51,7 @@ export class QueryCommentsRepositories {
     const likes = await this.likesHelper.findLikes(commentsId);
     const dislikes = await this.likesHelper.findDislike(commentsId);
     const status = await this.likesHelper.findStatus(userId, commentsId);
-    const items: CommentWithLikeResponseType[] = itemsSearch.map(c => ({
+    const items: CommentWithLikeResponseType[] = itemsSearch.map((c) => ({
       id: c._id,
       content: c.content,
       userId: c.userId,
