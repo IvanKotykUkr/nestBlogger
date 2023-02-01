@@ -85,11 +85,11 @@ describe('Users', () => {
     emailAdapter = moduleRef.get<EmailAdapter>(EmailAdapter);
     app.useGlobalPipes(
       new ValidationPipe({
-        exceptionFactory: errors => {
+        exceptionFactory: (errors) => {
           const errorsForResponse = [];
-          errors.forEach(e => {
+          errors.forEach((e) => {
             const constraintsKeys = Object.keys(e.constraints);
-            constraintsKeys.forEach(ckey => {
+            constraintsKeys.forEach((ckey) => {
               errorsForResponse.push({
                 message: e.constraints[ckey],
                 field: e.property,
@@ -158,8 +158,8 @@ describe('Users', () => {
       .expect(200);
     const cookies = res.headers['set-cookie'][0]
       .split(',')
-      .map(item => item.split(';')[0])
-      .map(item => item.split('=')[1]);
+      .map((item) => item.split(';')[0])
+      .map((item) => item.split('=')[1]);
 
     tokensForFirstUser.accessToken = res.body.accessToken;
     tokensForFirstUser.refreshToken = cookies.toString();
@@ -174,8 +174,8 @@ describe('Users', () => {
       .expect(200);
     const cookies = res.headers['set-cookie'][0]
       .split(',')
-      .map(item => item.split(';')[0])
-      .map(item => item.split('=')[1]);
+      .map((item) => item.split(';')[0])
+      .map((item) => item.split('=')[1]);
 
     tokensForSecondUser.accessToken = res.body.accessToken;
     tokensForSecondUser.refreshToken = cookies.toString();

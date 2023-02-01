@@ -111,7 +111,7 @@ export class QueryPostsRepositories {
     const dislikes = await this.likesHelper.findDislike(idItems);
     const status = await this.likesHelper.findStatus(userId, idItems);
     const allLikes = await this.likesHelper.findLastThreLikes(idItems);
-    const items = itemsFromDb.map(p => ({
+    const items = itemsFromDb.map((p) => ({
       id: p._id,
       title: p.title,
       shortDescription: p.shortDescription,
@@ -183,7 +183,7 @@ export class QueryPostsRepositories {
       .sort({ addedAt: -1 })
       .limit(3)
       .lean();
-    return likeInstance.map(d => ({
+    return likeInstance.map((d) => ({
       addedAt: d.addedAt,
       userId: d.userId,
       login: d.login,

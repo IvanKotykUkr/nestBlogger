@@ -1,12 +1,12 @@
-import { Document, HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { HydratedDocument } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ versionKey: false, _id: false })
-export class AccountData extends Document {
+export class AccountData {
   @Prop()
   login: string;
   @Prop()
@@ -22,7 +22,7 @@ export class AccountData extends Document {
 //export const AccountDataSchema = SchemaFactory.createForClass(AccountData);
 
 @Schema({ versionKey: false, _id: false })
-export class EmailConfirmation extends Document {
+export class EmailConfirmation {
   @Prop()
   confirmationCode: string;
   @Prop()
@@ -35,7 +35,7 @@ export class EmailConfirmation extends Document {
 //  SchemaFactory.createForClass(EmailConfirmation);
 
 @Schema({ versionKey: false })
-export class PasswordRecovery extends Document {
+export class PasswordRecovery {
   @Prop()
   recoveryCode: string;
   @Prop()
@@ -48,71 +48,80 @@ export class PasswordRecovery extends Document {
   isRecovered: boolean;
 }
 
-//export const PasswordRecoverySchema =
-//SchemaFactory.createForClass(PasswordRecovery);
-
 @Schema({ versionKey: false })
-export class User extends Document {
-  @Prop()
+export class User {
+  @Prop({ type: ObjectId })
   _id: ObjectId;
-  @Prop({ type: AccountData })
+  @Prop()
   accountData: AccountData;
-  @Prop({ type: EmailConfirmation })
+  @Prop()
   emailConfirmation: EmailConfirmation;
-  @Prop({ type: PasswordRecovery })
+  @Prop()
   passwordRecovery: PasswordRecovery;
   @Prop()
   createdAt: Date;
 
-  checkConfirmed: (...args: any) => any;
+  checkConfirmed() {
+    if (this.emailConfirmation.isConfirmed === true) {
+      throw new BadRequestException([
+        { message: 'code already confirmed', field: 'code' },
+      ]);
+    }
+    return true;
+  }
 
-  checkExpirationCode: (...args: any) => any;
+  checkExpirationCode() {
+    if (this.emailConfirmation.expirationDate < new Date()) {
+      throw new BadRequestException([
+        { message: 'code expired', field: 'code' },
+      ]);
+    }
+    return true;
+  }
 
-  confirm: (...args: any) => any;
-  comparePassword: (passwordHash: string) => ObjectId;
-  checkPasswordRecoveryStatus: (...args: any) => any;
-  checkExpirationPasswordRecoveryCode: (...args: any) => any;
+  confirm() {
+    this.emailConfirmation.isConfirmed = true;
+    return;
+  }
+
+  comparePassword(passwordHash: string) {
+    if (passwordHash !== this.accountData.passwordHash) {
+      throw new UnauthorizedException([
+        {
+          message: 'WRONG PASSWORD',
+          field: 'password',
+        },
+      ]);
+    }
+    return true;
+  }
+
+  checkPasswordRecoveryStatus() {
+    if (this.passwordRecovery.expirationCode < new Date()) {
+      throw new BadRequestException([
+        { message: 'code expired', field: 'code' },
+      ]);
+    }
+    return true;
+  }
+
+  checkExpirationPasswordRecoveryCode() {
+    if (this.passwordRecovery.isRecovered === true) {
+      throw new BadRequestException([
+        { message: 'code already confirmed', field: 'code' },
+      ]);
+    }
+    return true;
+  }
 }
 
 export const UsersSchema = SchemaFactory.createForClass(User);
-
-UsersSchema.methods.checkConfirmed = async function () {
-  if (this.emailConfirmation.isConfirmed === true) {
-    throw new BadRequestException([
-      { message: 'code already confirmed', field: 'code' },
-    ]);
-  }
-};
-
-UsersSchema.methods.checkExpirationCode = async function () {
-  if (this.emailConfirmation.expirationDate < new Date()) {
-    throw new BadRequestException([{ message: 'code expired', field: 'code' }]);
-  }
-};
-
-UsersSchema.methods.confirm = async function () {
-  this.emailConfirmation.isConfirmed = true;
-};
-UsersSchema.methods.comparePassword = async function (passwordHash: string) {
-  if (passwordHash !== this.accountData.passwordHash) {
-    throw new UnauthorizedException([
-      {
-        message: 'WRONG PASSWORD',
-        field: 'password',
-      },
-    ]);
-  }
-  return;
-};
-UsersSchema.methods.checkExpirationPasswordRecoveryCode = async function () {
-  if (this.passwordRecovery.expirationCode < new Date()) {
-    throw new BadRequestException([{ message: 'code expired', field: 'code' }]);
-  }
-};
-UsersSchema.methods.checkPasswordRecoveryStatus = async function () {
-  if (this.passwordRecovery.isRecovered === true) {
-    throw new BadRequestException([
-      { message: 'code already confirmed', field: 'code' },
-    ]);
-  }
+UsersSchema.methods = {
+  checkConfirmed: User.prototype.checkConfirmed,
+  checkExpirationCode: User.prototype.checkExpirationCode,
+  confirm: User.prototype.confirm,
+  comparePassword: User.prototype.comparePassword,
+  checkPasswordRecoveryStatus: User.prototype.checkPasswordRecoveryStatus,
+  checkExpirationPasswordRecoveryCode:
+    User.prototype.checkExpirationPasswordRecoveryCode,
 };

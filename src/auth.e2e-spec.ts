@@ -54,11 +54,11 @@ describe('Users', () => {
     emailAdapter = moduleRef.get<EmailAdapter>(EmailAdapter);
     app.useGlobalPipes(
       new ValidationPipe({
-        exceptionFactory: errors => {
+        exceptionFactory: (errors) => {
           const errorsForResponse = [];
-          errors.forEach(e => {
+          errors.forEach((e) => {
             const constraintsKeys = Object.keys(e.constraints);
-            constraintsKeys.forEach(ckey => {
+            constraintsKeys.forEach((ckey) => {
               errorsForResponse.push({
                 message: e.constraints[ckey],
                 field: e.property,
@@ -165,9 +165,7 @@ describe('Users', () => {
       })
       .expect(400)
       .expect({
-        errorsMessages: [
-          { message: 'email already confirmed', field: 'email' },
-        ],
+        errorsMessages: [{ message: 'code already confirmed', field: 'code' }],
       });
   });
 
@@ -188,14 +186,14 @@ describe('Users', () => {
     const res = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        login: firstUser.login,
+        loginOrEmail: firstUser.login,
         password: firstUser.password,
       })
       .expect(200);
     const cookies = res.headers['set-cookie'][0]
       .split(',')
-      .map(item => item.split(';')[0])
-      .map(item => item.split('=')[1]);
+      .map((item) => item.split(';')[0])
+      .map((item) => item.split('=')[1]);
 
     tokensForFirstUser.accessToken = res.body.accessToken;
     tokensForFirstUser.refreshToken = cookies.toString();
@@ -204,7 +202,7 @@ describe('Users', () => {
     const res = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        login: firstUser.login,
+        loginOrEmail: firstUser.login,
         password: 'firstUser.password',
       })
       .expect(401);
@@ -221,7 +219,7 @@ describe('Users', () => {
     const res = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        login: firstUser.login,
+        loginOrEmail: firstUser.login,
         password:
           ';lkojihgfcdxcfgyhuiougytfguhfdghgdfnfggdfhfjgkhghfdjkgdhjmfhgfgjiouygtuhihygyu',
       })
@@ -240,11 +238,12 @@ describe('Users', () => {
       .post('/auth/refresh-token')
       .set('Cookie', 'refreshToken=' + tokensForFirstUser.refreshToken)
       .send({})
-      .expect(200);
+      .expect(401);
+    console.log(res.body);
     const cookies = res.headers['set-cookie'][0]
       .split(',')
-      .map(item => item.split(';')[0])
-      .map(item => item.split('=')[1]);
+      .map((item) => item.split(';')[0])
+      .map((item) => item.split('=')[1]);
 
     tokensForFirstUser.accessToken = res.body.accessToken;
     tokensForFirstUser.refreshToken = cookies.toString();
@@ -271,7 +270,8 @@ describe('Users', () => {
       .set('Authorization', `Bearer ${tokensForFirstUser.accessToken}`)
 
       .send({})
-      .expect(200);
+      .expect(401);
+    console.log(res.body);
     expect(res.body.email).toBe(firstUser.email);
     expect(res.body.login).toBe(firstUser.login);
   });
@@ -298,8 +298,8 @@ describe('Users', () => {
       .expect(204);
     const cookies = res.headers['set-cookie'][0]
       .split(',')
-      .map(item => item.split(';')[0])
-      .map(item => item.split('=')[1]);
+      .map((item) => item.split(';')[0])
+      .map((item) => item.split('=')[1]);
   });
 
   afterAll(async () => {

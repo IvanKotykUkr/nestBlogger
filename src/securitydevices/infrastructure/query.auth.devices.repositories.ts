@@ -16,7 +16,7 @@ export class QueryAuthDevicesRepositories {
     userId: ObjectId,
   ): Promise<AuthDevicesResponseType[]> {
     const devices = await this.AuthDevisesModel.find({ userId });
-    return devices.map(d => ({
+    return devices.map((d) => ({
       ip: d.ip,
       title: d.title,
       lastActiveDate: d.lastActiveDate,

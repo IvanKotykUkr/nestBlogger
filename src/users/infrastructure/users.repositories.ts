@@ -1,15 +1,17 @@
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './repository/users.mongoose.schema';
 import { Model } from 'mongoose';
 import { UserDBType, UserRequestType } from '../users.types';
 import { ObjectId } from 'mongodb';
 
+@Injectable()
 export class UsersRepositories {
   constructor(
     @InjectModel(User.name) private UsersModel: Model<UserDocument>,
   ) {}
 
-  reqUsers(user: UserDBType) {
+  reqUsers(user: UserDocument) {
     return {
       _id: user._id,
       accountData: user.accountData,
@@ -58,15 +60,15 @@ export class UsersRepositories {
   }
 
   async findByEmail(email: string): Promise<UserDocument> {
-    return this.UsersModel.findOne({ 'accountData.email': email });
+    return this.UsersModel.findOne({ 'accountData.email': email }).exec();
   }
 
   async findUserById(_id: ObjectId): Promise<UserRequestType | string> {
     const user = await this.UsersModel.findById(_id);
+
     if (!user) {
       return 'not found';
     }
-
     return {
       id: user.id,
       login: user.accountData.login,
@@ -82,8 +84,7 @@ export class UsersRepositories {
   }
 
   async saveUser(user: UserDocument) {
-    await user.save();
-    return;
+    return await user.save();
   }
 
   async findUserByConfirmationCode(code: string): Promise<UserDocument> {
