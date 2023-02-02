@@ -18,12 +18,14 @@ describe('Posts', () => {
     id: '',
     name: 'Olya',
     websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
+    description: 'fdsfds',
     createdAt: '',
   };
   const differentBlogger = {
     id: '',
     name: 'Vasya',
     websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra4U',
+    description: 'fdsffdfdds',
     createdAt: '',
   };
   const firstPost = {
@@ -100,6 +102,7 @@ describe('Posts', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: blogger.name,
+        description: blogger.description,
         websiteUrl: blogger.websiteUrl,
       })
       .expect(201);
@@ -116,6 +119,7 @@ describe('Posts', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: differentBlogger.name,
+        description: differentBlogger.description,
         websiteUrl: differentBlogger.websiteUrl,
       })
       .expect(201);

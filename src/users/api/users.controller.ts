@@ -33,13 +33,15 @@ export class UsersController {
   async createUsers(
     @Body() inputModel: BodyForCreateUser,
   ): Promise<UsersResponseType> {
-    return this.commandBus.execute(
+    const user = await this.commandBus.execute(
       new CreateUserCommand(
         inputModel.login,
         inputModel.email,
         inputModel.password,
       ),
     );
+    console.log(user);
+    return user;
   }
 
   @UseGuards(BasicAuthGuard)
