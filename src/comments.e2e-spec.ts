@@ -44,6 +44,7 @@ describe('Users', () => {
     id: '',
     name: 'Olya',
     websiteUrl: 'https://www.youtube.com/watch?v=ez7s3N_Ra9U',
+    description: 'fdsfds',
     createdAt: '',
   };
 
@@ -152,7 +153,7 @@ describe('Users', () => {
     const res = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        login: firstUser.login,
+        loginOrEmail: firstUser.login,
         password: firstUser.password,
       })
       .expect(200);
@@ -168,7 +169,7 @@ describe('Users', () => {
     const res = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
-        login: secondUser.login,
+        loginOrEmail: secondUser.login,
         password: secondUser.password,
       })
       .expect(200);
@@ -186,6 +187,7 @@ describe('Users', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .send({
         name: blogger.name,
+        description: blogger.description,
         websiteUrl: blogger.websiteUrl,
       })
       .expect(201);

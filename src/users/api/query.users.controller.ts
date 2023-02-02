@@ -22,9 +22,11 @@ export class QueryUsersController {
   ): Promise<UsersWithPaginationResponseType> {
     const pageNumber = query.PageNumber || 1;
     const pageSize = query.PageSize || 10;
-    return this.queryUsersRepositories.findAllUsersWithPagination(
+    const user = await this.queryUsersRepositories.findAllUsersWithPagination(
       pageNumber,
       pageSize,
     );
+    console.log(user);
+    return user;
   }
 }
