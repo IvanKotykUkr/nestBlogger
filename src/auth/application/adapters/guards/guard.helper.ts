@@ -17,7 +17,9 @@ export class GuardHelper {
   ) {}
 
   async findUserById(userId: ObjectId): Promise<UserRequestType> {
-    const user = await this.usersRepositories.findUserById(userId);
+    const user = await this.usersRepositories.findUserById(
+      new ObjectId(userId),
+    );
     if (typeof user == 'string') {
       throw new UnauthorizedException([
         { message: 'there is no user', field: 'token' },
