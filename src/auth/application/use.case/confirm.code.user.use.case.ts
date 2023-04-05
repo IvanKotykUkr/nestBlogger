@@ -10,8 +10,6 @@ export class ConfirmCodeUserCommand {
 export class ConfirmCodeUserUseCase
   implements ICommandHandler<ConfirmCodeUserCommand>
 {
-  return;
-
   constructor(protected usersRepositories: UsersRepositories) {}
 
   async execute(command: ConfirmCodeUserCommand) {

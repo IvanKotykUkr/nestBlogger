@@ -5,7 +5,7 @@ import { ObjectId } from 'mongodb';
 declare global {
   declare namespace Express {
     export interface Request {
-      user: UserRequestType | null;
+      user: UserRequestType | userId | null;
       device: DevicesRequestType | null;
       userId: ObjectId;
     }

@@ -1,8 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UsersRepositories } from '../../../users/infrastructure/users.repositories';
-import { UnauthorizedException } from '@nestjs/common';
 import { AuthDevicesRepositories } from '../../../securitydevices/infrastructure/auth.devices.repositories';
-import { UsersHelper } from '../../../users/application/users.helper';
 import { ObjectId } from 'mongodb';
 import {
   AuthDevicesTypeDTO,
@@ -10,50 +7,33 @@ import {
 } from '../../../securitydevices/infrastructure/device.types';
 import * as uuid from 'uuid';
 
-export class LoginUserCommand {
+export class AddDeviceUserCommand {
   constructor(
-    public login: string,
-    public password: string,
+    public userId: ObjectId,
     public deviceName: string,
     public ip: string,
   ) {}
 }
 
-@CommandHandler(LoginUserCommand)
-export class LoginUserUseCase implements ICommandHandler<LoginUserCommand> {
-  return;
+@CommandHandler(AddDeviceUserCommand)
+export class AddDeviceUserUseCase
+  implements ICommandHandler<AddDeviceUserCommand>
+{
+  constructor(protected authDevicesRepositories: AuthDevicesRepositories) {}
 
-  constructor(
-    protected usersRepositories: UsersRepositories,
-    protected authDevicesRepositories: AuthDevicesRepositories,
-    protected userHelper: UsersHelper,
-  ) {}
-
-  async execute(command: LoginUserCommand): Promise<DeviceInfoType> {
-    const user = await this.usersRepositories.findUserByEmailOrLogin(
-      command.login,
-    );
-    if (typeof user === 'string') {
-      throw new UnauthorizedException([
-        {
-          message: 'WRONG LOGIN',
-          field: 'login',
-        },
-      ]);
-    }
-    const passwordHash = await this.userHelper.generateHash(
-      command.password,
-      user.accountData.passwordSalt,
-    );
-    await user.comparePassword(passwordHash);
+  async execute(command: AddDeviceUserCommand): Promise<DeviceInfoType> {
     const fixDate = new Date();
     const device = await this.addDevice(
       command.deviceName,
       command.ip,
-      user._id,
+      command.userId,
       fixDate,
     );
-    return { userId: user._id, deviceId: device.deviceId, date: device.date };
+    return {
+      userId: command.userId,
+      deviceId: device.deviceId,
+      date: device.date,
+    };
   }
 
   private async addDevice(

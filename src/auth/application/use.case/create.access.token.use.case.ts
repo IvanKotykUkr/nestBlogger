@@ -1,6 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { JwtService } from '../adapters/jwt.service';
 import { ObjectId } from 'mongodb';
+import { JwtService } from '@nestjs/jwt';
+import { UnauthorizedException } from '@nestjs/common';
 
 export class CreateAccessTokenCommand {
   constructor(public id: ObjectId) {}
@@ -10,11 +11,18 @@ export class CreateAccessTokenCommand {
 export class CreateAccessTokenUseCase
   implements ICommandHandler<CreateAccessTokenCommand>
 {
-  return;
-
   constructor(protected jwtService: JwtService) {}
 
   async execute(command: CreateAccessTokenCommand) {
-    return this.jwtService.createAccessToken(command.id);
+    if (!command.id) {
+      throw new UnauthorizedException({
+        message: 'Not have userId',
+        field: 'userId',
+      });
+    }
+    const payload = { sub: command.id };
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
   }
 }

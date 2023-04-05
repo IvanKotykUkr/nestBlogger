@@ -7,7 +7,6 @@ import {
   Param,
   Post,
   Put,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { BodyTypeForPost, IdTypeForReq, UpdateLikeDTO } from '../posts.types';
@@ -15,7 +14,6 @@ import { notFoundBlogger } from '../../bloggers/api/bloggers.controller';
 import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 import { BodyForComments } from '../../comments/comments.types';
 import { AuthorizationGuard } from '../../auth/application/adapters/guards/autherisation-guard.service';
-import { Request } from 'express';
 import { CommandBus } from '@nestjs/cqrs';
 import { FindBloggerCommand } from '../../bloggers/application/use.case/find.blogger.use.case';
 import { CreatePostCommand } from '../application/use.case/create.post.use.case';
@@ -24,6 +22,11 @@ import { DeletePostCommand } from '../application/use.case/delete.post.use.case'
 import { FindPostCommand } from '../application/use.case/find.post.use.case';
 import { CreateCommentCommand } from '../../comments/application/use.case/create.comment.use.case';
 import { UpdateLikeCommand } from '../../comments/application/use.case/update.like.use.case';
+import { CurrentUser, CurrentUserId } from '../../types/decorator';
+import { UserRequestType } from '../../users/users.types';
+import { ObjectId } from 'mongodb';
+import { FindUserByIdCommand } from '../../users/application/use.case/find.user.use.case';
+import { JwtAuthGuard } from '../../auth/application/adapters/guards/jwt-auth.guard';
 
 export const notFoundPost = [
   {
@@ -36,24 +39,20 @@ export const notFoundPost = [
 export class PostsController {
   constructor(protected commandBus: CommandBus) {}
 
-  @UseGuards(AuthorizationGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/:id/comments')
   async createComment(
     @Body() body: BodyForComments,
     @Param() param: IdTypeForReq,
-    @Req() request: Request,
+    @CurrentUserId() userId: ObjectId,
   ) {
     const post = await this.commandBus.execute(new FindPostCommand(param.id));
     if (typeof post === 'string') {
       throw new NotFoundException(notFoundPost);
     }
+    const user = await this.commandBus.execute(new FindUserByIdCommand(userId));
     return this.commandBus.execute(
-      new CreateCommentCommand(
-        param.id,
-        body.content,
-        request.user.id,
-        request.user.login,
-      ),
+      new CreateCommentCommand(param.id, body.content, user.id, user.login),
     );
   }
 
@@ -113,7 +112,7 @@ export class PostsController {
   async updateLikeStatus(
     @Param() param: IdTypeForReq,
     @Body() inputModel: UpdateLikeDTO,
-    @Req() req: Request,
+    @CurrentUser() user: UserRequestType,
   ) {
     const post = await this.commandBus.execute(new FindPostCommand(param.id));
     if (typeof post === 'string') {
@@ -123,8 +122,8 @@ export class PostsController {
       new UpdateLikeCommand(
         param.id,
         inputModel.likeStatus,
-        req.user.id,
-        req.user.login,
+        user.id,
+        user.login,
       ),
     );
   }

@@ -1,6 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { JwtService } from '../adapters/jwt.service';
 import { ObjectId } from 'mongodb';
+import { RefreshTokenPayload } from '../../auth.types';
+import { JwtService } from '@nestjs/jwt';
 
 export class CreateRefreshTokenCommand {
   constructor(
@@ -14,15 +15,19 @@ export class CreateRefreshTokenCommand {
 export class CreateRefreshTokenUseCase
   implements ICommandHandler<CreateRefreshTokenCommand>
 {
-  return;
-
   constructor(protected jwtService: JwtService) {}
 
   async execute(command: CreateRefreshTokenCommand) {
-    return this.jwtService.createRefreshToken(
-      command.id,
-      command.deviceId,
-      command.data,
-    );
+    const payload: RefreshTokenPayload = {
+      userId: command.id,
+      deviceId: command.deviceId,
+      iat: +command.data,
+    };
+    const refresh = this.jwtService.sign(payload, {
+      secret: process.env.REFRESH_JWT_SECRET,
+      expiresIn: '2h',
+    });
+    console.log(refresh);
+    return refresh;
   }
 }
