@@ -21,24 +21,28 @@ import {
   LogoutTokenGuards,
   RefreshTokenGuards,
 } from '../application/adapters/guards/refresh.token.guards';
-import { AuthorizationGuard } from '../application/adapters/guards/autherisation-guard.service';
-import { Cookies } from '../../types/decorator';
-import { BodyForCreateUser } from '../../users/users.types';
+import { Cookies, CurrentUser, CurrentUserId } from '../../types/decorator';
+import { BodyForCreateUser, UserRequestType } from '../../users/users.types';
 import { CreateUserGuard } from '../../guards/create.user.guard';
 import { AntiDdosGuard } from '../application/adapters/guards/anti.ddos.guard';
-import { CommandBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateUserCommand } from '../../users/application/use.case/create.user.use.case';
 import { ConfirmCodeUserCommand } from '../application/use.case/confirm.code.user.use.case';
 import { ResendConfirmCodeUserCommand } from '../application/use.case/resend.confirm.code.user.use.case';
 import { CreateAccessTokenCommand } from '../application/use.case/create.access.token.use.case';
 import { CreateRefreshTokenCommand } from '../application/use.case/create.refresh.token.use.case';
-import { LoginUserCommand } from '../application/use.case/login.user.use.case';
+import { AddDeviceUserCommand } from '../application/use.case/addDeviceUserUseCase';
 import { RecoveryPasswordUserCommand } from '../application/use.case/recovery.passsword.user.use.case';
 import { NewPasswordUserCommand } from '../application/use.case/new.passsword.user.use.case';
+import { LocalAuthGuard } from '../application/adapters/guards/local-auth.guard';
+import { JwtAuthGuard } from '../application/adapters/guards/jwt-auth.guard';
+import { MeCommand } from '../application/use.case/query.UseCase/meUseCase';
+import { User } from '../../users/infrastructure/repository/users.mongoose.schema';
+import { ObjectId } from 'mongodb';
 
 @Controller('/auth')
 export class AuthController {
-  constructor(protected commandBus: CommandBus) {}
+  constructor(protected commandBus: CommandBus, protected queryBus: QueryBus) {}
 
   @UseGuards(AntiDdosGuard, CreateUserGuard)
   @HttpCode(204)
@@ -65,22 +69,19 @@ export class AuthController {
     );
   }
 
-  @UseGuards(AntiDdosGuard)
+  @UseGuards(AntiDdosGuard, LocalAuthGuard)
   @Post('/login')
   @HttpCode(200)
   async login(
     @Body() body: AuthBodyType,
     @Req() req: Request,
+    @CurrentUser() user: User,
     @Res({ passthrough: true }) res: Response,
   ) {
     const userInfo = await this.commandBus.execute(
-      new LoginUserCommand(
-        body.loginOrEmail,
-        body.password,
-        req.headers['user-agent'],
-        req.ip,
-      ),
+      new AddDeviceUserCommand(user._id, req.headers['user-agent'], req.ip),
     );
+
     const accessToken = await this.commandBus.execute(
       new CreateAccessTokenCommand(userInfo.userId),
     );
@@ -100,17 +101,14 @@ export class AuthController {
   @HttpCode(200)
   async refreshToken(
     @Req() req: Request,
+    @CurrentUser() user: UserRequestType,
     @Res({ passthrough: true }) res: Response,
   ) {
     const accessToken = await this.commandBus.execute(
-      new CreateAccessTokenCommand(req.user.id),
+      new CreateAccessTokenCommand(user.id),
     );
     const refreshToken = await this.commandBus.execute(
-      new CreateRefreshTokenCommand(
-        req.user.id,
-        req.user.deviceId,
-        req.user.date,
-      ),
+      new CreateRefreshTokenCommand(user.id, user.deviceId, user.date),
     );
     return this.resToken(accessToken, refreshToken, res);
   }
@@ -145,14 +143,13 @@ export class AuthController {
     );
   }
 
-  @UseGuards(AntiDdosGuard, AuthorizationGuard)
+  @UseGuards(AntiDdosGuard, JwtAuthGuard)
   @Get('/me')
-  async getUserFromAccessesToken(@Req() req: Request) {
-    return {
-      email: req.user.email,
-      login: req.user.login,
-      userId: req.user.id,
-    };
+  async getUserFromAccessesToken(
+    @CurrentUserId() userId: ObjectId,
+    @Req() req: Request,
+  ) {
+    return await this.queryBus.execute(new MeCommand(userId));
   }
 
   protected resToken(

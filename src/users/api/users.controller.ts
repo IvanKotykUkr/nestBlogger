@@ -40,7 +40,6 @@ export class UsersController {
         inputModel.password,
       ),
     );
-    console.log(user);
     return user;
   }
 

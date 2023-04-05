@@ -1,4 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { ObjectId } from 'mongodb';
+import { UserRequestType } from '../users/users.types';
 
 export const Cookies = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
@@ -8,8 +10,14 @@ export const Cookies = createParamDecorator(
 );
 
 export const CurrentUser = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
+  (data: unknown, context: ExecutionContext): UserRequestType => {
     const request = context.switchToHttp().getRequest();
     return request.user;
+  },
+);
+export const CurrentUserId = createParamDecorator(
+  (data: unknown, context: ExecutionContext): ObjectId => {
+    const request = context.switchToHttp().getRequest();
+    return request.user.userId;
   },
 );

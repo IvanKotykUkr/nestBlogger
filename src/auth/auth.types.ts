@@ -44,3 +44,11 @@ export type RecordType = {
   date: Date;
   process: string;
 };
+export type AccessTokenPayload = {
+  userId: ObjectId;
+};
+export type RefreshTokenPayload = {
+  userId: ObjectId;
+  iat: number;
+  deviceId: string;
+};

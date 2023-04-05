@@ -1,12 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { JwtService } from '../jwt.service';
+import { JwtServiceAuth } from '../jwt-service-auth.service';
 import { Request } from 'express';
 import { UserFromTokenType } from '../../../../users/users.types';
 import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class LikesAuthGuard implements CanActivate {
-  constructor(protected jwtService: JwtService) {}
+  constructor(protected jwtService: JwtServiceAuth) {}
 
   async canActivate(context: ExecutionContext) {
     const req: Request = context.switchToHttp().getRequest();

@@ -1,17 +1,19 @@
 import { ObjectId } from 'mongodb';
 import { UserRequestType } from '../../../../users/users.types';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '../jwt.service';
+import { JwtServiceAuth } from '../jwt-service-auth.service';
 import { Response } from 'express';
 
 import { AuthDevicesRepositories } from '../../../../securitydevices/infrastructure/auth.devices.repositories';
 import { DevicesInfo } from '../../../../securitydevices/infrastructure/device.types';
 import { UsersRepositories } from '../../../../users/infrastructure/users.repositories';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class GuardHelper {
   constructor(
     protected usersRepositories: UsersRepositories,
+    protected jwtServiceAuth: JwtServiceAuth,
     protected jwtService: JwtService,
     protected authDevicesRepositories: AuthDevicesRepositories,
   ) {}
@@ -39,7 +41,7 @@ export class GuardHelper {
 
   getUserMetaRefreshToken(refreshToken: string, res: Response) {
     const metaFromRefreshToken =
-      this.jwtService.getMetaFromRefreshToken(refreshToken);
+      this.jwtServiceAuth.getMetaFromRefreshToken(refreshToken);
     if (typeof metaFromRefreshToken === 'string') {
       res.clearCookie('refreshToken');
       throw new UnauthorizedException([

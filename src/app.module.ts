@@ -14,7 +14,7 @@ import { UsersHelper } from './users/application/users.helper';
 import { UsersRepositories } from './users/infrastructure/users.repositories';
 import { QueryUsersRepositories } from './users/infrastructure/query.users.repositories';
 import { UsersService } from './users/application/users.service';
-import { JwtService } from './auth/application/adapters/jwt.service';
+import { JwtServiceAuth } from './auth/application/adapters/jwt-service-auth.service';
 import { AuthController } from './auth/api/auth.controller';
 import { AuthService } from './auth/application/auth.service';
 import { QueryCommentsRepositories } from './comments/infrastructure/query.comments.repositories';
@@ -79,8 +79,18 @@ import { ConfirmCodeUserUseCase } from './auth/application/use.case/confirm.code
 import { ResendConfirmCodeUserUseCase } from './auth/application/use.case/resend.confirm.code.user.use.case';
 import { CreateAccessTokenUseCase } from './auth/application/use.case/create.access.token.use.case';
 import { CreateRefreshTokenUseCase } from './auth/application/use.case/create.refresh.token.use.case';
-import { LoginUserUseCase } from './auth/application/use.case/login.user.use.case';
+import { AddDeviceUserUseCase } from './auth/application/use.case/addDeviceUserUseCase';
 import { NewPasswordUserUseCase } from './auth/application/use.case/new.passsword.user.use.case';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import process from 'process';
+import { LocalStrategy } from './auth/application/local.strategy';
+import { JwtStrategy } from './auth/application/jwt.strategy';
+import { ValidateUserUseCase } from './auth/application/use.case/login.use.case';
+import { MeUseCase } from './auth/application/use.case/query.UseCase/meUseCase';
+import { FindUserByIdUseCase } from './users/application/use.case/find.user.use.case';
+import { LocalAuthGuard } from './auth/application/adapters/guards/local-auth.guard';
+import { JwtAuthGuard } from './auth/application/adapters/guards/jwt-auth.guard';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -105,6 +115,8 @@ const auth = [
   AuthService,
   BedRefreshTokensRepositories,
   RateRecordRepositories,
+  LocalStrategy,
+  JwtStrategy,
 ];
 const user = [
   UsersService,
@@ -149,14 +161,20 @@ const commentUseCase = [
   FindCommentUseCase,
   UpdateLikeUseCase,
 ];
-const userUserUseCase = [CreateUserUseCase, DeleteUserUseCase];
+const userUserUseCase = [
+  CreateUserUseCase,
+  DeleteUserUseCase,
+  FindUserByIdUseCase,
+];
 const authUseCase = [
   ConfirmCodeUserUseCase,
   ResendConfirmCodeUserUseCase,
   CreateAccessTokenUseCase,
   CreateRefreshTokenUseCase,
-  LoginUserUseCase,
+  AddDeviceUserUseCase,
   NewPasswordUserUseCase,
+  ValidateUserUseCase,
+  MeUseCase,
 ];
 const mongooseModule = [
   ConfigModule.forRoot(),
@@ -205,6 +223,11 @@ const mongooseModule = [
         },
       }),
     }),
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.ACCESS_JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
   ],
   controllers: [...controller, ...queryController],
   providers: [
@@ -219,8 +242,12 @@ const mongooseModule = [
     ...userUserUseCase,
     ...authUseCase,
     DeviceGuards,
+    LocalStrategy,
+    JwtStrategy,
+    LocalAuthGuard,
+    JwtAuthGuard,
     GuardHelper,
-    JwtService,
+    JwtServiceAuth,
     EmailManager,
     EmailAdapter,
     SecurityDevicesService,

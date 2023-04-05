@@ -6,7 +6,7 @@ import { ObjectId } from 'mongodb';
 export const wrong = 'wrong';
 
 @Injectable()
-export class JwtService {
+export class JwtServiceAuth {
   async createAccessToken(id: ObjectId): Promise<{ accessToken: string }> {
     const access: string = jwt.sign(
       { userId: id },

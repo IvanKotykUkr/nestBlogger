@@ -7,18 +7,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { UserFromTokenType } from '../../../../users/users.types';
-import { JwtService } from '../jwt.service';
 import { ObjectId } from 'mongodb';
-import { GuardHelper } from './guard.helper';
 import { CommentsRepositories } from '../../../../comments/infrastructure/comments.repositories';
+import { JwtService } from '@nestjs/jwt';
+import process from 'process';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
-  constructor(
-    protected jwtService: JwtService,
-    protected guardHelper: GuardHelper,
-  ) {}
+  constructor(protected jwtService: JwtService) {}
 
   async canActivate(context: ExecutionContext) {
     const req: Request = context.switchToHttp().getRequest();
@@ -31,17 +27,30 @@ export class AuthorizationGuard implements CanActivate {
       ]);
     }
     const token: string = req.headers.authorization.split(' ')[1];
-    const user: UserFromTokenType | string =
-      this.jwtService.getUserIdByAccessToken(token);
-
+    try {
+      const payload = this.jwtService.verify(token, {
+        secret: process.env.ACCESS_JWT_SECRET,
+      });
+      req.userId = payload.userId;
+    } catch {
+      throw new UnauthorizedException({
+        message: 'Should be valide JWT Token',
+        field: 'token',
+      });
+    }
+    return true;
+    /*
+    const user = this.jwtService.verify(token);
     if (typeof user == 'string') {
       throw new UnauthorizedException([
         { message: 'Should be valide JWT Token', field: 'token' },
       ]);
     }
 
-    req.user = await this.guardHelper.findUserById(user.userId);
-    return true;
+    console.log('here ' + user.userId);
+    req.userId = user.userId;
+    
+     */
   }
 }
 
@@ -51,6 +60,8 @@ export class CheckOwnGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const req: Request = context.switchToHttp().getRequest();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const userId = req.user.id.toString();
     const comment = await this.commentsRepositories.findCommentsById(
       new ObjectId(req.params.id),

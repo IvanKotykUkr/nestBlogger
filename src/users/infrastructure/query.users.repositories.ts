@@ -7,6 +7,7 @@ import {
   UsersResponseType,
   UsersWithPaginationResponseType,
 } from '../users.types';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class QueryUsersRepositories {
@@ -58,6 +59,10 @@ export class QueryUsersRepositories {
       email: u.accountData.email,
       createdAt: u.createdAt,
     }));
+  }
+
+  async findUserById(_id: ObjectId): Promise<User> {
+    return this.UsersModel.findById(_id);
   }
 
   private async usersSearchCount(): Promise<number> {
