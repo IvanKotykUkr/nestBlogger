@@ -22,7 +22,7 @@ import {
   RefreshTokenGuards,
 } from '../application/adapters/guards/refresh.token.guards';
 import { Cookies, CurrentUser, CurrentUserId } from '../../types/decorator';
-import { BodyForCreateUser, UserRequestType } from '../../users/users.types';
+import { BodyForCreateUser } from '../../users/users.types';
 import { CreateUserGuard } from '../../guards/create.user.guard';
 import { AntiDdosGuard } from '../application/adapters/guards/anti.ddos.guard';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -85,6 +85,7 @@ export class AuthController {
     const accessToken = await this.commandBus.execute(
       new CreateAccessTokenCommand(userInfo.userId),
     );
+
     const refreshToken = await this.commandBus.execute(
       new CreateRefreshTokenCommand(
         userInfo.userId,
@@ -101,14 +102,17 @@ export class AuthController {
   @HttpCode(200)
   async refreshToken(
     @Req() req: Request,
-    @CurrentUser() user: UserRequestType,
     @Res({ passthrough: true }) res: Response,
   ) {
     const accessToken = await this.commandBus.execute(
-      new CreateAccessTokenCommand(user.id),
+      new CreateAccessTokenCommand(req.device.userId),
     );
     const refreshToken = await this.commandBus.execute(
-      new CreateRefreshTokenCommand(user.id, user.deviceId, user.date),
+      new CreateRefreshTokenCommand(
+        req.device.userId,
+        req.device.deviceId,
+        req.device.date,
+      ),
     );
     return this.resToken(accessToken, refreshToken, res);
   }

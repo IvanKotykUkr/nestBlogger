@@ -39,7 +39,6 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
-
   await app.listen(PORT);
 
   console.log(`server started at http://localhost:${PORT}`);

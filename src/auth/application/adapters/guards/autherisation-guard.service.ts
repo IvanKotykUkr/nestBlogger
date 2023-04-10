@@ -39,18 +39,6 @@ export class AuthorizationGuard implements CanActivate {
       });
     }
     return true;
-    /*
-    const user = this.jwtService.verify(token);
-    if (typeof user == 'string') {
-      throw new UnauthorizedException([
-        { message: 'Should be valide JWT Token', field: 'token' },
-      ]);
-    }
-
-    console.log('here ' + user.userId);
-    req.userId = user.userId;
-    
-     */
   }
 }
 
