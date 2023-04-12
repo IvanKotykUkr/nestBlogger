@@ -2,6 +2,8 @@ import { BloggersRepositories } from '../../infrastructure/bloggers.repositories
 import { ObjectId } from 'mongodb';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BloggerType, BloggerTypeForUpdate } from '../../bloggers.types';
+import { NotFoundException } from '@nestjs/common';
+import { notFoundBlogger } from '../../../constants';
 
 export class UpdateBloggerCommand {
   constructor(
@@ -25,7 +27,11 @@ export class UpdateBloggerUseCase
       command.websiteUrl,
       command.description,
     );
-    return this.bloggersRepositories.updateBlogger(newBlogger);
+    const isUpdated = await this.bloggersRepositories.updateBlogger(newBlogger);
+    if (isUpdated) {
+      return isUpdated;
+    }
+    throw new NotFoundException(notFoundBlogger);
   }
 
   private updateBlogger(

@@ -2,6 +2,9 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ObjectId } from 'mongodb';
 import { PostUpdatedType } from '../../posts.types';
 import { PostsRepositories } from '../../infrastructure/posts.repositories';
+import { NotFoundException } from '@nestjs/common';
+
+import { notFoundPost } from '../../../constants';
 
 export class UpdatePostCommand {
   constructor(
@@ -28,7 +31,11 @@ export class UpdatePostUseCase implements ICommandHandler<UpdatePostCommand> {
       command.blogName,
     );
 
-    return this.postRepositories.updatePost(newPost);
+    const post = await this.postRepositories.updatePost(newPost);
+    if (typeof post === 'string') {
+      throw new NotFoundException(notFoundPost);
+    }
+    return post;
   }
 
   private updatePost(

@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   HttpCode,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -21,13 +20,6 @@ import { UpdateBloggerCommand } from '../application/use.case/update.blogger.use
 import { DeleteBloggerCommand } from '../application/use.case/delete.blogger.use.case';
 import { FindBloggerCommand } from '../application/use.case/find.blogger.use.case';
 import { CreatePostCommand } from '../../posts/application/use.case/create.post.use.case';
-
-export const notFoundBlogger = [
-  {
-    message: 'NOT FOUND',
-    field: 'blogId',
-  },
-];
 
 @Controller('/blogs')
 export class BloggersController {
@@ -53,7 +45,7 @@ export class BloggersController {
     @Param() param: IdTypeForReq,
     @Body() inputModel: BodyForUpdateBloggerType,
   ) {
-    const isUpdated = await this.commandBus.execute(
+    return this.commandBus.execute(
       new UpdateBloggerCommand(
         param.id,
         inputModel.name,
@@ -61,23 +53,13 @@ export class BloggersController {
         inputModel.description,
       ),
     );
-    if (isUpdated) {
-      return isUpdated;
-    }
-    throw new NotFoundException(notFoundBlogger);
   }
 
   @UseGuards(BasicAuthGuard)
   @Delete('/:id')
   @HttpCode(204)
   async deleteBlogger(@Param() param: IdTypeForReq) {
-    const isDeleited: boolean = await this.commandBus.execute(
-      new DeleteBloggerCommand(param.id),
-    );
-    if (isDeleited) {
-      return isDeleited;
-    }
-    throw new NotFoundException(notFoundBlogger);
+    return this.commandBus.execute(new DeleteBloggerCommand(param.id));
   }
 
   @UseGuards(BasicAuthGuard)
@@ -89,9 +71,6 @@ export class BloggersController {
     const blogger = await this.commandBus.execute(
       new FindBloggerCommand(param.id),
     );
-    if (blogger === 'not found') {
-      throw new NotFoundException(notFoundBlogger);
-    }
 
     return this.commandBus.execute(
       new CreatePostCommand(
