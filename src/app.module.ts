@@ -91,6 +91,7 @@ import { MeUseCase } from './auth/application/use.case/query.UseCase/meUseCase';
 import { FindUserByIdUseCase } from './users/application/use.case/find.user.use.case';
 import { LocalAuthGuard } from './auth/application/adapters/guards/local-auth.guard';
 import { JwtAuthGuard } from './auth/application/adapters/guards/jwt-auth.guard';
+import { SAController } from './sa/api/sa.controller';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -104,6 +105,7 @@ const controller = [
   CommentsController,
   DeleteTest,
   SecurityDevicesController,
+  SAController,
 ];
 const queryController = [
   QueryBloggersController,

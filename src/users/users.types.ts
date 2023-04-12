@@ -65,6 +65,17 @@ export type UsersResponseType = {
   email: string;
   createdAt: Date;
 };
+export type CreateUserResponseType = {
+  id: ObjectId;
+  login: string;
+  email: string;
+  createdAt: Date;
+  banInfo: {
+    isBanned: boolean;
+    banDate: Date;
+    banReason: string;
+  };
+};
 export type UsersWithPaginationResponseType = PaginationType<UsersResponseType>;
 export type UserFromTokenType = {
   userId: ObjectId;
