@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserDBType } from '../../users.types';
+import { UserDBType, UsersResponseType } from '../../users.types';
 import * as bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,7 +24,7 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     protected emailManager: EmailManager,
   ) {}
 
-  async execute(command: CreateUserCommand) {
+  async execute(command: CreateUserCommand): Promise<UsersResponseType> {
     const user = await this.makeUser(
       command.login,
       command.email,
@@ -41,7 +41,12 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
 
       await this.usersRepositories.deleteUser(user._id);
     }
-    return;
+    return {
+      id: user._id,
+      login: user.accountData.login,
+      email: user.accountData.email,
+      createdAt: user.createdAt,
+    };
   }
 
   private async makeUser(
