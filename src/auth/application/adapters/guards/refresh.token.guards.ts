@@ -9,7 +9,6 @@ export class RefreshTokenGuards implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const req: Request = context.switchToHttp().getRequest();
     const res: Response = context.switchToHttp().getResponse();
-    console.log(req.cookies);
     const refreshToken = this.guardHelper.checkCookie(req.cookies.refreshToken);
     const userMeta = this.guardHelper.getUserMetaRefreshToken(
       refreshToken,
@@ -20,12 +19,8 @@ export class RefreshTokenGuards implements CanActivate {
       userMeta.deviceId,
       res,
     );
-    const user = await this.guardHelper.findUserById(userMeta.userId);
-    req.user = {
-      id: user.id,
-      passwordHash: user.passwordHash,
-      passwordSalt: user.passwordSalt,
-      login: user.login,
+    req.device = {
+      userId: userMeta.userId,
       deviceId: deviceInfo.deviceId,
       date: deviceInfo.date,
     };

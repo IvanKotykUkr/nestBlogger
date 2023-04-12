@@ -22,7 +22,7 @@ import {
   RefreshTokenGuards,
 } from '../application/adapters/guards/refresh.token.guards';
 import { Cookies, CurrentUser, CurrentUserId } from '../../types/decorator';
-import { BodyForCreateUser, UserRequestType } from '../../users/users.types';
+import { BodyForCreateUser } from '../../users/users.types';
 import { CreateUserGuard } from '../../guards/create.user.guard';
 import { AntiDdosGuard } from '../application/adapters/guards/anti.ddos.guard';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -35,10 +35,10 @@ import { AddDeviceUserCommand } from '../application/use.case/addDeviceUserUseCa
 import { RecoveryPasswordUserCommand } from '../application/use.case/recovery.passsword.user.use.case';
 import { NewPasswordUserCommand } from '../application/use.case/new.passsword.user.use.case';
 import { LocalAuthGuard } from '../application/adapters/guards/local-auth.guard';
-import { JwtAuthGuard } from '../application/adapters/guards/jwt-auth.guard';
 import { MeCommand } from '../application/use.case/query.UseCase/meUseCase';
 import { User } from '../../users/infrastructure/repository/users.mongoose.schema';
 import { ObjectId } from 'mongodb';
+import { JwtAuthGuard } from '../application/adapters/guards/jwt-auth.guard';
 
 @Controller('/auth')
 export class AuthController {
@@ -85,6 +85,7 @@ export class AuthController {
     const accessToken = await this.commandBus.execute(
       new CreateAccessTokenCommand(userInfo.userId),
     );
+
     const refreshToken = await this.commandBus.execute(
       new CreateRefreshTokenCommand(
         userInfo.userId,
@@ -101,14 +102,17 @@ export class AuthController {
   @HttpCode(200)
   async refreshToken(
     @Req() req: Request,
-    @CurrentUser() user: UserRequestType,
     @Res({ passthrough: true }) res: Response,
   ) {
     const accessToken = await this.commandBus.execute(
-      new CreateAccessTokenCommand(user.id),
+      new CreateAccessTokenCommand(req.device.userId),
     );
     const refreshToken = await this.commandBus.execute(
-      new CreateRefreshTokenCommand(user.id, user.deviceId, user.date),
+      new CreateRefreshTokenCommand(
+        req.device.userId,
+        req.device.deviceId,
+        req.device.date,
+      ),
     );
     return this.resToken(accessToken, refreshToken, res);
   }
@@ -145,10 +149,7 @@ export class AuthController {
 
   @UseGuards(AntiDdosGuard, JwtAuthGuard)
   @Get('/me')
-  async getUserFromAccessesToken(
-    @CurrentUserId() userId: ObjectId,
-    @Req() req: Request,
-  ) {
+  async getUserFromAccessesToken(@CurrentUserId() userId: ObjectId) {
     return await this.queryBus.execute(new MeCommand(userId));
   }
 

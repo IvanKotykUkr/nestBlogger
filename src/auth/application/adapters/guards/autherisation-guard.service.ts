@@ -18,15 +18,7 @@ export class AuthorizationGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const req: Request = context.switchToHttp().getRequest();
-    if (!req.headers.authorization) {
-      throw new UnauthorizedException([
-        {
-          message: 'there are no authorizations in the header ',
-          field: 'headers authorization',
-        },
-      ]);
-    }
-    const token: string = req.headers.authorization.split(' ')[1];
+    const token = this.takeTokenFromHeader(req.headers.authorization);
     try {
       const payload = this.jwtService.verify(token, {
         secret: process.env.ACCESS_JWT_SECRET,
@@ -39,18 +31,18 @@ export class AuthorizationGuard implements CanActivate {
       });
     }
     return true;
-    /*
-    const user = this.jwtService.verify(token);
-    if (typeof user == 'string') {
+  }
+
+  private takeTokenFromHeader(headers: string) {
+    if (!headers) {
       throw new UnauthorizedException([
-        { message: 'Should be valide JWT Token', field: 'token' },
+        {
+          message: 'there are no authorizations in the header ',
+          field: 'headers authorization',
+        },
       ]);
     }
-
-    console.log('here ' + user.userId);
-    req.userId = user.userId;
-    
-     */
+    return headers.split(' ')[1];
   }
 }
 
@@ -62,7 +54,7 @@ export class CheckOwnGuard implements CanActivate {
     const req: Request = context.switchToHttp().getRequest();
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const userId = req.user.id.toString();
+    const userId = req.user.toString();
     const comment = await this.commentsRepositories.findCommentsById(
       new ObjectId(req.params.id),
     );

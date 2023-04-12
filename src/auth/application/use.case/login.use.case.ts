@@ -34,7 +34,6 @@ export class ValidateUserUseCase
       user.accountData.passwordSalt,
     );
     user.comparePassword(passwordHash);
-
     return user;
   }
 }

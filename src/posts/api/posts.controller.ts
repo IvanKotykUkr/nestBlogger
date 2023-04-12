@@ -10,10 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BodyTypeForPost, IdTypeForReq, UpdateLikeDTO } from '../posts.types';
-import { notFoundBlogger } from '../../bloggers/api/bloggers.controller';
 import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 import { BodyForComments } from '../../comments/comments.types';
-import { AuthorizationGuard } from '../../auth/application/adapters/guards/autherisation-guard.service';
 import { CommandBus } from '@nestjs/cqrs';
 import { FindBloggerCommand } from '../../bloggers/application/use.case/find.blogger.use.case';
 import { CreatePostCommand } from '../application/use.case/create.post.use.case';
@@ -27,13 +25,7 @@ import { UserRequestType } from '../../users/users.types';
 import { ObjectId } from 'mongodb';
 import { FindUserByIdCommand } from '../../users/application/use.case/find.user.use.case';
 import { JwtAuthGuard } from '../../auth/application/adapters/guards/jwt-auth.guard';
-
-export const notFoundPost = [
-  {
-    message: 'NOT FOUND',
-    field: 'postId',
-  },
-];
+import { notFoundBlogger } from '../../constants';
 
 @Controller('/posts')
 export class PostsController {
@@ -47,12 +39,10 @@ export class PostsController {
     @CurrentUserId() userId: ObjectId,
   ) {
     const post = await this.commandBus.execute(new FindPostCommand(param.id));
-    if (typeof post === 'string') {
-      throw new NotFoundException(notFoundPost);
-    }
+
     const user = await this.commandBus.execute(new FindUserByIdCommand(userId));
     return this.commandBus.execute(
-      new CreateCommentCommand(param.id, body.content, user.id, user.login),
+      new CreateCommentCommand(post.id, body.content, user.id, user.login),
     );
   }
 
@@ -100,13 +90,10 @@ export class PostsController {
         blogger.name,
       ),
     );
-    if (typeof isUpdated !== 'string') {
-      return isUpdated;
-    }
-    throw new NotFoundException(notFoundPost);
+    return isUpdated;
   }
 
-  @UseGuards(AuthorizationGuard)
+  @UseGuards(JwtAuthGuard)
   @Put('/:id/like-status')
   @HttpCode(204)
   async updateLikeStatus(
@@ -115,12 +102,9 @@ export class PostsController {
     @CurrentUser() user: UserRequestType,
   ) {
     const post = await this.commandBus.execute(new FindPostCommand(param.id));
-    if (typeof post === 'string') {
-      throw new NotFoundException(notFoundPost);
-    }
     return this.commandBus.execute(
       new UpdateLikeCommand(
-        param.id,
+        post.id,
         inputModel.likeStatus,
         user.id,
         user.login,
@@ -132,12 +116,6 @@ export class PostsController {
   @Delete('/:id')
   @HttpCode(204)
   async deleteBlogger(@Param() param: IdTypeForReq) {
-    const isDeleted = await this.commandBus.execute(
-      new DeletePostCommand(param.id),
-    );
-    if (typeof isDeleted !== 'string') {
-      return isDeleted;
-    }
-    throw new NotFoundException(notFoundPost);
+    return this.commandBus.execute(new DeletePostCommand(param.id));
   }
 }

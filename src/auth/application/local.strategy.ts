@@ -18,7 +18,12 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       new ValidateUserCommand(username, password),
     );
     if (!userId) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException([
+        {
+          message: 'here fild',
+          field: 'headers authorization',
+        },
+      ]);
     }
     return userId;
   }
