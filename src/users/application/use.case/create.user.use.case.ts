@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UserDBType, UsersResponseType } from '../../users.types';
+import { CreateUserResponseType, UserDBType } from '../../users.types';
 import * as bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
@@ -24,7 +24,7 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
     protected emailManager: EmailManager,
   ) {}
 
-  async execute(command: CreateUserCommand): Promise<UsersResponseType> {
+  async execute(command: CreateUserCommand): Promise<CreateUserResponseType> {
     const user = await this.makeUser(
       command.login,
       command.email,
@@ -46,6 +46,11 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
       login: user.accountData.login,
       email: user.accountData.email,
       createdAt: user.createdAt,
+      banInfo: {
+        isBanned: false,
+        banDate: new Date(),
+        banReason: '2',
+      },
     };
   }
 

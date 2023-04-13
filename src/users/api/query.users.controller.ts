@@ -26,7 +26,6 @@ export class QueryUsersController {
       pageNumber,
       pageSize,
     );
-    console.log(user);
     return user;
   }
 }
