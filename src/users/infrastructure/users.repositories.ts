@@ -16,6 +16,7 @@ export class UsersRepositories {
       _id: user._id,
       accountData: user.accountData,
       emailConfirmation: user.emailConfirmation,
+      banInfo: user.banInfo,
       createdAt: user.createdAt,
     };
   }

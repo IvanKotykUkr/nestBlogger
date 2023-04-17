@@ -1,4 +1,4 @@
-import { QueryUsersRepositories } from '../infrastructure/query.users.repositories';
+/*import { QueryUsersRepositories } from '../infrastructure/query.users.repositories';
 import { Controller, Get, Query } from '@nestjs/common';
 import {
   QueryForGetUsers,
@@ -29,3 +29,6 @@ export class QueryUsersController {
     return user;
   }
 }
+
+
+ */
