@@ -10,3 +10,10 @@ export const notFoundBlogger = [
     field: 'blogId',
   },
 ];
+
+export const notFoundUser = [
+  {
+    message: 'NOT FOUND',
+    field: 'userId',
+  },
+];

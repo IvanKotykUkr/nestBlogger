@@ -45,12 +45,8 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
       id: user._id,
       login: user.accountData.login,
       email: user.accountData.email,
+      banInfo: user.banInfo,
       createdAt: user.createdAt,
-      banInfo: {
-        isBanned: false,
-        banDate: new Date(),
-        banReason: '2',
-      },
     };
   }
 
@@ -81,6 +77,9 @@ export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
           minutes: 2,
         }),
         isConfirmed: false,
+      },
+      banInfo: {
+        isBanned: false,
       },
       createdAt: new Date(),
     };

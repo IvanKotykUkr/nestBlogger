@@ -34,6 +34,11 @@ export type UserDBType = {
     recoveryDate: Date;
     isRecovered: boolean;
   };
+  banInfo: {
+    isBanned: boolean;
+    banDate?: Date;
+    banReason?: string;
+  };
   createdAt: Date;
 };
 type passwordRecovery = {
@@ -55,14 +60,15 @@ export type EmailConfirmationType = {
   isConfirmed: boolean;
 };
 
-export type QueryForGetUsers = {
-  PageNumber: number;
-  PageSize: number;
-};
 export type UsersResponseType = {
   id: ObjectId;
   login: string;
   email: string;
+  banInfo: {
+    isBanned: boolean;
+    banDate?: Date;
+    banReason?: string;
+  };
   createdAt: Date;
 };
 export type CreateUserResponseType = {
@@ -72,8 +78,8 @@ export type CreateUserResponseType = {
   createdAt: Date;
   banInfo: {
     isBanned: boolean;
-    banDate: Date;
-    banReason: string;
+    banDate?: Date;
+    banReason?: string;
   };
 };
 export type UsersWithPaginationResponseType = PaginationType<UsersResponseType>;

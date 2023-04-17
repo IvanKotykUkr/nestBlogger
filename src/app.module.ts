@@ -9,7 +9,6 @@ import { PostsHelper } from './posts/application/posts.helper';
 import { PostsRepositories } from './posts/infrastructure/posts.repositories';
 import { QueryBloggersRepositories } from './bloggers/infrastructure/query.bloggers.repositories';
 import { QueryPostsRepositories } from './posts/infrastructure/query.posts.repositories';
-import { UsersController } from './users/api/users.controller';
 import { UsersHelper } from './users/application/users.helper';
 import { UsersRepositories } from './users/infrastructure/users.repositories';
 import { QueryUsersRepositories } from './users/infrastructure/query.users.repositories';
@@ -39,7 +38,6 @@ import {
 import { QueryBloggersController } from './bloggers/api/query.bloggers.controller';
 import { QueryPostsController } from './posts/api/query.posts.controller';
 import { QueryCommentsController } from './comments/api/query.comments.controller.';
-import { QueryUsersController } from './users/api/query.users.controller';
 import { ConfigModule } from '@nestjs/config';
 import { BedRefreshTokensRepositories } from './auth/infrastructure/bed-refresh-tokens-repositories';
 import { LimitingSchema } from './auth/infrastructure/repository/rate.limiting.mongoose';
@@ -92,6 +90,7 @@ import { FindUserByIdUseCase } from './users/application/use.case/find.user.use.
 import { LocalAuthGuard } from './auth/application/adapters/guards/local-auth.guard';
 import { JwtAuthGuard } from './auth/application/adapters/guards/jwt-auth.guard';
 import { SAController } from './sa/api/sa.controller';
+import { FindAllUserUseCase } from './sa/application/useCase/queryUseCase/find.all.user.use.case';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -100,7 +99,7 @@ dotenv.config();
 const controller = [
   BloggersController,
   PostsController,
-  UsersController,
+
   AuthController,
   CommentsController,
   DeleteTest,
@@ -111,7 +110,6 @@ const queryController = [
   QueryBloggersController,
   QueryPostsController,
   QueryCommentsController,
-  QueryUsersController,
 ];
 const auth = [
   AuthService,
@@ -178,6 +176,7 @@ const authUseCase = [
   ValidateUserUseCase,
   MeUseCase,
 ];
+const saUseCase = [FindAllUserUseCase];
 const mongooseModule = [
   ConfigModule.forRoot(),
   MongooseModule.forRoot(
@@ -243,6 +242,7 @@ const mongooseModule = [
     ...commentUseCase,
     ...userUserUseCase,
     ...authUseCase,
+    ...saUseCase,
     DeviceGuards,
     LocalStrategy,
     JwtStrategy,

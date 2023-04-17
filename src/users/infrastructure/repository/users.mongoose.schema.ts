@@ -34,7 +34,7 @@ export class EmailConfirmation {
 //export const EmailConfirmationSchema =
 //  SchemaFactory.createForClass(EmailConfirmation);
 
-@Schema({ versionKey: false })
+@Schema({ versionKey: false, _id: false })
 export class PasswordRecovery {
   @Prop()
   recoveryCode: string;
@@ -48,6 +48,16 @@ export class PasswordRecovery {
   isRecovered: boolean;
 }
 
+@Schema({ versionKey: false, _id: false })
+export class BanInfo {
+  @Prop()
+  isBanned: boolean;
+  @Prop()
+  banDate: Date;
+  @Prop()
+  banReason: string;
+}
+
 @Schema({ versionKey: false })
 export class User {
   @Prop({ type: ObjectId })
@@ -58,6 +68,8 @@ export class User {
   emailConfirmation: EmailConfirmation;
   @Prop()
   passwordRecovery: PasswordRecovery;
+  @Prop()
+  banInfo: BanInfo;
   @Prop()
   createdAt: Date;
 
