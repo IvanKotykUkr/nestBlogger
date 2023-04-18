@@ -87,4 +87,8 @@ export class AuthDevicesRepositories {
     await device.deleteOne();
     return 'all good';
   }
+
+  async deleteAllDeviceForCurrentUser(userId: ObjectId) {
+    return this.AuthDevicesModel.findOneAndDelete(userId);
+  }
 }

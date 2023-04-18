@@ -8,6 +8,7 @@ export class CreateBloggerCommand {
     public name: string,
     public websiteUrl: string,
     public description: string,
+    public userId: ObjectId,
   ) {}
 }
 
@@ -22,6 +23,7 @@ export class CreateBloggerUseCase
       command.name,
       command.websiteUrl,
       command.description,
+      command.userId,
     );
     return this.bloggersRepositories.createBlogger(blogger);
   }
@@ -30,13 +32,16 @@ export class CreateBloggerUseCase
     name: string,
     websiteUrl: string,
     description: string,
+    ownerId: ObjectId,
   ): BloggerType {
     const newBlogger: BloggerType = {
       _id: new ObjectId(),
       name,
       description,
       websiteUrl,
+      ownerId,
       createdAt: new Date(),
+      isMembership: true,
     };
 
     return newBlogger;

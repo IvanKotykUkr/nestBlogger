@@ -17,17 +17,14 @@ export class BloggersRepositories {
       name: blogger.name,
       description: blogger.description,
       websiteUrl: blogger.websiteUrl,
+      ownerId: blogger.ownerId,
       createdAt: blogger.createdAt,
+      isMembership: true,
     };
   }
 
   async createBlogger(newBlogger: BloggerType): Promise<BloggerType> {
-    const bloggerInstance = new this.BloggerModel();
-    bloggerInstance._id = newBlogger._id;
-    bloggerInstance.name = newBlogger.name;
-    bloggerInstance.description = newBlogger.description;
-    bloggerInstance.websiteUrl = newBlogger.websiteUrl;
-    bloggerInstance.createdAt = newBlogger.createdAt;
+    const bloggerInstance = new this.BloggerModel(newBlogger);
 
     await bloggerInstance.save();
     return this.reqBlogger(bloggerInstance);
@@ -58,5 +55,14 @@ export class BloggersRepositories {
       return this.reqBlogger(blogger);
     }
     return 'not found';
+  }
+
+  async findById(_id: ObjectId): Promise<BloggerDocument> {
+    return this.BloggerModel.findById(_id);
+  }
+
+  async save(blogger: BloggerDocument) {
+    await blogger.save();
+    return true;
   }
 }

@@ -41,7 +41,9 @@ export type BloggerDBType = {
   name: string;
   description: string;
   websiteUrl: string;
+  ownerId: ObjectId;
   createdAt: Date;
+  isMembership: boolean;
 };
 
 export type BloggerType = {
@@ -50,7 +52,9 @@ export type BloggerType = {
   name: string;
   description: string;
   websiteUrl: string;
+  ownerId: ObjectId;
   createdAt: Date;
+  isMembership: boolean;
 };
 export type BloggerTypeForUpdate = {
   id?: ObjectId;
@@ -66,6 +70,7 @@ export type BloggerResponseType = {
   description: string;
   websiteUrl: string;
   createdAt: Date;
+  isMembership: boolean;
 };
 export type PaginationType<T> = {
   pagesCount: number;
@@ -74,6 +79,12 @@ export type PaginationType<T> = {
   totalCount: number;
   items: T[];
 };
+
+export type BloggSearchFilerType =
+  | { $and: ({ ownerId: ObjectId } | { name: { $regex: string } })[] }
+  | {
+      ownerId: ObjectId;
+    };
 
 export type BloggerResponseTypeWithPagination =
   PaginationType<BloggerResponseType>;

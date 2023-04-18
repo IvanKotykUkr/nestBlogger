@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import {
   BloggerResponseType,
-  BloggerResponseTypeWithPagination,
   BloggerType,
+  BloggSearchFilerType,
 } from '../bloggers.types';
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
@@ -24,6 +24,7 @@ export class QueryBloggersRepositories {
       description: blogger.description,
       websiteUrl: blogger.websiteUrl,
       createdAt: blogger.createdAt,
+      isMembership: true,
     };
   }
 
@@ -42,15 +43,17 @@ export class QueryBloggersRepositories {
   }
 
   async getBloggers(
-    name: string | null,
-    size: number,
-    number: number,
+    filter: BloggSearchFilerType,
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    page: number,
   ): Promise<BloggerResponseType[]> {
-    const filter = await this.paginationFilter(name);
-
+    const direction = this.getDirection(sortDirection);
     const bloggers = await this.BloggerModel.find(filter)
-      .skip(number > 0 ? (number - 1) * size : 0)
-      .limit(size)
+      .skip(page > 0 ? (page - 1) * pageSize : 0)
+      .sort({ [sortBy]: direction })
+      .limit(pageSize)
       .lean();
     return bloggers.map((d) => ({
       id: d._id,
@@ -58,6 +61,7 @@ export class QueryBloggersRepositories {
       description: d.description,
       websiteUrl: d.websiteUrl,
       createdAt: d.createdAt,
+      isMembership: true,
     }));
   }
 
@@ -70,29 +74,16 @@ export class QueryBloggersRepositories {
     return 'not found';
   }
 
-  async findAllBloggers(
-    searchnameterm: string | null,
-    pagenumber: number,
-    pagesize: number,
-  ): Promise<BloggerResponseTypeWithPagination> {
-    const page: number = pagenumber;
-    const pageSize: number = pagesize;
-    const totalCountSearch: number = await this.bloggersSearchCount(
-      searchnameterm,
-    );
-    const pagesCountSearch: number = Math.ceil(totalCountSearch / pageSize);
-    const itemsSearch: BloggerResponseType[] = await this.getBloggers(
-      searchnameterm,
-      pageSize,
-      page,
-    );
+  async bloggSearchCount(filter: BloggSearchFilerType) {
+    return 0;
+  }
 
-    return {
-      pagesCount: pagesCountSearch,
-      page: pagenumber,
-      pageSize: pagesize,
-      totalCount: totalCountSearch,
-      items: itemsSearch,
-    };
+  private getDirection(sortDirection: string) {
+    if (sortDirection.toString() === 'asc') {
+      return 1;
+    }
+    if (sortDirection.toString() === 'desc') {
+      return -1;
+    }
   }
 }

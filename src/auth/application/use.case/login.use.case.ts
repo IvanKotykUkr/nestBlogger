@@ -29,6 +29,14 @@ export class ValidateUserUseCase
         },
       ]);
     }
+    if (user.banInfo.isBanned === true) {
+      throw new UnauthorizedException([
+        {
+          message: 'user banned',
+          field: 'user',
+        },
+      ]);
+    }
     const passwordHash = await this.userHelper.generateHash(
       command.password,
       user.accountData.passwordSalt,

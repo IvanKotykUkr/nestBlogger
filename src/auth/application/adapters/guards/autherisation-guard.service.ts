@@ -11,6 +11,7 @@ import { ObjectId } from 'mongodb';
 import { CommentsRepositories } from '../../../../comments/infrastructure/comments.repositories';
 import { JwtService } from '@nestjs/jwt';
 import process from 'process';
+import { BloggersRepositories } from '../../../../bloggers/infrastructure/bloggers.repositories';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
@@ -63,6 +64,31 @@ export class CheckOwnGuard implements CanActivate {
     }
     const commentUserId = comment.userId.toString();
     if (userId !== commentUserId.toString()) {
+      throw new ForbiddenException([
+        { message: 'not your own', field: 'user' },
+      ]);
+    }
+    return true;
+  }
+}
+
+@Injectable()
+export class CheckOwnBlogGuard implements CanActivate {
+  constructor(protected bloggersRepositories: BloggersRepositories) {}
+
+  async canActivate(context: ExecutionContext) {
+    const req: Request = context.switchToHttp().getRequest();
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const userId = req.user.toString();
+    const blog = await this.bloggersRepositories.findById(
+      new ObjectId(req.params.id),
+    );
+    if (!blog) {
+      throw new NotFoundException([{ message: 'no blog', field: 'id' }]);
+    }
+    const blogOwnerId = blog.ownerId.toString();
+    if (userId !== blogOwnerId.toString()) {
       throw new ForbiddenException([
         { message: 'not your own', field: 'user' },
       ]);
