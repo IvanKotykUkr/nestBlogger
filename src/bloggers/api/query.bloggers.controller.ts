@@ -28,21 +28,24 @@ export class QueryBloggersController {
     protected queryPostsRepositories: QueryPostsRepositories,
   ) {}
 
-  @Get('/')
-  async getBloggers(@Query() query: QueryForPaginationType) {
-    const searchNameTerm = query.searchNameTerm || null;
-    const pageNumber: number = query.pageNumber || 1;
-    const pageSize: number = query.pageSize || 10;
-
-    const bloggers = await this.queryBloggersRepositories.findAllBloggers(
-      searchNameTerm,
-      +pageNumber,
-      +pageSize,
-    );
-
-    return bloggers;
-  }
-
+  /*
+    @Get('/')
+    async getBloggers(@Query() query: QueryForPaginationType) {
+      const searchNameTerm = query.searchNameTerm || null;
+      const pageNumber: number = query.pageNumber || 1;
+      const pageSize: number = query.pageSize || 10;
+  
+      const bloggers = await this.queryBloggersRepositories.findAllBloggers(
+        searchNameTerm,
+        +pageNumber,
+        +pageSize,
+      );
+  
+      return bloggers;
+    }
+  
+  
+   */
   @Get('/:id')
   async getBlogger(@Param() param: IdTypeForReq) {
     const blogger: BloggerResponseType | string =

@@ -125,6 +125,38 @@ export class User {
     }
     return true;
   }
+
+  checkAlreadyBanned() {
+    if (this.banInfo.isBanned === true) {
+      throw new BadRequestException([
+        { message: 'User already banned', field: 'userId' },
+      ]);
+    }
+    return true;
+  }
+
+  checkAlreadyUnBan() {
+    if (this.banInfo.isBanned === false) {
+      throw new BadRequestException([
+        { message: 'User already UnBaned', field: 'userId' },
+      ]);
+    }
+    return true;
+  }
+
+  banUser(banReason: string) {
+    (this.banInfo.isBanned = true),
+      (this.banInfo.banReason = banReason),
+      (this.banInfo.banDate = new Date());
+    return true;
+  }
+
+  UnBanUser() {
+    (this.banInfo.isBanned = true),
+      (this.banInfo.banReason = null),
+      (this.banInfo.banDate = null);
+    return true;
+  }
 }
 
 export const UsersSchema = SchemaFactory.createForClass(User);
@@ -136,4 +168,8 @@ UsersSchema.methods = {
   checkPasswordRecoveryStatus: User.prototype.checkPasswordRecoveryStatus,
   checkExpirationPasswordRecoveryCode:
     User.prototype.checkExpirationPasswordRecoveryCode,
+  checkAlreadyBanned: User.prototype.checkAlreadyBanned,
+  checkAlreadyUnBan: User.prototype.checkAlreadyUnBan,
+  banUser: User.prototype.banUser,
+  UnBanUser: User.prototype.UnBanUser,
 };

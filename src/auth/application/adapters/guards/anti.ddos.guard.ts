@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { RecordType } from '../../../auth.types';
 import { ObjectId } from 'mongodb';
 import { RateRecordRepositories } from '../../../infrastructure/rate-record-repositories';
@@ -15,16 +14,18 @@ export class AntiDdosGuard implements CanActivate {
   constructor(protected rateRecordRepositories: RateRecordRepositories) {}
 
   async canActivate(context: ExecutionContext) {
-    const req: Request = context.switchToHttp().getRequest();
-    const record = this.makeRecord(req.ip, new Date(), req.url);
-    const recordsForIpAndUrl = await this.rateRecordRepositories.findRecords(
-      req.ip,
-      req.url,
-    );
-    this.checkRecord(recordsForIpAndUrl);
-
-    await this.rateRecordRepositories.createRecord(record);
-
+    /*  const req: Request = context.switchToHttp().getRequest();
+      const record = this.makeRecord(req.ip, new Date(), req.url);
+      const recordsForIpAndUrl = await this.rateRecordRepositories.findRecords(
+        req.ip,
+        req.url,
+      );
+      this.checkRecord(recordsForIpAndUrl);
+  
+      await this.rateRecordRepositories.createRecord(record);
+  
+  
+     */
     return true;
   }
 

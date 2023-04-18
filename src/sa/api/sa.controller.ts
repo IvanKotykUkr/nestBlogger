@@ -23,8 +23,10 @@ import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 import { IdTypeForReq } from '../../posts/posts.types';
 import { DeleteUserCommand } from '../../users/application/use.case/delete.user.use.case';
 import { notFoundUser } from '../../constants';
-import { QueryForGetUsers } from '../sa.types';
+import { BodyForBanUser, QueryForGetUsers } from '../sa.types';
 import { FindAllUserCommand } from '../application/useCase/queryUseCase/find.all.user.use.case';
+import { BanUserCommand } from '../application/useCase/ban.user.use.case';
+import { UnBanUserCommand } from '../application/useCase/unBan.user.use.case';
 
 @Controller('/sa')
 export class SAController {
@@ -39,8 +41,19 @@ export class SAController {
   async getBlogs() {}
 
   @UseGuards(BasicAuthGuard)
-  @Put('users/:id')
-  async banOrUnbanUser() {}
+  @Put('users/:id/ban')
+  async banOrUnbanUser(
+    @Param() param: IdTypeForReq,
+    @Body() body: BodyForBanUser,
+  ) {
+    if (body.isBanned === true)
+      return this.commandBus.execute(
+        new BanUserCommand(param.id, body.banReason),
+      );
+    if (body.isBanned === false)
+      return this.commandBus.execute(new UnBanUserCommand(param.id));
+    return;
+  }
 
   @UseGuards(BasicAuthGuard)
   @Get('/users')

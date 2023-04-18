@@ -91,6 +91,10 @@ import { LocalAuthGuard } from './auth/application/adapters/guards/local-auth.gu
 import { JwtAuthGuard } from './auth/application/adapters/guards/jwt-auth.guard';
 import { SAController } from './sa/api/sa.controller';
 import { FindAllUserUseCase } from './sa/application/useCase/queryUseCase/find.all.user.use.case';
+import { BanUserUseCase } from './sa/application/useCase/ban.user.use.case';
+import { UnBanUserUseCase } from './sa/application/useCase/unBan.user.use.case';
+import { CheckOwnBlogGuard } from './auth/application/adapters/guards/autherisation-guard.service';
+import { FindALLOwnedBlogsUseCase } from './bloggers/application/use.case/query.Use.Case/find.all.owned.blogs.use.case';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -147,6 +151,7 @@ const bloggerUseCase = [
   DeleteBloggerUseCase,
   UpdateBloggerUseCase,
   FindBloggerUseCase,
+  FindALLOwnedBlogsUseCase,
 ];
 const postUseCase = [
   CreatePostUseCase,
@@ -176,7 +181,7 @@ const authUseCase = [
   ValidateUserUseCase,
   MeUseCase,
 ];
-const saUseCase = [FindAllUserUseCase];
+const saUseCase = [FindAllUserUseCase, BanUserUseCase, UnBanUserUseCase];
 const mongooseModule = [
   ConfigModule.forRoot(),
   MongooseModule.forRoot(
@@ -259,6 +264,7 @@ const mongooseModule = [
     Validator,
     LikesHelper,
     LikesAuthGuard,
+    CheckOwnBlogGuard,
   ],
 })
 export class AppModule {}

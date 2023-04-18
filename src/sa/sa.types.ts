@@ -1,3 +1,5 @@
+import { IsBoolean, IsNotEmpty, Length } from 'class-validator';
+
 export class QueryForGetUsers {
   banStatus: string;
   searchLoginTerm: string | null;
@@ -6,6 +8,14 @@ export class QueryForGetUsers {
   sortDirection: string;
   pageNumber: number;
   pageSize: number;
+}
+
+export class BodyForBanUser {
+  @IsNotEmpty()
+  @IsBoolean()
+  isBanned: boolean;
+  @Length(0, 20)
+  banReason: string;
 }
 
 export type UsersSearchCountParams =
