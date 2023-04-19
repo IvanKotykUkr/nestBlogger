@@ -33,14 +33,8 @@ export class PostsRepositories {
   }
 
   async createPost(newPost: PostsDBType): Promise<PostsResponseType> {
-    const postsInstance = new this.PostModel();
-    postsInstance._id = newPost._id;
-    postsInstance.title = newPost.title;
-    postsInstance.shortDescription = newPost.shortDescription;
-    postsInstance.content = newPost.content;
-    postsInstance.blogId = newPost.blogId;
-    postsInstance.blogName = newPost.blogName;
-    postsInstance.createdAt = new Date();
+    const postsInstance = await new this.PostModel(newPost);
+
     await postsInstance.save();
     return this.resPost(postsInstance);
   }

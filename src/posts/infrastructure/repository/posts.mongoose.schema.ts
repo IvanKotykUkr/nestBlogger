@@ -10,6 +10,8 @@ export const PostsSchema = new mongoose.Schema<PostsDBType>(
     content: String,
     blogId: ObjectId,
     blogName: String,
+    ownerBlogId: ObjectId,
+    isVisible: Boolean,
     createdAt: Date,
   },
   {

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -14,6 +15,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   BodyForCreateBloggerType,
   BodyForUpdateBloggerType,
+  IdTypeForReqPost,
   QueryForPaginationType,
 } from '../bloggers.types';
 import { CreateBloggerCommand } from '../application/use.case/create.blogger.use.case';
@@ -21,10 +23,19 @@ import { JwtAuthGuard } from '../../auth/application/adapters/guards/jwt-auth.gu
 import { CurrentUserId } from '../../types/decorator';
 import { ObjectId } from 'mongodb';
 import { CheckOwnBlogGuard } from '../../auth/application/adapters/guards/autherisation-guard.service';
-import { IdTypeForReq } from '../../posts/posts.types';
+import {
+  BodyTypeForPost,
+  BodyTypeForPostBlogger,
+  IdTypeForReq,
+} from '../../posts/posts.types';
 import { UpdateBloggerCommand } from '../application/use.case/update.blogger.use.case';
 import { DeleteBloggerCommand } from '../application/use.case/delete.blogger.use.case';
 import { FindALLOwnedBlogsCommand } from '../application/use.case/query.Use.Case/find.all.owned.blogs.use.case';
+import { FindBloggerCommand } from '../application/use.case/find.blogger.use.case';
+import { CreatePostCommand } from '../../posts/application/use.case/create.post.use.case';
+import { notFoundBlogger } from '../../constants';
+import { UpdatePostCommand } from '../../posts/application/use.case/update.post.use.case';
+import { DeletePostCommand } from '../../posts/application/use.case/delete.post.use.case';
 
 @Controller('blogger/blogs')
 export class BloggersController {
@@ -94,27 +105,62 @@ export class BloggersController {
     );
   }
 
-  /*
-    @UseGuards(BasicAuthGuard)
-    @Post('/:id/posts')
-    async createPostByBlogger(
-      @Param() param: IdTypeForReq,
-      @Body() inputModel: BodyTypeForPostBlogger,
-    ) {
-      const blogger = await this.commandBus.execute(
-        new FindBloggerCommand(param.id),
-      );
-  
-      return this.commandBus.execute(
-        new CreatePostCommand(
-          blogger.id,
-          inputModel.title,
-          inputModel.shortDescription,
-          inputModel.content,
-          blogger.name,
-        ),
-      );
-    }
+  @UseGuards(JwtAuthGuard, CheckOwnBlogGuard)
+  @Post('/:id/posts')
+  async createPostByBlogger(
+    @Param() param: IdTypeForReq,
+    @Body() inputModel: BodyTypeForPostBlogger,
+    @CurrentUserId() userId: ObjectId,
+  ) {
+    const blogger = await this.commandBus.execute(
+      new FindBloggerCommand(param.id),
+    );
 
-   */
+    return this.commandBus.execute(
+      new CreatePostCommand(
+        blogger.id,
+        inputModel.title,
+        inputModel.shortDescription,
+        inputModel.content,
+        blogger.name,
+        userId,
+      ),
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, CheckOwnBlogGuard)
+  @Put('/:id/posts/:postId')
+  @HttpCode(204)
+  async updatePost(
+    @Param() param: IdTypeForReqPost,
+    @Body() inputModel: BodyTypeForPost,
+  ) {
+    const blog = await this.commandBus.execute(
+      new FindBloggerCommand(param.id),
+    );
+    if (blog === 'not found') {
+      throw new NotFoundException(notFoundBlogger);
+    }
+    const isUpdated = await this.commandBus.execute(
+      new UpdatePostCommand(
+        param.postId,
+        inputModel.title,
+        inputModel.shortDescription,
+        inputModel.content,
+        param.id,
+        blog.name,
+      ),
+    );
+    return isUpdated;
+  }
+
+  @UseGuards(JwtAuthGuard, CheckOwnBlogGuard)
+  @Delete('/:id/posts/:postId')
+  @HttpCode(204)
+  async deletePost(
+    @Param()
+    param: IdTypeForReqPost,
+  ) {
+    return this.commandBus.execute(new DeletePostCommand(param.postId));
+  }
 }

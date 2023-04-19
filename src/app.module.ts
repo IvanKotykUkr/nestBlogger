@@ -95,6 +95,8 @@ import { BanUserUseCase } from './sa/application/useCase/ban.user.use.case';
 import { UnBanUserUseCase } from './sa/application/useCase/unBan.user.use.case';
 import { CheckOwnBlogGuard } from './auth/application/adapters/guards/autherisation-guard.service';
 import { FindALLOwnedBlogsUseCase } from './bloggers/application/use.case/query.Use.Case/find.all.owned.blogs.use.case';
+import { FindALLBlogsUseCase } from './bloggers/application/use.case/query.Use.Case/find.all.blogs.use.case';
+import { FindAllPostsUseCase } from './bloggers/application/use.case/query.Use.Case/find.all.posts.use.case';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -152,12 +154,14 @@ const bloggerUseCase = [
   UpdateBloggerUseCase,
   FindBloggerUseCase,
   FindALLOwnedBlogsUseCase,
+  FindALLBlogsUseCase,
 ];
 const postUseCase = [
   CreatePostUseCase,
   UpdatePostUseCase,
   DeletePostUseCase,
   FindPostUseCase,
+  FindAllPostsUseCase,
 ];
 const commentUseCase = [
   CreateCommentUseCase,
