@@ -23,10 +23,17 @@ import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 import { IdTypeForReq } from '../../posts/posts.types';
 import { DeleteUserCommand } from '../../users/application/use.case/delete.user.use.case';
 import { notFoundUser } from '../../constants';
-import { BodyForBanUser, QueryForGetUsers } from '../sa.types';
+import {
+  BodyForBanUser,
+  IdTypeForReqUser,
+  QueryForGetUsers,
+} from '../sa.types';
 import { FindAllUserCommand } from '../application/useCase/queryUseCase/find.all.user.use.case';
 import { BanUserCommand } from '../application/useCase/ban.user.use.case';
 import { UnBanUserCommand } from '../application/useCase/unBan.user.use.case';
+import { QueryForPaginationType } from '../../bloggers/bloggers.types';
+import { FindALLBlogsCommand } from '../../bloggers/application/use.case/query.Use.Case/find.all.blogs.use.case';
+import { BinUserCommand } from '../application/useCase/bin.user.use.case';
 
 @Controller('/sa')
 export class SAController {
@@ -34,11 +41,28 @@ export class SAController {
 
   @UseGuards(BasicAuthGuard)
   @Put('/blogs/:id/bind-with-user/:userId')
-  async bindBlog() {}
+  async bindBlog(@Param() param: IdTypeForReqUser) {
+    return this.commandBus.execute(new BinUserCommand(param.id, param.userId));
+  }
 
   @UseGuards(BasicAuthGuard)
   @Get('/blogs')
-  async getBlogs() {}
+  async getBlogs(@Query() query: QueryForPaginationType) {
+    const searchNameTerm = query.searchNameTerm || null;
+    const pageNumber: number = query.pageNumber || 1;
+    const pageSize: number = query.pageSize || 10;
+    const sortByQuery = query.sortBy || 'createdAt';
+    const sortDirectionQuery = query.sortDirection || 'desc';
+    return this.queryBus.execute(
+      new FindALLBlogsCommand(
+        searchNameTerm,
+        pageNumber,
+        pageSize,
+        sortByQuery,
+        sortDirectionQuery,
+      ),
+    );
+  }
 
   @UseGuards(BasicAuthGuard)
   @Put('users/:id/ban')

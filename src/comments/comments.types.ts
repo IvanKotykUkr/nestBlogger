@@ -13,6 +13,7 @@ export type CommentsDBType = {
   content: string;
   userId: ObjectId;
   userLogin: string;
+  isVisible: boolean;
   createdAt: Date;
 };
 export type CommentResponseType = {
@@ -42,6 +43,7 @@ export type LikeDbType = {
   status: string;
   addedAt: Date;
   userId: ObjectId;
+  isVisible: boolean;
   login: string;
 };
 export type ArrayIdType = Array<{

@@ -61,10 +61,26 @@ export class PostsRepositories {
   }
 
   async findPostById(id: ObjectId): Promise<PostsResponseType | string> {
-    const post = await this.PostModel.findById(id);
+    const post = await this.PostModel.findById({
+      $and: [{ id }, { isVisible: { $ne: false } }],
+    });
     if (post) {
       return this.resPost(post);
     }
     return 'not found';
+  }
+
+  async makePostInvisible(userId: ObjectId) {
+    return this.PostModel.updateMany(
+      { ownerBlogId: userId },
+      { isVisible: false },
+    );
+  }
+
+  async makePostVisible(userId: ObjectId) {
+    return this.PostModel.updateMany(
+      { ownerBlogId: userId },
+      { isVisible: true },
+    );
   }
 }

@@ -1,20 +1,10 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Query,
-  Req,
-} from '@nestjs/common';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { QueryForPaginationType } from '../bloggers.types';
 import { IdTypeForReq } from '../../posts/posts.types';
-import { QueryBloggersRepositories } from '../infrastructure/query.bloggers.repositories';
-import { QueryPostsRepositories } from '../../posts/infrastructure/query.posts.repositories';
-import { Request } from 'express';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FindALLBlogsCommand } from '../application/use.case/query.Use.Case/find.all.blogs.use.case';
 import { FindBloggerCommand } from '../application/use.case/find.blogger.use.case';
-import { FindAllPostsCommand } from '../application/use.case/query.Use.Case/find.all.posts.use.case';
+import { FindAllPostsForBlogCommand } from '../application/use.case/query.Use.Case/find.all.posts.for.blog.use.case';
 
 export const notFoundBlogger = [
   {
@@ -25,12 +15,7 @@ export const notFoundBlogger = [
 
 @Controller('/blogs')
 export class QueryBloggersController {
-  constructor(
-    protected queryBloggersRepositories: QueryBloggersRepositories,
-    protected queryPostsRepositories: QueryPostsRepositories,
-    protected queryBus: QueryBus,
-    protected commandBus: CommandBus,
-  ) {}
+  constructor(protected queryBus: QueryBus, protected commandBus: CommandBus) {}
 
   @Get('/')
   async getBloggers(@Query() query: QueryForPaginationType) {
@@ -54,7 +39,6 @@ export class QueryBloggersController {
   async getPostByBlogger(
     @Param() param: IdTypeForReq,
     @Query() query: QueryForPaginationType,
-    @Req() req: Request,
   ) {
     const searchNameTerm = query.searchNameTerm || null;
     const pageNumber = query.pageNumber || 1;
@@ -65,17 +49,23 @@ export class QueryBloggersController {
       new FindBloggerCommand(param.id),
     );
 
-    if (blogger === 'not found') {
-      throw new NotFoundException(notFoundBlogger);
-    }
     return this.queryBus.execute(
-      new FindAllPostsCommand(
-        param.id,
+      new FindAllPostsForBlogCommand(
+        searchNameTerm,
+        blogger.id,
         pageNumber,
         pageSize,
         sortByQuery,
         sortDirectionQuery,
       ),
     );
+  }
+
+  @Post('/:id')
+  async getBlogById(
+    @Param() param: IdTypeForReq,
+    @Query() query: QueryForPaginationType,
+  ) {
+    return this.commandBus.execute(new FindBloggerCommand(param.id));
   }
 }

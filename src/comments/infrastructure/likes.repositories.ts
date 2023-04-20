@@ -92,4 +92,20 @@ export class LikesRepositories {
     await like.deleteOne();
     return;
   }
+
+  async countLike(entityId: ObjectId) {
+    return this.LikesModel.countDocuments(entityId);
+  }
+
+  async countDislike(entityId: ObjectId) {
+    return this.LikesModel.countDocuments(entityId);
+  }
+
+  async makeLikeInvisible(userId: ObjectId) {
+    return this.LikesModel.updateMany({ userId }, { isVisible: false });
+  }
+
+  async makeLikeVisible(userId: ObjectId) {
+    return this.LikesModel.updateMany({ userId }, { isVisible: true });
+  }
 }

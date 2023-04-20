@@ -15,6 +15,8 @@ export class Likes {
   @Prop()
   addedAt: Date;
   @Prop()
+  isVisible: boolean;
+  @Prop()
   userId: ObjectId;
   @Prop()
   login: string;

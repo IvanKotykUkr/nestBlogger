@@ -6,8 +6,9 @@ import {
 import { QueryBloggersRepositories } from '../../../infrastructure/query.bloggers.repositories';
 import { ObjectId } from 'mongodb';
 
-export class FindAllPostsCommand {
+export class FindAllPostsForBlogCommand {
   constructor(
+    public searchNameTerm: string | null,
     public blogId: ObjectId,
     public pageNumber: number,
     public pageSize: number,
@@ -16,18 +17,18 @@ export class FindAllPostsCommand {
   ) {}
 }
 
-@CommandHandler(FindAllPostsCommand)
-export class FindAllPostsUseCase
-  implements ICommandHandler<FindAllPostsCommand>
+@CommandHandler(FindAllPostsForBlogCommand)
+export class FindAllPostsForBlogUseCase
+  implements ICommandHandler<FindAllPostsForBlogCommand>
 {
   constructor(protected queryBloggersRepositories: QueryBloggersRepositories) {}
 
   async execute(
-    command: FindAllPostsCommand,
+    command: FindAllPostsForBlogCommand,
   ): Promise<BloggerResponseTypeWithPagination> {
     const page: number = command.pageNumber;
     const pageSize: number = command.pageSize;
-    const filter = this.getFilter(command.searchNameTerm);
+    const filter = this.getFilter(command.searchNameTerm, command.blogId);
     const totalCountSearch: number =
       await this.queryBloggersRepositories.bloggSearchCount(filter);
     const pagesCountSearch: number = Math.ceil(totalCountSearch / pageSize);
@@ -49,8 +50,9 @@ export class FindAllPostsUseCase
     };
   }
 
-  private getFilter(searchNameTerm: string | null) {
-    if (searchNameTerm) return { name: { $regex: searchNameTerm } };
-    return {};
+  private getFilter(searchNameTerm: string | null, blogId: ObjectId) {
+    if (searchNameTerm)
+      return { $and: [{ blogId }, { name: { $regex: searchNameTerm } }] };
+    return { blogId };
   }
 }

@@ -13,8 +13,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { FindPostCommand } from '../application/use.case/find.post.use.case';
 import { CreateCommentCommand } from '../../comments/application/use.case/create.comment.use.case';
 import { UpdateLikeCommand } from '../../comments/application/use.case/update.like.use.case';
-import { CurrentUser, CurrentUserId } from '../../types/decorator';
-import { UserRequestType } from '../../users/users.types';
+import { CurrentUserId } from '../../types/decorator';
 import { ObjectId } from 'mongodb';
 import { FindUserByIdCommand } from '../../users/application/use.case/find.user.use.case';
 import { JwtAuthGuard } from '../../auth/application/adapters/guards/jwt-auth.guard';
@@ -44,8 +43,9 @@ export class PostsController {
   async updateLikeStatus(
     @Param() param: IdTypeForReq,
     @Body() inputModel: UpdateLikeDTO,
-    @CurrentUser() user: UserRequestType,
+    @CurrentUserId() userId: ObjectId,
   ) {
+    const user = await this.commandBus.execute(new FindUserByIdCommand(userId));
     const post = await this.commandBus.execute(new FindPostCommand(param.id));
     return this.commandBus.execute(
       new UpdateLikeCommand(

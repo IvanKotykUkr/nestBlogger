@@ -96,7 +96,11 @@ import { UnBanUserUseCase } from './sa/application/useCase/unBan.user.use.case';
 import { CheckOwnBlogGuard } from './auth/application/adapters/guards/autherisation-guard.service';
 import { FindALLOwnedBlogsUseCase } from './bloggers/application/use.case/query.Use.Case/find.all.owned.blogs.use.case';
 import { FindALLBlogsUseCase } from './bloggers/application/use.case/query.Use.Case/find.all.blogs.use.case';
-import { FindAllPostsUseCase } from './bloggers/application/use.case/query.Use.Case/find.all.posts.use.case';
+import { FindAllPostsUseCase } from './posts/application/use.case/find.all.posts.use.case';
+import { FindAllPostsForBlogUseCase } from './bloggers/application/use.case/query.Use.Case/find.all.posts.for.blog.use.case';
+import { FindAllCommentUseCase } from './comments/application/use.case/find.all.comment.use.case';
+import { FindCommentWithLikeUseCase } from './comments/application/use.case/find.comment.with.likes.info.use.case';
+import { BinUserUseCase } from './sa/application/useCase/bin.user.use.case';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -141,6 +145,7 @@ const comment = [
   CommentsHelper,
   CommentsRepositories,
   QueryCommentsRepositories,
+  FindCommentWithLikeUseCase,
 ];
 const blogger = [
   BloggersService,
@@ -162,6 +167,7 @@ const postUseCase = [
   DeletePostUseCase,
   FindPostUseCase,
   FindAllPostsUseCase,
+  FindAllPostsForBlogUseCase,
 ];
 const commentUseCase = [
   CreateCommentUseCase,
@@ -169,6 +175,7 @@ const commentUseCase = [
   DeleteCommentUseCase,
   FindCommentUseCase,
   UpdateLikeUseCase,
+  FindAllCommentUseCase,
 ];
 const userUserUseCase = [
   CreateUserUseCase,
@@ -185,7 +192,12 @@ const authUseCase = [
   ValidateUserUseCase,
   MeUseCase,
 ];
-const saUseCase = [FindAllUserUseCase, BanUserUseCase, UnBanUserUseCase];
+const saUseCase = [
+  FindAllUserUseCase,
+  BanUserUseCase,
+  UnBanUserUseCase,
+  BinUserUseCase,
+];
 const mongooseModule = [
   ConfigModule.forRoot(),
   MongooseModule.forRoot(
