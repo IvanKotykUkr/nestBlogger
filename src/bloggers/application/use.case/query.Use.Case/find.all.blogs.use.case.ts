@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import {
   BloggerResponseType,
   BloggerResponseTypeWithPagination,
@@ -15,10 +15,8 @@ export class FindALLBlogsCommand {
   ) {}
 }
 
-@CommandHandler(FindALLBlogsCommand)
-export class FindALLBlogsUseCase
-  implements ICommandHandler<FindALLBlogsCommand>
-{
+@QueryHandler(FindALLBlogsCommand)
+export class FindALLBlogsUseCase implements IQueryHandler<FindALLBlogsCommand> {
   constructor(protected queryBloggersRepositories: QueryBloggersRepositories) {}
 
   async execute(
