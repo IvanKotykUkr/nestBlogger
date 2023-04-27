@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { QueryPostsRepositories } from '../../infrastructure/query.posts.repositories';
 import {
   PostsDBType,
@@ -17,10 +17,8 @@ export class FindAllPostsCommand {
   ) {}
 }
 
-@CommandHandler(FindAllPostsCommand)
-export class FindAllPostsUseCase
-  implements ICommandHandler<FindAllPostsCommand>
-{
+@QueryHandler(FindAllPostsCommand)
+export class FindAllPostsUseCase implements IQueryHandler<FindAllPostsCommand> {
   constructor(
     protected queryPostsRepositories: QueryPostsRepositories,
     protected likesHelper: LikesHelper,

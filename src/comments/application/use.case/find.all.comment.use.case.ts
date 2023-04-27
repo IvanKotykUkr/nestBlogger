@@ -1,6 +1,6 @@
 import { LikesHelper } from '../../../comments/application/likes.helper';
 import { ObjectId } from 'mongodb';
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { QueryCommentsRepositories } from '../../infrastructure/query.comments.repositories';
 import {
   CommentsResponseTypeWithPagination,
@@ -18,9 +18,9 @@ export class FindAllCommentCommand {
   ) {}
 }
 
-@CommandHandler(FindAllCommentCommand)
+@QueryHandler(FindAllCommentCommand)
 export class FindAllCommentUseCase
-  implements ICommandHandler<FindAllCommentCommand>
+  implements IQueryHandler<FindAllCommentCommand>
 {
   constructor(
     protected queryCommentRepositories: QueryCommentsRepositories,

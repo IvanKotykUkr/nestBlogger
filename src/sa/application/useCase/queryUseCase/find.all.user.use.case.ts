@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 
 import { QueryUsersRepositories } from '../../../../users/infrastructure/query.users.repositories';
 import {
@@ -19,8 +19,8 @@ export class FindAllUserCommand {
   ) {}
 }
 
-@CommandHandler(FindAllUserCommand)
-export class FindAllUserUseCase implements ICommandHandler<FindAllUserCommand> {
+@QueryHandler(FindAllUserCommand)
+export class FindAllUserUseCase implements IQueryHandler<FindAllUserCommand> {
   constructor(protected usersRepositories: QueryUsersRepositories) {}
 
   async execute(
