@@ -15,7 +15,7 @@ export class BodyForBanUser {
   @IsNotEmpty()
   @IsBoolean()
   isBanned: boolean;
-  @Length(0, 20)
+  @Length(20, 100)
   banReason: string;
 }
 
