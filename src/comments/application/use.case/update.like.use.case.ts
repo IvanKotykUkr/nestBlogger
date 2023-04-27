@@ -47,6 +47,7 @@ export class UpdateLikeUseCase implements ICommandHandler<UpdateLikeCommand> {
       status,
       userId,
       login,
+      isVisible: true,
       addedAt: new Date(),
     };
   }

@@ -1,4 +1,4 @@
-import { IsUrl, Length } from 'class-validator';
+import { IsMongoId, IsUrl, Length } from 'class-validator';
 import { ObjectId } from 'mongodb';
 
 export type QueryForPaginationType = {
@@ -34,6 +34,13 @@ export class BodyForUpdateBloggerType {
   @Length(1, 100)
   @IsUrl()
   websiteUrl: string;
+}
+
+export class IdTypeForReqPost {
+  @IsMongoId()
+  id: ObjectId;
+  @IsMongoId()
+  postId: ObjectId;
 }
 
 export type BloggerDBType = {
@@ -84,7 +91,9 @@ export type BloggSearchFilerType =
   | { $and: ({ ownerId: ObjectId } | { name: { $regex: string } })[] }
   | {
       ownerId: ObjectId;
-    };
+    }
+  | { name: { $regex: string } }
+  | {};
 
 export type BloggerResponseTypeWithPagination =
   PaginationType<BloggerResponseType>;

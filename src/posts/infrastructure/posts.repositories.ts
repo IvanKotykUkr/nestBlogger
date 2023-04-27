@@ -33,14 +33,8 @@ export class PostsRepositories {
   }
 
   async createPost(newPost: PostsDBType): Promise<PostsResponseType> {
-    const postsInstance = new this.PostModel();
-    postsInstance._id = newPost._id;
-    postsInstance.title = newPost.title;
-    postsInstance.shortDescription = newPost.shortDescription;
-    postsInstance.content = newPost.content;
-    postsInstance.blogId = newPost.blogId;
-    postsInstance.blogName = newPost.blogName;
-    postsInstance.createdAt = new Date();
+    const postsInstance = await new this.PostModel(newPost);
+
     await postsInstance.save();
     return this.resPost(postsInstance);
   }
@@ -67,10 +61,26 @@ export class PostsRepositories {
   }
 
   async findPostById(id: ObjectId): Promise<PostsResponseType | string> {
-    const post = await this.PostModel.findById(id);
+    const post = await this.PostModel.findById({
+      $and: [{ id }, { isVisible: { $ne: false } }],
+    });
     if (post) {
       return this.resPost(post);
     }
     return 'not found';
+  }
+
+  async makePostInvisible(userId: ObjectId) {
+    return this.PostModel.updateMany(
+      { ownerBlogId: userId },
+      { isVisible: false },
+    );
+  }
+
+  async makePostVisible(userId: ObjectId) {
+    return this.PostModel.updateMany(
+      { ownerBlogId: userId },
+      { isVisible: true },
+    );
   }
 }

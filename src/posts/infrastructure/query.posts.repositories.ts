@@ -6,7 +6,6 @@ import {
   PostsDBType,
   PostsLikeResponseType,
   PostsResponseType,
-  PostsResponseTypeWithPagination,
 } from '../posts.types';
 import { ObjectId } from 'mongodb';
 import { PostsDocument } from './repository/posts.mongoose.schema';
@@ -46,16 +45,18 @@ export class QueryPostsRepositories {
   }
 
   paginationFilter(blogId: undefined | ObjectId) {
-    const filter = {};
+    const filter = { isVisible: { $ne: false } };
     if (blogId) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      return { blogId };
+      return {
+        $and: [{ blogId }, { isVisible: { $ne: false } }],
+      };
     }
     return filter;
   }
 
   async findPostsByIdBloggerCount(
-    blogId: undefined | ObjectId,
+    blogId?: undefined | ObjectId,
   ): Promise<number> {
     const filter = this.paginationFilter(blogId);
 
@@ -63,16 +64,14 @@ export class QueryPostsRepositories {
   }
 
   async findAllPosts(
-    blogId: undefined | ObjectId,
     number: number,
     size: number,
     sortBy: string,
     sortDirection: string,
   ): Promise<PostsDBType[]> {
-    const filter = await this.paginationFilter(blogId);
     const direction = this.getDirection(sortDirection);
     return (
-      this.PostModel.find(filter)
+      this.PostModel.find({ isVisible: { $ne: false } })
         .sort({ [sortBy]: direction })
         //.skip((number - 1) * size)
         .skip(number > 0 ? (number - 1) * size : 0)
@@ -82,60 +81,6 @@ export class QueryPostsRepositories {
     );
 
     //   return posts.sort(this.compareValues(sortBy, sortDirection));
-  }
-
-  async getAllPostsWithPagination(
-    number: number,
-    size: number,
-    userId: ObjectId,
-    sortBy: string,
-    sortDirection: string,
-    blogId?: ObjectId,
-  ): Promise<PostsResponseTypeWithPagination> {
-    const totalCountSearch: number = await this.findPostsByIdBloggerCount(
-      blogId,
-    );
-    const pagenumber: number = number;
-    const pagesize: number = size;
-    const pagesCountSearch: number = Math.ceil(totalCountSearch / pagesize);
-    const itemsFromDb: PostsDBType[] = await this.findAllPosts(
-      blogId,
-      pagenumber,
-      pagesize,
-      sortBy,
-      sortDirection,
-    );
-
-    const idItems = this.likesHelper.takeEntityId(itemsFromDb);
-    const likes = await this.likesHelper.findLikes(idItems);
-    const dislikes = await this.likesHelper.findDislike(idItems);
-    const status = await this.likesHelper.findStatus(userId, idItems);
-    const allLikes = await this.likesHelper.findLastThreLikes(idItems);
-    const items = itemsFromDb.map((p) => ({
-      id: p._id,
-      title: p.title,
-      shortDescription: p.shortDescription,
-      content: p.content,
-      blogId: p.blogId,
-      blogName: p.blogName,
-      createdAt: p.createdAt,
-      extendedLikesInfo: {
-        likesCount: this.likesHelper.findAmountLikeOrDislike(p._id, likes),
-        dislikesCount: this.likesHelper.findAmountLikeOrDislike(
-          p._id,
-          dislikes,
-        ),
-        myStatus: this.likesHelper.findStatusInArray(p._id, status),
-        newestLikes: this.likesHelper.groupAndSortLikes(allLikes, p._id),
-      },
-    }));
-    return {
-      pagesCount: pagesCountSearch,
-      page: pagenumber,
-      pageSize: pagesize,
-      totalCount: totalCountSearch,
-      items,
-    };
   }
 
   async findPostWithLikeById(

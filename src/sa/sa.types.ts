@@ -1,4 +1,5 @@
-import { IsBoolean, IsNotEmpty, Length } from 'class-validator';
+import { IsBoolean, IsMongoId, IsNotEmpty, Length } from 'class-validator';
+import { ObjectId } from 'mongodb';
 
 export class QueryForGetUsers {
   banStatus: string;
@@ -16,6 +17,13 @@ export class BodyForBanUser {
   isBanned: boolean;
   @Length(0, 20)
   banReason: string;
+}
+
+export class IdTypeForReqUser {
+  @IsMongoId()
+  id: ObjectId;
+  @IsMongoId()
+  userId: ObjectId;
 }
 
 export type UsersSearchCountParams =

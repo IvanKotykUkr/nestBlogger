@@ -42,6 +42,7 @@ export class CreateCommentUseCase
       userId,
       userLogin,
       postId,
+      isVisible: true,
       createdAt: new Date(),
     };
   }

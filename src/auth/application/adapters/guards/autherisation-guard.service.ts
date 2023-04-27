@@ -81,6 +81,7 @@ export class CheckOwnBlogGuard implements CanActivate {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const userId = req.user.toString();
+
     const blog = await this.bloggersRepositories.findById(
       new ObjectId(req.params.id),
     );

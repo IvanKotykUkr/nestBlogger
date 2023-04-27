@@ -34,8 +34,6 @@ export class BodyTypeForPost {
   shortDescription: string;
   @Length(1, 1000)
   content: string;
-  @IsMongoId()
-  blogId: ObjectId;
 }
 
 export type PostsDBType = {
@@ -45,6 +43,8 @@ export type PostsDBType = {
   content: string;
   blogId: ObjectId;
   blogName: string;
+  ownerBlogId: ObjectId;
+  isVisible: boolean;
   createdAt: Date;
 };
 export type PostUpdatedType = {

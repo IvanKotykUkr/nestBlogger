@@ -10,13 +10,8 @@ export class CommentsRepositories {
   ) {}
 
   async createComment(comment: CommentsDBType): Promise<CommentResponseType> {
-    const commentInstance = new this.CommentsModel();
-    commentInstance._id = comment._id;
-    commentInstance.postId = comment.postId;
-    commentInstance.content = comment.content;
-    commentInstance.userId = comment.userId;
-    commentInstance.userLogin = comment.userLogin;
-    commentInstance.createdAt = new Date();
+    const commentInstance = await new this.CommentsModel(comment);
+
     await commentInstance.save();
 
     return this.reqComment(commentInstance);
@@ -36,11 +31,21 @@ export class CommentsRepositories {
   }
 
   async findCommentsById(_id: ObjectId): Promise<CommentResponseType | string> {
-    const comment = await this.CommentsModel.findById(_id);
+    const comment = await this.CommentsModel.findById({
+      $and: [{ _id }, { isVisible: { $ne: false } }],
+    });
     if (comment) {
       return this.reqComment(comment);
     }
     return 'not found';
+  }
+
+  async makeCommentInvisible(userId: ObjectId) {
+    return this.CommentsModel.updateMany({ userId }, { isVisible: false });
+  }
+
+  async makeCommentVisible(userId: ObjectId) {
+    return this.CommentsModel.updateMany({ userId }, { isVisible: true });
   }
 
   private reqComment(comment: CommentsDBType) {

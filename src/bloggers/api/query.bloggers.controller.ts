@@ -1,18 +1,10 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import { BloggerResponseType, QueryForPaginationType } from '../bloggers.types';
+import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { QueryForPaginationType } from '../bloggers.types';
 import { IdTypeForReq } from '../../posts/posts.types';
-import { QueryBloggersRepositories } from '../infrastructure/query.bloggers.repositories';
-import { QueryPostsRepositories } from '../../posts/infrastructure/query.posts.repositories';
-import { LikesAuthGuard } from '../../auth/application/adapters/guards/likes.auth.guard';
-import { Request } from 'express';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { FindALLBlogsCommand } from '../application/use.case/query.Use.Case/find.all.blogs.use.case';
+import { FindBloggerCommand } from '../application/use.case/find.blogger.use.case';
+import { FindAllPostsForBlogCommand } from '../application/use.case/query.Use.Case/find.all.posts.for.blog.use.case';
 
 export const notFoundBlogger = [
   {
@@ -23,64 +15,57 @@ export const notFoundBlogger = [
 
 @Controller('/blogs')
 export class QueryBloggersController {
-  constructor(
-    protected queryBloggersRepositories: QueryBloggersRepositories,
-    protected queryPostsRepositories: QueryPostsRepositories,
-  ) {}
+  constructor(protected queryBus: QueryBus, protected commandBus: CommandBus) {}
 
-  /*
-    @Get('/')
-    async getBloggers(@Query() query: QueryForPaginationType) {
-      const searchNameTerm = query.searchNameTerm || null;
-      const pageNumber: number = query.pageNumber || 1;
-      const pageSize: number = query.pageSize || 10;
-  
-      const bloggers = await this.queryBloggersRepositories.findAllBloggers(
+  @Get('/')
+  async getBloggers(@Query() query: QueryForPaginationType) {
+    const searchNameTerm = query.searchNameTerm || null;
+    const pageNumber: number = query.pageNumber || 1;
+    const pageSize: number = query.pageSize || 10;
+    const sortByQuery = query.sortBy || 'createdAt';
+    const sortDirectionQuery = query.sortDirection || 'desc';
+    return this.queryBus.execute(
+      new FindALLBlogsCommand(
         searchNameTerm,
-        +pageNumber,
-        +pageSize,
-      );
-  
-      return bloggers;
-    }
-  
-  
-   */
-  @Get('/:id')
-  async getBlogger(@Param() param: IdTypeForReq) {
-    const blogger: BloggerResponseType | string =
-      await this.queryBloggersRepositories.findBloggerById(param.id);
-    if (blogger !== 'not found') {
-      return blogger;
-    }
-    throw new NotFoundException(notFoundBlogger);
+        pageNumber,
+        pageSize,
+        sortByQuery,
+        sortDirectionQuery,
+      ),
+    );
   }
 
-  @UseGuards(LikesAuthGuard)
   @Get('/:id/posts')
   async getPostByBlogger(
     @Param() param: IdTypeForReq,
     @Query() query: QueryForPaginationType,
-    @Req() req: Request,
   ) {
+    const searchNameTerm = query.searchNameTerm || null;
     const pageNumber = query.pageNumber || 1;
     const pageSize = query.pageSize || 10;
     const sortByQuery = query.sortBy || 'createdAt';
     const sortDirectionQuery = query.sortDirection || 'desc';
-    const blogger = await this.queryBloggersRepositories.findBloggerById(
-      param.id,
+    const blogger = await this.commandBus.execute(
+      new FindBloggerCommand(param.id),
     );
 
-    if (blogger === 'not found') {
-      throw new NotFoundException(notFoundBlogger);
-    }
-    return this.queryPostsRepositories.getAllPostsWithPagination(
-      pageNumber,
-      pageSize,
-      req.userId,
-      sortByQuery,
-      sortDirectionQuery,
-      param.id,
+    return this.queryBus.execute(
+      new FindAllPostsForBlogCommand(
+        searchNameTerm,
+        blogger.id,
+        pageNumber,
+        pageSize,
+        sortByQuery,
+        sortDirectionQuery,
+      ),
     );
+  }
+
+  @Post('/:id')
+  async getBlogById(
+    @Param() param: IdTypeForReq,
+    @Query() query: QueryForPaginationType,
+  ) {
+    return this.commandBus.execute(new FindBloggerCommand(param.id));
   }
 }

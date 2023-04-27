@@ -76,6 +76,32 @@ export class QueryCommentsRepositories {
     };
   }
 
+  async commentsSearchCount(postId): Promise<number> {
+    return this.CommentsModel.countDocuments({ postId });
+  }
+
+  async getComments(
+    pageSize: number,
+    page: number,
+    postId: ObjectId,
+    sortBy: string,
+    sortDirection: string,
+  ) {
+    const direction = this.getDirection(sortDirection);
+    return this.CommentsModel.find({
+      $and: [
+        {
+          postId,
+        },
+        { isVisible: { $ne: false } },
+      ],
+    })
+      .skip(page > 0 ? (page - 1) * pageSize : 0)
+      .sort({ [sortBy]: direction })
+      .limit(pageSize)
+      .lean();
+  }
+
   protected async reqComment(
     comment: CommentsDocument,
     userId: ObjectId,
@@ -108,25 +134,6 @@ export class QueryCommentsRepositories {
         myStatus,
       },
     };
-  }
-
-  private async commentsSearchCount(postId): Promise<number> {
-    return this.CommentsModel.countDocuments({ postId });
-  }
-
-  private async getComments(
-    pageSize: number,
-    page: number,
-    postId: ObjectId,
-    sortBy: string,
-    sortDirection: string,
-  ) {
-    const direction = this.getDirection(sortDirection);
-    return this.CommentsModel.find({ postId })
-      .skip(page > 0 ? (page - 1) * pageSize : 0)
-      .sort({ [sortBy]: direction })
-      .limit(pageSize)
-      .lean();
   }
 
   private getDirection(sortDirection: string) {

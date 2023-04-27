@@ -10,6 +10,7 @@ export class CreatePostCommand {
     public shortDescription: string,
     public content: string,
     public bloggerName: string,
+    public userId: ObjectId,
   ) {}
 }
 
@@ -26,6 +27,7 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
       command.content,
       command.id,
       command.bloggerName,
+      command.userId,
     );
     return this.postRepositories.createPost(post);
   }
@@ -36,6 +38,7 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
     content: string,
     blogId: ObjectId,
     blogName: string,
+    ownerOfBlogId: ObjectId,
   ): PostsDBType {
     const newPost: PostsDBType = {
       _id: new ObjectId(),
@@ -44,6 +47,8 @@ export class CreatePostUseCase implements ICommandHandler<CreatePostCommand> {
       content: content,
       blogId,
       blogName,
+      ownerBlogId: ownerOfBlogId,
+      isVisible: true,
       createdAt: new Date(),
     };
     return newPost;

@@ -1,30 +1,17 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { IdTypeForReq } from '../../posts/posts.types';
-import { QueryCommentsRepositories } from '../infrastructure/query.comments.repositories';
 import { LikesAuthGuard } from '../../auth/application/adapters/guards/likes.auth.guard';
 import { Request } from 'express';
+import { CommandBus } from '@nestjs/cqrs';
+import { FindCommentCommand } from '../application/use.case/find.comment.use.case';
 
 @Controller('/comments')
 export class QueryCommentsController {
-  constructor(protected queryCommentsRepositories: QueryCommentsRepositories) {}
+  constructor(protected commandBus: CommandBus) {}
 
   @UseGuards(LikesAuthGuard)
   @Get('/:id')
   async getComment(@Param() param: IdTypeForReq, @Req() req: Request) {
-    const comment = await this.queryCommentsRepositories.findCommentsById(
-      param.id,
-      req.userId,
-    );
-    if (typeof comment === 'string') {
-      throw new NotFoundException([{ message: 'no comment', field: 'id' }]);
-    }
-    return comment;
+    return this.commandBus.execute(new FindCommentCommand(param.id));
   }
 }

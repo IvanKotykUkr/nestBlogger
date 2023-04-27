@@ -1,23 +1,12 @@
-import {
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
-import {
-  IdTypeForReq,
-  PostsLikeResponseType,
-  PostsResponseTypeWithPagination,
-} from '../posts.types';
+import { Controller, Get, Param, Query, Req, UseGuards } from '@nestjs/common';
+import { IdTypeForReq } from '../posts.types';
 import { QueryForPaginationType } from '../../bloggers/bloggers.types';
-import { QueryPostsRepositories } from '../infrastructure/query.posts.repositories';
-import { QueryCommentsRepositories } from '../../comments/infrastructure/query.comments.repositories';
-import { ObjectId } from 'mongodb';
 import { LikesAuthGuard } from '../../auth/application/adapters/guards/likes.auth.guard';
 import { Request } from 'express';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { FindPostCommand } from '../application/use.case/find.post.use.case';
+import { FindAllPostsCommand } from '../application/use.case/find.all.posts.use.case';
+import { FindAllCommentCommand } from '../../comments/application/use.case/find.all.comment.use.case';
 
 export const notFoundPost = [
   {
@@ -28,23 +17,12 @@ export const notFoundPost = [
 
 @Controller('/posts')
 export class QueryPostsController {
-  constructor(
-    protected queryPostsRepositories: QueryPostsRepositories,
-    protected queryCommentsRepositories: QueryCommentsRepositories,
-  ) {}
+  constructor(protected commandBus: CommandBus, protected queryBus: QueryBus) {}
 
   @UseGuards(LikesAuthGuard)
   @Get('/:id')
   async getPost(@Param() param: IdTypeForReq, @Req() req: Request) {
-    const post: PostsLikeResponseType | string =
-      await this.queryPostsRepositories.findPostWithLikeById(
-        param.id,
-        req.userId,
-      );
-    if (post === 'not found') {
-      throw new NotFoundException(notFoundPost);
-    }
-    return post;
+    return this.commandBus.execute(new FindPostCommand(param.id));
   }
 
   @UseGuards(LikesAuthGuard)
@@ -54,15 +32,15 @@ export class QueryPostsController {
     const pageSize = query.pageSize || 10;
     const sortByQuery = query.sortBy || 'createdAt';
     const sortDirectionQuery = query.sortDirection || 'desc';
-    const posts: PostsResponseTypeWithPagination =
-      await this.queryPostsRepositories.getAllPostsWithPagination(
+    return this.queryBus.execute(
+      new FindAllPostsCommand(
         pageNumber,
         pageSize,
-        req.userId,
         sortByQuery,
         sortDirectionQuery,
-      );
-    return posts;
+        req.userId,
+      ),
+    );
   }
 
   @UseGuards(LikesAuthGuard)
@@ -76,19 +54,16 @@ export class QueryPostsController {
     const pageSizeQuery: number = query.pageSize || 10;
     const sortByQuery = query.sortBy || 'createdAt';
     const sortDirectionQuery = query.sortDirection || 'desc';
-    const post = await this.queryPostsRepositories.findPostById(
-      new ObjectId(param.id),
-    );
-    if (typeof post == 'string') {
-      throw new NotFoundException(notFoundPost);
-    }
-    return this.queryCommentsRepositories.findAllComments(
-      param.id,
-      +pageNumberQuery,
-      +pageSizeQuery,
-      sortByQuery,
-      sortDirectionQuery,
-      req.userId,
+    const post = await this.commandBus.execute(new FindPostCommand(param.id));
+    return this.queryBus.execute(
+      new FindAllCommentCommand(
+        post.id,
+        +pageNumberQuery,
+        +pageSizeQuery,
+        sortByQuery,
+        sortDirectionQuery,
+        req.userId,
+      ),
     );
   }
 }
