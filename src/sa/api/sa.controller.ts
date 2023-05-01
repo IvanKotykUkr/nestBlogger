@@ -53,6 +53,7 @@ export class SAController {
     const pageSize: number = query.pageSize || 10;
     const sortByQuery = query.sortBy || 'createdAt';
     const sortDirectionQuery = query.sortDirection || 'desc';
+
     return this.queryBus.execute(
       new FindALLBlogsCommand(
         searchNameTerm,
