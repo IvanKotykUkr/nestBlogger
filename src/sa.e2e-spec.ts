@@ -150,6 +150,34 @@ describe('Users', () => {
         banReason: 'dfdxfsF?g.,frsdgfsfdgds',
       })
       .expect(204);
+  });
+  it('Get Users', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/sa/users')
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .query({ sortDirection: 'asc' })
+      .expect(200);
+    console.log(res.body.items);
+  });
+  it('UnBan User', async () => {
+    const res = await request(app.getHttpServer())
+      .put('/sa/users/' + secondUser.id.toString() + '/ban')
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .send({
+        isBanned: false,
+        banReason: 'dfdxsdsdasdsfsF?g.,frsdgfsfdgds',
+      })
+      .expect(204);
+    console.log(res.body);
+  });
+
+  it('Get Users', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/sa/users')
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .query({ sortDirection: 'asc' })
+      .expect(200);
+    console.log(res.body.items);
   }); /*
     it('Delete User', async () => {
       const res = await request(app.getHttpServer())

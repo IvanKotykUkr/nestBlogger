@@ -152,7 +152,7 @@ export class User {
   }
 
   UnBanUser() {
-    (this.banInfo.isBanned = true),
+    (this.banInfo.isBanned = false),
       (this.banInfo.banReason = null),
       (this.banInfo.banDate = null);
     return true;

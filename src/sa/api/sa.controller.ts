@@ -41,7 +41,9 @@ export class SAController {
   @UseGuards(BasicAuthGuard)
   @Put('/blogs/:id/bind-with-user/:userId')
   async bindBlog(@Param() param: IdTypeForReqUser) {
-    return this.commandBus.execute(new BinUserCommand(param.id, param.userId));
+    return this.commandBus.execute(
+      new BinUserCommand(new ObjectId(param.id), param.userId),
+    );
   }
 
   @UseGuards(BasicAuthGuard)
@@ -120,7 +122,9 @@ export class SAController {
   @Delete('/users/:id')
   @HttpCode(204)
   async deleteUsers(@Param() param: IdTypeForReq): Promise<string> {
-    return this.commandBus.execute(new DeleteUserCommand(param.id));
+    return this.commandBus.execute(
+      new DeleteUserCommand(new ObjectId(param.id)),
+    );
   }
 
   private getBanStatusQuery(banStatus: string) {

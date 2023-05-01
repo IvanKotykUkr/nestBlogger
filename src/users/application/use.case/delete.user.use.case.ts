@@ -13,9 +13,7 @@ export class DeleteUserUseCase implements ICommandHandler<DeleteUserCommand> {
   constructor(protected usersRepositories: UsersRepositories) {}
 
   async execute(command: DeleteUserCommand) {
-    const isDeleted = await this.usersRepositories.deleteUser(
-      new ObjectId(command.id),
-    );
+    const isDeleted = await this.usersRepositories.deleteUser(command.id);
     if (isDeleted === true) {
       return true;
     }
