@@ -17,7 +17,7 @@ export type createBloggerType = {
 };
 
 export class BodyForCreateBloggerType {
-  @Length(4, 15)
+  @Length(1, 15)
   name: string;
   @Length(1, 500)
   description: string;
