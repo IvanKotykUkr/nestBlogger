@@ -112,7 +112,7 @@ export class BloggersController {
     @Body() inputModel: BodyTypeForPostBlogger,
     @CurrentUserId() userId: ObjectId,
   ) {
-    const blogger = await this.commandBus.execute(
+    const blogger = await this.queryBus.execute(
       new FindBloggerCommand(param.id),
     );
 
@@ -135,9 +135,7 @@ export class BloggersController {
     @Param() param: IdTypeForReqPost,
     @Body() inputModel: BodyTypeForPost,
   ) {
-    const blog = await this.commandBus.execute(
-      new FindBloggerCommand(param.id),
-    );
+    const blog = await this.queryBus.execute(new FindBloggerCommand(param.id));
     if (blog === 'not found') {
       throw new NotFoundException(notFoundBlogger);
     }
