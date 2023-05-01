@@ -11,23 +11,29 @@ export type CommentsDBType = {
   _id: ObjectId;
   postId: ObjectId;
   content: string;
-  userId: ObjectId;
-  userLogin: string;
+  commentatorInfo: {
+    userId: ObjectId;
+    userLogin: string;
+  };
   isVisible: boolean;
   createdAt: Date;
 };
 export type CommentResponseType = {
   id: ObjectId;
   content: string;
-  userId: ObjectId;
-  userLogin: string;
+  commentatorInfo: {
+    userId: ObjectId;
+    userLogin: string;
+  };
   createdAt: Date;
 };
 export type CommentWithLikeResponseType = {
   id: ObjectId;
   content: string;
-  userId: ObjectId;
-  userLogin: string;
+  commentatorInfo: {
+    userId: ObjectId;
+    userLogin: string;
+  };
   createdAt: Date;
   likesInfo: {
     likesCount: number;

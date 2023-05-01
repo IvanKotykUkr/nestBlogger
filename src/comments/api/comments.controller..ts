@@ -13,12 +13,12 @@ import { CheckOwnGuard } from '../../auth/application/adapters/guards/autherisat
 import { CommandBus } from '@nestjs/cqrs';
 import { UpdateCommentCommand } from '../application/use.case/update.comment.use.case';
 import { DeleteCommentCommand } from '../application/use.case/delete.comment.use.case';
-import { FindCommentCommand } from '../application/use.case/find.comment.use.case';
 import { UpdateLikeCommand } from '../application/use.case/update.like.use.case';
 import { JwtAuthGuard } from '../../auth/application/adapters/guards/jwt-auth.guard';
 import { ObjectId } from 'mongodb';
 import { CurrentUserId } from '../../types/decorator';
 import { FindUserByIdCommand } from '../../users/application/use.case/find.user.use.case';
+import { FindCommentCommand } from '../application/use.case/find.comment.use.case';
 
 @Controller('/comments')
 export class CommentsController {

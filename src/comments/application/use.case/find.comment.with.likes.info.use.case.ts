@@ -6,7 +6,7 @@ import { NotFoundException } from '@nestjs/common';
 import { LikesRepositories } from '../../infrastructure/likes.repositories';
 
 export class FindCommentWithLikeCommand {
-  constructor(public id: ObjectId) {}
+  constructor(public id: ObjectId, public userId: ObjectId) {}
 }
 
 @CommandHandler(FindCommentWithLikeCommand)
@@ -35,14 +35,18 @@ export class FindCommentWithLikeUseCase
     return {
       id: comment.id,
       content: comment.content,
-      userId: comment.userId,
-      userLogin: comment.userLogin,
+      commentatorInfo: comment.commentatorInfo,
       createdAt: comment.createdAt,
       likesInfo: {
         likesCount: await this.likesRepositories.countLike(comment.id),
         dislikesCount: await this.likesRepositories.countDislike(comment.id),
-        myStatus: 'None',
+        myStatus: await this.checkStatus(comment.id, command.userId),
       },
     };
+  }
+
+  private async checkStatus(id: ObjectId, userId: ObjectId) {
+    if (userId.toString() === '63ab296b882037600d1ce455') return 'None';
+    return this.likesRepositories.findMyStatus(userId, id);
   }
 }
