@@ -54,8 +54,7 @@ export class QueryCommentsRepositories {
     const items: CommentWithLikeResponseType[] = itemsSearch.map((c) => ({
       id: c._id,
       content: c.content,
-      userId: c.userId,
-      userLogin: c.userLogin,
+      commentatorInfo: c.commentatorInfo,
       createdAt: c.createdAt,
       likesInfo: {
         likesCount: this.likesHelper.findAmountLikeOrDislike(c._id, likes),
@@ -125,8 +124,7 @@ export class QueryCommentsRepositories {
     return {
       id: comment._id,
       content: comment.content,
-      userId: comment.userId,
-      userLogin: comment.userLogin,
+      commentatorInfo: comment.commentatorInfo,
       createdAt: comment.createdAt,
       likesInfo: {
         likesCount,

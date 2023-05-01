@@ -31,7 +31,7 @@ export class CommentsRepositories {
   }
 
   async findCommentsById(_id: ObjectId): Promise<CommentResponseType | string> {
-    const comment = await this.CommentsModel.findById({
+    const comment = await this.CommentsModel.findOne({
       $and: [{ _id }, { isVisible: { $ne: false } }],
     });
     if (comment) {
@@ -52,8 +52,7 @@ export class CommentsRepositories {
     return {
       id: comment._id,
       content: comment.content,
-      userId: comment.userId,
-      userLogin: comment.userLogin,
+      commentatorInfo: comment.commentatorInfo,
       createdAt: comment.createdAt,
       likesInfo: {
         dislikesCount: 0,

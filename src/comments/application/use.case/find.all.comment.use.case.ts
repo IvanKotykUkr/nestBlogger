@@ -52,8 +52,7 @@ export class FindAllCommentUseCase
     const items: CommentWithLikeResponseType[] = itemsSearch.map((c) => ({
       id: c._id,
       content: c.content,
-      userId: c.userId,
-      userLogin: c.userLogin,
+      commentatorInfo: c.commentatorInfo,
       createdAt: c.createdAt,
       likesInfo: {
         likesCount: this.likesHelper.findAmountLikeOrDislike(c._id, likes),

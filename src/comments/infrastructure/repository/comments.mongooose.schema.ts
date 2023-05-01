@@ -7,8 +7,10 @@ export const CommentsSchema = new mongoose.Schema<CommentsDBType>(
     _id: ObjectId,
     postId: ObjectId,
     content: String,
-    userId: ObjectId,
-    userLogin: String,
+    commentatorInfo: {
+      userId: ObjectId,
+      userLogin: String,
+    },
     isVisible: Boolean,
     createdAt: Date,
   },

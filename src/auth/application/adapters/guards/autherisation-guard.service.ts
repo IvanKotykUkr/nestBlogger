@@ -62,7 +62,7 @@ export class CheckOwnGuard implements CanActivate {
     if (typeof comment === 'string') {
       throw new NotFoundException([{ message: 'no comment', field: 'id' }]);
     }
-    const commentUserId = comment.userId.toString();
+    const commentUserId = comment.commentatorInfo.userId.toString();
     if (userId !== commentUserId.toString()) {
       throw new ForbiddenException([
         { message: 'not your own', field: 'user' },

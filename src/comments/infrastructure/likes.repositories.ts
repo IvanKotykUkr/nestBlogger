@@ -94,11 +94,15 @@ export class LikesRepositories {
   }
 
   async countLike(entityId: ObjectId) {
-    return this.LikesModel.countDocuments(entityId);
+    return this.LikesModel.countDocuments({
+      $and: [{ entityId }, { status: 'Like' }],
+    });
   }
 
   async countDislike(entityId: ObjectId) {
-    return this.LikesModel.countDocuments(entityId);
+    return this.LikesModel.countDocuments({
+      $and: [{ entityId }, { status: 'Dislike' }],
+    });
   }
 
   async makeLikeInvisible(userId: ObjectId) {
@@ -107,5 +111,16 @@ export class LikesRepositories {
 
   async makeLikeVisible(userId: ObjectId) {
     return this.LikesModel.updateMany({ userId }, { isVisible: true });
+  }
+
+  async findMyStatus(userId: ObjectId, entityId: ObjectId): Promise<string> {
+    console.log(entityId);
+    console.log(userId);
+    const like = await this.LikesModel.find({
+      $and: [{ userId }, { entityId }],
+    });
+    console.log(like);
+    if (!like) return 'None';
+    //return like.status;
   }
 }

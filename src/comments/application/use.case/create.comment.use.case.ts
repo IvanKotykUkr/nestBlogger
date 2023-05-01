@@ -39,8 +39,10 @@ export class CreateCommentUseCase
     return {
       _id: new ObjectId(),
       content,
-      userId,
-      userLogin,
+      commentatorInfo: {
+        userId,
+        userLogin,
+      },
       postId,
       isVisible: true,
       createdAt: new Date(),
