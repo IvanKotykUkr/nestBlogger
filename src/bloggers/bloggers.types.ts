@@ -27,11 +27,11 @@ export class BodyForCreateBloggerType {
 }
 
 export class BodyForUpdateBloggerType {
-  @Length(4, 15)
+  @Length(1, 15)
   name: string;
   @Length(1, 500)
   description: string;
-  @Length(1, 100)
+  @Length(1, 200)
   @IsUrl()
   websiteUrl: string;
 }

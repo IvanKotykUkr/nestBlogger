@@ -1,10 +1,11 @@
-import { Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { QueryForPaginationType } from '../bloggers.types';
 import { IdTypeForReq } from '../../posts/posts.types';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FindALLBlogsCommand } from '../application/use.case/query.Use.Case/find.all.blogs.use.case';
 import { FindBloggerCommand } from '../application/use.case/find.blogger.use.case';
 import { FindAllPostsForBlogCommand } from '../application/use.case/query.Use.Case/find.all.posts.for.blog.use.case';
+import { ObjectId } from 'mongodb';
 
 export const notFoundBlogger = [
   {
@@ -45,10 +46,9 @@ export class QueryBloggersController {
     const pageSize = query.pageSize || 10;
     const sortByQuery = query.sortBy || 'createdAt';
     const sortDirectionQuery = query.sortDirection || 'desc';
-    const blogger = await this.commandBus.execute(
-      new FindBloggerCommand(param.id),
+    const blogger = await this.queryBus.execute(
+      new FindBloggerCommand(new ObjectId(param.id)),
     );
-
     return this.queryBus.execute(
       new FindAllPostsForBlogCommand(
         searchNameTerm,
@@ -61,11 +61,13 @@ export class QueryBloggersController {
     );
   }
 
-  @Post('/:id')
+  @Get('/:id')
   async getBlogById(
     @Param() param: IdTypeForReq,
     @Query() query: QueryForPaginationType,
   ) {
-    return this.commandBus.execute(new FindBloggerCommand(param.id));
+    return this.queryBus.execute(
+      new FindBloggerCommand(new ObjectId(param.id)),
+    );
   }
 }
