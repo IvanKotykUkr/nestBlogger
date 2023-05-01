@@ -1,12 +1,10 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { Request } from 'express';
+import { Injectable } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 
+@Injectable()
+export class BasicAuthGuard extends AuthGuard('basic') {}
+
+/*
 @Injectable()
 export class BasicAuthGuard implements CanActivate {
   canActivate(
@@ -17,6 +15,7 @@ export class BasicAuthGuard implements CanActivate {
     const [username, password] = Buffer.from(b64auth, 'base64')
       .toString()
       .split(':');
+    console.log(request.headers.authorization);
     if (
       b64auth === undefined ||
       username !== process.env.USERNAME ||
@@ -27,3 +26,6 @@ export class BasicAuthGuard implements CanActivate {
     return true;
   }
 }
+
+
+ */
