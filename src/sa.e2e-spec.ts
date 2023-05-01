@@ -134,13 +134,23 @@ describe('Users', () => {
       .query({ sortDirection: 'asc' })
       .expect(200);
   });
-  /*
-    it('Delete User', async () => {
-      const res = await request(app.getHttpServer())
-        .delete('/users/' + firstUser.id.toString())
-        .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
-        .expect(204);
-    });
+
+  it('Delete User', async () => {
+    const res = await request(app.getHttpServer())
+      .delete('/sa/users/' + firstUser.id.toString())
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .expect(204);
+  });
+  it('Ban User', async () => {
+    const res = await request(app.getHttpServer())
+      .put('/sa/users/' + secondUser.id.toString() + '/ban')
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .send({
+        isBanned: true,
+        banReason: 'dfdxfsF?g.,frsdgfsfdgds',
+      })
+      .expect(204);
+  }); /*
     it('Delete User', async () => {
       const res = await request(app.getHttpServer())
         .delete('/users/' + new ObjectId())

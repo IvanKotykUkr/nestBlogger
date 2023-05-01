@@ -5,7 +5,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -22,7 +21,6 @@ import { CreateUserCommand } from '../../users/application/use.case/create.user.
 import { BasicAuthGuard } from '../../guards/basic.auth.guard';
 import { IdTypeForReq } from '../../posts/posts.types';
 import { DeleteUserCommand } from '../../users/application/use.case/delete.user.use.case';
-import { notFoundUser } from '../../constants';
 import {
   BodyForBanUser,
   IdTypeForReqUser,
@@ -34,6 +32,7 @@ import { UnBanUserCommand } from '../application/useCase/unBan.user.use.case';
 import { QueryForPaginationType } from '../../bloggers/bloggers.types';
 import { FindALLBlogsCommand } from '../../bloggers/application/use.case/query.Use.Case/find.all.blogs.use.case';
 import { BinUserCommand } from '../application/useCase/bin.user.use.case';
+import { ObjectId } from 'mongodb';
 
 @Controller('/sa')
 export class SAController {
@@ -66,6 +65,7 @@ export class SAController {
   }
 
   @UseGuards(BasicAuthGuard)
+  @HttpCode(204)
   @Put('users/:id/ban')
   async banOrUnbanUser(
     @Param() param: IdTypeForReq,
@@ -73,10 +73,12 @@ export class SAController {
   ) {
     if (body.isBanned === true)
       return this.commandBus.execute(
-        new BanUserCommand(param.id, body.banReason),
+        new BanUserCommand(new ObjectId(param.id), body.banReason),
       );
     if (body.isBanned === false)
-      return this.commandBus.execute(new UnBanUserCommand(param.id));
+      return this.commandBus.execute(
+        new UnBanUserCommand(new ObjectId(param.id)),
+      );
     return;
   }
 
@@ -118,14 +120,7 @@ export class SAController {
   @Delete('/users/:id')
   @HttpCode(204)
   async deleteUsers(@Param() param: IdTypeForReq): Promise<string> {
-    const isDeleted = await this.commandBus.execute(
-      new DeleteUserCommand(param.id),
-    );
-    if (isDeleted === true) {
-      return;
-    }
-
-    throw new NotFoundException(notFoundUser);
+    return this.commandBus.execute(new DeleteUserCommand(param.id));
   }
 
   private getBanStatusQuery(banStatus: string) {
