@@ -101,6 +101,7 @@ import { FindAllPostsForBlogUseCase } from './bloggers/application/use.case/quer
 import { FindAllCommentUseCase } from './comments/application/use.case/find.all.comment.use.case';
 import { FindCommentWithLikeUseCase } from './comments/application/use.case/find.comment.with.likes.info.use.case';
 import { BinUserUseCase } from './sa/application/useCase/bin.user.use.case';
+import { BasicStrategy } from './auth/application/basic.strategy';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -281,6 +282,7 @@ const mongooseModule = [
     LikesHelper,
     LikesAuthGuard,
     CheckOwnBlogGuard,
+    BasicStrategy,
   ],
 })
 export class AppModule {}
