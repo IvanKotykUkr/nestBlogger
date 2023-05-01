@@ -6,8 +6,8 @@ import {
 
 import cookieParser from 'cookie-parser';
 import { Test } from '@nestjs/testing';
-import { HttpExceptionFilter } from './exeption.filter';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './exeption.filter';
 import request = require('supertest');
 
 jest.setTimeout(60_0000);
@@ -77,7 +77,7 @@ describe('Users', () => {
         email: firstUser.email,
       })
       .expect(201);
-
+    console.log(res.body.createdAt);
     firstUser.id = res.body.id;
     firstUser.createdAt = res.body.createdAt;
     expect(res.body.id).toBe(firstUser.id);
@@ -127,69 +127,52 @@ describe('Users', () => {
         ],
       });
   });
-  /*it('Get Users', async () => {
-    const res = await request(app.getHttpServer())
-      .get('/users')
-      .expect(200)
-      .expect({
-        pagesCount: 1,
-        page: 1,
-        pageSize: 10,
-        totalCount: 2,
-        items: [
-          {
-            id: firstUser.id,
-            login: firstUser.login,
-            email: firstUser.email,
-            createdAt: firstUser.createdAt,
-          },
-          {
-            id: secondUser.id,
-            login: secondUser.login,
-            email: secondUser.email,
-            createdAt: secondUser.createdAt,
-          },
-        ],
-      });
-  });
-  it('Delete User', async () => {
-    const res = await request(app.getHttpServer())
-      .delete('/users/' + firstUser.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
-      .expect(204);
-  });
-  it('Delete User', async () => {
-    const res = await request(app.getHttpServer())
-      .delete('/users/' + new ObjectId())
-      .expect(401);
-  });
-  it('Delete User', async () => {
-    const res = await request(app.getHttpServer())
-      .delete('/users/' + new ObjectId())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
-      .expect(404);
-  });
   it('Get Users', async () => {
     const res = await request(app.getHttpServer())
-      .get('/users')
-      .expect(200)
-      .expect({
-        pagesCount: 1,
-        page: 1,
-        pageSize: 10,
-        totalCount: 1,
-        items: [
-          {
-            id: secondUser.id,
-            login: secondUser.login,
-            email: secondUser.email,
-            createdAt: secondUser.createdAt,
-          },
-        ],
-      });
+      .get('/sa/users')
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .query({ sortDirection: 'asc' })
+      .expect(200);
   });
-
-   */
+  /*
+    it('Delete User', async () => {
+      const res = await request(app.getHttpServer())
+        .delete('/users/' + firstUser.id.toString())
+        .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+        .expect(204);
+    });
+    it('Delete User', async () => {
+      const res = await request(app.getHttpServer())
+        .delete('/users/' + new ObjectId())
+        .expect(401);
+    });
+    it('Delete User', async () => {
+      const res = await request(app.getHttpServer())
+        .delete('/users/' + new ObjectId())
+        .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+        .expect(404);
+    });
+    it('Get Users', async () => {
+      const res = await request(app.getHttpServer())
+        .get('/users')
+        .expect(200)
+        .expect({
+          pagesCount: 1,
+          page: 1,
+          pageSize: 10,
+          totalCount: 1,
+          items: [
+            {
+              id: secondUser.id,
+              login: secondUser.login,
+              email: secondUser.email,
+              createdAt: secondUser.createdAt,
+            },
+          ],
+        });
+    });
+  
+     */
   afterAll(async () => {
     await app.close();
   });
