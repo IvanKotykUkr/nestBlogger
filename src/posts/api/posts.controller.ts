@@ -30,7 +30,6 @@ export class PostsController {
     @CurrentUserId() userId: ObjectId,
   ) {
     const post = await this.commandBus.execute(new FindPostCommand(param.id));
-
     const user = await this.commandBus.execute(new FindUserByIdCommand(userId));
     return this.commandBus.execute(
       new CreateCommentCommand(post.id, body.content, user.id, user.login),

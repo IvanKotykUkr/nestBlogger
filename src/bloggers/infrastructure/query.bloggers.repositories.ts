@@ -24,7 +24,7 @@ export class QueryBloggersRepositories {
       description: blogger.description,
       websiteUrl: blogger.websiteUrl,
       createdAt: blogger.createdAt,
-      isMembership: true,
+      isMembership: false,
     };
   }
 

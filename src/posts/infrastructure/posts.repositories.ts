@@ -61,8 +61,8 @@ export class PostsRepositories {
   }
 
   async findPostById(id: ObjectId): Promise<PostsResponseType | string> {
-    const post = await this.PostModel.findById({
-      $and: [{ id }, { isVisible: { $ne: false } }],
+    const post = await this.PostModel.findOne({
+      $and: [{ _id: id }, { isVisible: { $ne: false } }],
     });
     if (post) {
       return this.resPost(post);
