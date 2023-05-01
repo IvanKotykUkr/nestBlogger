@@ -29,9 +29,10 @@ export class UsersRepositories {
   }
 
   async deleteUser(_id: ObjectId): Promise<boolean> {
-    const userInstance = await this.UsersModel.findById({ _id });
+    const userInstance = await this.UsersModel.findById(_id);
     if (!userInstance) return false;
     await userInstance.deleteOne();
+
     return true;
   }
 
