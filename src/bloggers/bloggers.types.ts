@@ -21,7 +21,6 @@ export class BodyForCreateBloggerType {
   name: string;
   @Length(1, 500)
   description: string;
-  @Length(1, 100)
   @IsUrl()
   websiteUrl: string;
 }
@@ -31,7 +30,6 @@ export class BodyForUpdateBloggerType {
   name: string;
   @Length(1, 500)
   description: string;
-  @Length(1, 200)
   @IsUrl()
   websiteUrl: string;
 }
@@ -59,7 +57,7 @@ export type BloggerType = {
   name: string;
   description: string;
   websiteUrl: string;
-  ownerId: ObjectId;
+  ownerId?: ObjectId;
   createdAt: Date;
   isMembership: boolean;
 };

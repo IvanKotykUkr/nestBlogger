@@ -114,13 +114,10 @@ export class LikesRepositories {
   }
 
   async findMyStatus(userId: ObjectId, entityId: ObjectId): Promise<string> {
-    console.log(entityId);
-    console.log(userId);
-    const like = await this.LikesModel.find({
-      $and: [{ userId }, { entityId }],
+    const like = await this.LikesModel.findOne({
+      $and: [{ entityId }, { userId }],
     });
-    console.log(like);
     if (!like) return 'None';
-    //return like.status;
+    return like.status;
   }
 }
