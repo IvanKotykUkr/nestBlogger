@@ -29,7 +29,7 @@ export class UpdateLikeUseCase implements ICommandHandler<UpdateLikeCommand> {
     const likeDTO = this.createLikeDTO(
       command.entityId,
       command.likeStatus,
-      command.userId,
+      new ObjectId(command.userId),
       command.login,
     );
     return this.likesRepositories.createStatus(likeDTO);

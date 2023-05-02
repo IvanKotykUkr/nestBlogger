@@ -17,9 +17,9 @@ export class BloggersRepositories {
       name: blogger.name,
       description: blogger.description,
       websiteUrl: blogger.websiteUrl,
-      ownerId: blogger.ownerId,
+      //ownerId: blogger.ownerId,
       createdAt: blogger.createdAt,
-      isMembership: true,
+      isMembership: false,
     };
   }
 
