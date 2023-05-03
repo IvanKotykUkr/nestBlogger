@@ -102,6 +102,7 @@ import { FindAllCommentUseCase } from './comments/application/use.case/find.all.
 import { FindCommentWithLikeUseCase } from './comments/application/use.case/find.comment.with.likes.info.use.case';
 import { BinUserUseCase } from './sa/application/useCase/bin.user.use.case';
 import { BasicStrategy } from './auth/application/basic.strategy';
+import { FindALLBlogsSaUseCase } from './sa/application/useCase/queryUseCase/find.all.blogs.sa.use.case';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
@@ -198,6 +199,7 @@ const saUseCase = [
   BanUserUseCase,
   UnBanUserUseCase,
   BinUserUseCase,
+  FindALLBlogsSaUseCase,
 ];
 const mongooseModule = [
   ConfigModule.forRoot(),

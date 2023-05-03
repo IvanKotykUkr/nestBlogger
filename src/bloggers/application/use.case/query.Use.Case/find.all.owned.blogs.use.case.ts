@@ -57,7 +57,10 @@ export class FindALLOwnedBlogsUseCase
   ): BloggSearchFilerType {
     if (searchNameTerm)
       return {
-        $and: [{ ownerId }, { name: { $regex: searchNameTerm } }],
+        $and: [
+          { 'blogOwnerInfo.userId': ownerId },
+          { name: { $regex: searchNameTerm } },
+        ],
       };
     return { ownerId };
   }

@@ -31,10 +31,10 @@ import { FindAllUserCommand } from '../application/useCase/queryUseCase/find.all
 import { BanUserCommand } from '../application/useCase/ban.user.use.case';
 import { UnBanUserCommand } from '../application/useCase/unBan.user.use.case';
 import { QueryForPaginationType } from '../../bloggers/bloggers.types';
-import { FindALLBlogsCommand } from '../../bloggers/application/use.case/query.Use.Case/find.all.blogs.use.case';
 import { BinUserCommand } from '../application/useCase/bin.user.use.case';
 import { ObjectId } from 'mongodb';
 import { Request } from 'express';
+import { FindALLBlogsSaCommand } from '../application/useCase/queryUseCase/find.all.blogs.sa.use.case';
 
 @Controller('/sa')
 export class SAController {
@@ -58,7 +58,7 @@ export class SAController {
     const sortDirectionQuery = query.sortDirection || 'desc';
 
     return this.queryBus.execute(
-      new FindALLBlogsCommand(
+      new FindALLBlogsSaCommand(
         searchNameTerm,
         pageNumber,
         pageSize,

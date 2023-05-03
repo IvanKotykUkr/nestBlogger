@@ -8,6 +8,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { ObjectId } from 'mongodb';
 import { BloggerDocument } from './repository/blogger.mongoose';
+import { BloggerResponseSaType } from '../../sa/sa.types';
 
 @Injectable()
 export class QueryBloggersRepositories {
@@ -62,6 +63,33 @@ export class QueryBloggersRepositories {
       websiteUrl: d.websiteUrl,
       createdAt: d.createdAt,
       isMembership: false,
+    }));
+  }
+
+  async getBloggersSa(
+    filter: BloggSearchFilerType,
+    sortBy: string,
+    sortDirection: string,
+    pageSize: number,
+    page: number,
+  ): Promise<BloggerResponseSaType[]> {
+    const direction = this.getDirection(sortDirection);
+    const bloggers = await this.BloggerModel.find(filter)
+      .skip(page > 0 ? (page - 1) * pageSize : 0)
+      .sort({ [sortBy]: direction })
+      .limit(pageSize)
+      .lean();
+    return bloggers.map((d) => ({
+      id: d._id,
+      name: d.name,
+      description: d.description,
+      websiteUrl: d.websiteUrl,
+      createdAt: d.createdAt,
+      isMembership: false,
+      blogOwnerInfo: {
+        userId: d.blogOwnerInfo.userId,
+        userLogin: d.blogOwnerInfo.userLogin,
+      },
     }));
   }
 
