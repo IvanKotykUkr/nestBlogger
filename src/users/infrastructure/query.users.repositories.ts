@@ -47,7 +47,7 @@ export class QueryUsersRepositories {
   }
 
   async usersSearchCount(filter: UsersSearchCountParams): Promise<number> {
-    return this.UsersModel.countDocuments();
+    return this.UsersModel.countDocuments(filter);
   }
 
   private getDirection(sortDirection: string) {

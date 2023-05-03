@@ -1,4 +1,13 @@
-import { IsMongoId, IsUrl, Length } from 'class-validator';
+import {
+  IsMongoId,
+  isNotEmpty,
+  isString,
+  IsUrl,
+  Length,
+  registerDecorator,
+  ValidationArguments,
+  ValidationOptions,
+} from 'class-validator';
 import { ObjectId } from 'mongodb';
 
 export type QueryForPaginationType = {
@@ -16,7 +25,25 @@ export type createBloggerType = {
   websiteUrl: string;
 };
 
+export function IsNotEmptyString(validationOptions?: ValidationOptions) {
+  return (object: unknown, propertyName: string) => {
+    registerDecorator({
+      name: 'isNotEmptyString',
+      target: object.constructor,
+      propertyName,
+      options: validationOptions,
+      validator: {
+        validate: (value: any): boolean =>
+          isString(value) && isNotEmpty(value.trim()),
+        defaultMessage: (validationArguments?: ValidationArguments): string =>
+          `${validationArguments.property} should not be an empty string`,
+      },
+    });
+  };
+}
+
 export class BodyForCreateBloggerType {
+  @IsNotEmptyString()
   @Length(1, 15)
   name: string;
   @Length(1, 500)

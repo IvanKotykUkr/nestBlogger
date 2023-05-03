@@ -61,7 +61,7 @@ export class QueryBloggersRepositories {
       description: d.description,
       websiteUrl: d.websiteUrl,
       createdAt: d.createdAt,
-      isMembership: true,
+      isMembership: false,
     }));
   }
 
@@ -74,8 +74,8 @@ export class QueryBloggersRepositories {
     return 'not found';
   }
 
-  async bloggSearchCount(filter: BloggSearchFilerType) {
-    return 0;
+  async blogsSearchCount(filter: BloggSearchFilerType) {
+    return this.BloggerModel.countDocuments(filter);
   }
 
   private getDirection(sortDirection: string) {
