@@ -46,10 +46,10 @@ export class FindAllUserUseCase implements IQueryHandler<FindAllUserCommand> {
       );
 
     return {
-      pagesCount: pagesCountSearch,
-      page,
-      pageSize,
-      totalCount: totalCountSearch,
+      pagesCount: +pagesCountSearch,
+      page: +page,
+      pageSize: +pageSize,
+      totalCount: +totalCountSearch,
       items: itemsSearch,
     };
   }

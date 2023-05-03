@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { AntiDdosGuard } from '../../auth/application/adapters/guards/anti.ddos.guard';
@@ -33,6 +34,7 @@ import { QueryForPaginationType } from '../../bloggers/bloggers.types';
 import { FindALLBlogsCommand } from '../../bloggers/application/use.case/query.Use.Case/find.all.blogs.use.case';
 import { BinUserCommand } from '../application/useCase/bin.user.use.case';
 import { ObjectId } from 'mongodb';
+import { Request } from 'express';
 
 @Controller('/sa')
 export class SAController {
@@ -87,6 +89,7 @@ export class SAController {
   @UseGuards(BasicAuthGuard)
   @Get('/users')
   async getUsers(
+    @Req() req: Request,
     @Query() query: QueryForGetUsers,
   ): Promise<UsersWithPaginationResponseType> {
     const banStatus = this.getBanStatusQuery(query.banStatus);
@@ -96,6 +99,7 @@ export class SAController {
     const sortDirection = query.sortDirection || 'desc';
     const pageNumber = query.pageNumber || 1;
     const pageSize = query.pageSize || 10;
+
     return this.queryBus.execute(
       new FindAllUserCommand(
         banStatus,

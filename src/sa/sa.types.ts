@@ -1,7 +1,7 @@
 import { IsBoolean, IsMongoId, IsNotEmpty, Length } from 'class-validator';
 import { ObjectId } from 'mongodb';
 
-export class QueryForGetUsers {
+export type QueryForGetUsers = {
   banStatus: string;
   searchLoginTerm: string | null;
   searchEmailTerm: string | null;
@@ -9,7 +9,7 @@ export class QueryForGetUsers {
   sortDirection: string;
   pageNumber: number;
   pageSize: number;
-}
+};
 
 export class BodyForBanUser {
   @IsNotEmpty()

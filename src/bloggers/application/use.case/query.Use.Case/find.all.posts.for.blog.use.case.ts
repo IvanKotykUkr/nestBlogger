@@ -30,7 +30,7 @@ export class FindAllPostsForBlogUseCase
     const pageSize: number = command.pageSize;
     const filter = this.getFilter(command.searchNameTerm, command.blogId);
     const totalCountSearch: number =
-      await this.queryBloggersRepositories.bloggSearchCount(filter);
+      await this.queryBloggersRepositories.blogsSearchCount(filter);
     const pagesCountSearch: number = Math.ceil(totalCountSearch / pageSize);
     const itemsSearch: BloggerResponseType[] =
       await this.queryBloggersRepositories.getBloggers(
@@ -42,10 +42,10 @@ export class FindAllPostsForBlogUseCase
       );
 
     return {
-      pagesCount: pagesCountSearch,
-      page,
-      pageSize,
-      totalCount: totalCountSearch,
+      pagesCount: +pagesCountSearch,
+      page: +page,
+      pageSize: +pageSize,
+      totalCount: +totalCountSearch,
       items: itemsSearch,
     };
   }

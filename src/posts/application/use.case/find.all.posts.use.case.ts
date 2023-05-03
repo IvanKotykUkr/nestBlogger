@@ -64,10 +64,10 @@ export class FindAllPostsUseCase implements IQueryHandler<FindAllPostsCommand> {
       },
     }));
     return {
-      pagesCount: pagesCountSearch,
-      page: page,
-      pageSize: pageSize,
-      totalCount: totalCountSearch,
+      pagesCount: +pagesCountSearch,
+      page: +page,
+      pageSize: +pageSize,
+      totalCount: +totalCountSearch,
       items,
     };
   }
