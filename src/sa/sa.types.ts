@@ -1,5 +1,6 @@
 import { IsBoolean, IsMongoId, IsNotEmpty, Length } from 'class-validator';
 import { ObjectId } from 'mongodb';
+import { PaginationType } from '../bloggers/bloggers.types';
 
 export type QueryForGetUsers = {
   banStatus: string;
@@ -42,3 +43,19 @@ export type UsersSearchCountParams =
           }
       )[];
     };
+
+export type BloggerResponseSaType = {
+  id: ObjectId;
+  name: string;
+  description: string;
+  websiteUrl: string;
+  createdAt: Date;
+  isMembership: boolean;
+  blogOwnerInfo: {
+    userId: ObjectId;
+    userLogin: string;
+  };
+};
+
+export type BloggerResponseSaTypeWithPagination =
+  PaginationType<BloggerResponseSaType>;

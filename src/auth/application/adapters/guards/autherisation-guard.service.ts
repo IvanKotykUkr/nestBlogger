@@ -88,7 +88,7 @@ export class CheckOwnBlogGuard implements CanActivate {
     if (!blog) {
       throw new NotFoundException([{ message: 'no blog', field: 'id' }]);
     }
-    const blogOwnerId = blog.ownerId.toString();
+    const blogOwnerId = blog.blogOwnerInfo.userId.toString();
     if (userId !== blogOwnerId.toString()) {
       throw new ForbiddenException([
         { message: 'not your own', field: 'user' },

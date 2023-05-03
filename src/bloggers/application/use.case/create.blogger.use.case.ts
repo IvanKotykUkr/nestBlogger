@@ -1,7 +1,10 @@
 import { BloggersRepositories } from '../../infrastructure/bloggers.repositories';
-import { BloggerType } from '../../bloggers.types';
+import { BloggerResponseType, BloggerType } from '../../bloggers.types';
 import { ObjectId } from 'mongodb';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { UsersRepositories } from '../../../users/infrastructure/users.repositories';
+import { NotFoundException } from '@nestjs/common';
+import { notFoundUser } from '../../../constants';
 
 export class CreateBloggerCommand {
   constructor(
@@ -16,10 +19,13 @@ export class CreateBloggerCommand {
 export class CreateBloggerUseCase
   implements ICommandHandler<CreateBloggerCommand>
 {
-  constructor(protected bloggersRepositories: BloggersRepositories) {}
+  constructor(
+    protected bloggersRepositories: BloggersRepositories,
+    protected userRepositories: UsersRepositories,
+  ) {}
 
-  async execute(command: CreateBloggerCommand): Promise<BloggerType> {
-    const blogger = this.makeBlogger(
+  async execute(command: CreateBloggerCommand): Promise<BloggerResponseType> {
+    const blogger = await this.makeBlogger(
       command.name,
       command.websiteUrl,
       command.description,
@@ -28,18 +34,27 @@ export class CreateBloggerUseCase
     return this.bloggersRepositories.createBlogger(blogger);
   }
 
-  private makeBlogger(
+  private async makeBlogger(
     name: string,
     websiteUrl: string,
     description: string,
     ownerId: ObjectId,
-  ): BloggerType {
+  ): Promise<BloggerType> {
+    const user = await this.userRepositories.findUserById(
+      new ObjectId(ownerId),
+    );
+    if (typeof user === 'string') {
+      throw new NotFoundException(notFoundUser);
+    }
     const newBlogger: BloggerType = {
       _id: new ObjectId(),
       name,
       description,
       websiteUrl,
-      ownerId,
+      blogOwnerInfo: {
+        userId: ownerId,
+        userLogin: user.login,
+      },
       createdAt: new Date(),
       isMembership: true,
     };

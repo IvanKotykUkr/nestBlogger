@@ -29,11 +29,11 @@ export class BinUserUseCase implements ICommandHandler<BinUserCommand> {
         { message: 'there is no blog', field: 'blogId' },
       ]);
     }
-    if (!blog.ownerId)
+    if (!blog.blogOwnerInfo.userId)
       throw new UnauthorizedException([
         { message: 'there is no user', field: 'userId' },
       ]);
-    blog.ownerId = command.userId;
+    blog.blogOwnerInfo.userId = command.userId;
     await this.blogsRepositories.save(blog);
     return;
   }

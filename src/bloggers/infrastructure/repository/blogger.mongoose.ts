@@ -24,7 +24,10 @@ export const BloggerSchema = new mongoose.Schema<BloggerDBType>(
     name: String,
     description: String,
     websiteUrl: String,
-    ownerId: ObjectId,
+    blogOwnerInfo: {
+      userId: ObjectId,
+      userLogin: String,
+    },
     createdAt: Date,
     isMembership: Boolean,
   },

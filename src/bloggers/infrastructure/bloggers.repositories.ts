@@ -23,7 +23,7 @@ export class BloggersRepositories {
     };
   }
 
-  async createBlogger(newBlogger: BloggerType): Promise<BloggerType> {
+  async createBlogger(newBlogger: BloggerType): Promise<BloggerResponseType> {
     const bloggerInstance = new this.BloggerModel(newBlogger);
 
     await bloggerInstance.save();

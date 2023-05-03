@@ -33,8 +33,8 @@ export function IsNotEmptyString(validationOptions?: ValidationOptions) {
       propertyName,
       options: validationOptions,
       validator: {
-        validate: (value: any): boolean =>
-          isString(value) && isNotEmpty(value.trim()),
+        validate: (value: any): any =>
+          isString(value) && isNotEmpty(value.trim()) && Length(0, 15),
         defaultMessage: (validationArguments?: ValidationArguments): string =>
           `${validationArguments.property} should not be an empty string`,
       },
@@ -44,7 +44,7 @@ export function IsNotEmptyString(validationOptions?: ValidationOptions) {
 
 export class BodyForCreateBloggerType {
   @IsNotEmptyString()
-  @Length(1, 15)
+  //  @Length(0, 15)
   name: string;
   @Length(1, 500)
   description: string;
@@ -53,7 +53,7 @@ export class BodyForCreateBloggerType {
 }
 
 export class BodyForUpdateBloggerType {
-  @Length(1, 15)
+  @IsNotEmptyString()
   name: string;
   @Length(1, 500)
   description: string;
@@ -73,7 +73,10 @@ export type BloggerDBType = {
   name: string;
   description: string;
   websiteUrl: string;
-  ownerId: ObjectId;
+  blogOwnerInfo: {
+    userId: ObjectId;
+    userLogin: string;
+  };
   createdAt: Date;
   isMembership: boolean;
 };
@@ -84,7 +87,10 @@ export type BloggerType = {
   name: string;
   description: string;
   websiteUrl: string;
-  ownerId?: ObjectId;
+  blogOwnerInfo: {
+    userId: ObjectId;
+    userLogin: string;
+  };
   createdAt: Date;
   isMembership: boolean;
 };
