@@ -1,4 +1,12 @@
-import { IsMongoId, IsUrl, Length } from 'class-validator';
+import {
+  IsMongoId,
+  IsUrl,
+  Length,
+  Validate,
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+} from 'class-validator';
 import { ObjectId } from 'mongodb';
 
 export type QueryForPaginationType = {
@@ -16,8 +24,23 @@ export type createBloggerType = {
   websiteUrl: string;
 };
 
+@ValidatorConstraint({ name: 'customText', async: false })
+export class CustomTextLength implements ValidatorConstraintInterface {
+  validate(text: string, args: ValidationArguments) {
+    if (!text) return;
+    return text.trim().length > 1 && text.length < 15; // for async validations you must return a Promise<boolean> here
+  }
+
+  defaultMessage(args: ValidationArguments) {
+    // here you can provide default error message if validation failed
+    return 'Name ($value) is too short or too long!';
+  }
+}
+
 export class BodyForCreateBloggerType {
-  @Length(0, 15)
+  @Validate(CustomTextLength, {
+    message: 'Name is too short or long!',
+  })
   name: string;
   @Length(1, 500)
   description: string;
@@ -26,7 +49,9 @@ export class BodyForCreateBloggerType {
 }
 
 export class BodyForUpdateBloggerType {
-  @Length(0, 15)
+  @Validate(CustomTextLength, {
+    message: 'Name is too short or long!',
+  })
   name: string;
   @Length(1, 500)
   description: string;
