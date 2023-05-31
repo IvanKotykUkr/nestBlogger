@@ -35,15 +35,6 @@ export class QueryPostsRepositories {
     };
   }
 
-  async findPostById(_id: ObjectId): Promise<PostsResponseType | string> {
-    const post = await this.PostModel.findById(_id);
-    if (post) {
-      return this.resPost(post);
-    }
-
-    return 'not found';
-  }
-
   paginationFilter(blogId: undefined | ObjectId) {
     const filter = { isVisible: { $ne: false } };
     if (blogId) {

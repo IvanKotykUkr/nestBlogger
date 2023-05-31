@@ -1,7 +1,6 @@
 import {
   IsMongoId,
   isNotEmpty,
-  isString,
   IsUrl,
   Length,
   registerDecorator,
@@ -34,7 +33,7 @@ export function IsNotEmptyString(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate: (value: any): any =>
-          isString(value) && isNotEmpty(value.trim()) && Length(0, 15),
+          isNotEmpty(value.trim()) && Length(0, 15),
         defaultMessage: (validationArguments?: ValidationArguments): string =>
           `${validationArguments.property} should not be an empty string`,
       },
@@ -45,6 +44,7 @@ export function IsNotEmptyString(validationOptions?: ValidationOptions) {
 export class BodyForCreateBloggerType {
   @IsNotEmptyString()
   //  @Length(0, 15)
+  @Length(0, 15)
   name: string;
   @Length(1, 500)
   description: string;

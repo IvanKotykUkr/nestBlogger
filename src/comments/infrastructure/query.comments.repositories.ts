@@ -76,7 +76,14 @@ export class QueryCommentsRepositories {
   }
 
   async commentsSearchCount(postId): Promise<number> {
-    return this.CommentsModel.countDocuments({ postId });
+    return this.CommentsModel.countDocuments({
+      $and: [
+        {
+          postId,
+        },
+        { isVisible: { $ne: false } },
+      ],
+    });
   }
 
   async getComments(

@@ -139,7 +139,7 @@ export class BloggersController {
     if (blog === 'not found') {
       throw new NotFoundException(notFoundBlogger);
     }
-    const isUpdated = await this.commandBus.execute(
+    return await this.commandBus.execute(
       new UpdatePostCommand(
         param.postId,
         inputModel.title,
@@ -149,7 +149,6 @@ export class BloggersController {
         blog.name,
       ),
     );
-    return isUpdated;
   }
 
   @UseGuards(JwtAuthGuard, CheckOwnBlogGuard)
