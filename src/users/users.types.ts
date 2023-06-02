@@ -66,8 +66,8 @@ export type UsersResponseType = {
   email: string;
   banInfo: {
     isBanned: boolean;
-    banDate?: Date;
     banReason?: string;
+    banDate?: Date;
   };
   createdAt: Date;
 };

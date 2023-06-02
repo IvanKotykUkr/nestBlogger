@@ -49,7 +49,8 @@ export class FindALLBlogsSaUseCase
   }
 
   private getFilter(searchNameTerm: string | null) {
-    if (searchNameTerm) return { name: { $regex: searchNameTerm } };
+    if (searchNameTerm)
+      return { name: { $regex: new RegExp(searchNameTerm, 'i') } };
     return {};
   }
 }

@@ -37,7 +37,11 @@ export class QueryUsersRepositories {
       id: u._id,
       login: u.accountData.login,
       email: u.accountData.email,
-      banInfo: u.banInfo,
+      banInfo: {
+        isBanned: u.banInfo.isBanned,
+        banReason: u.banInfo.banReason,
+        banDate: u.banInfo.banDate,
+      },
       createdAt: u.createdAt,
     }));
   }
