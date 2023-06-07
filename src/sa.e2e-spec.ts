@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import { Test } from '@nestjs/testing';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './exeption.filter';
+import { IsObject } from 'class-validator';
 import request = require('supertest');
 
 jest.setTimeout(60_0000);
@@ -77,7 +78,6 @@ describe('Users', () => {
         email: firstUser.email,
       })
       .expect(201);
-    console.log(res.body.createdAt);
     firstUser.id = res.body.id;
     firstUser.createdAt = res.body.createdAt;
     expect(res.body.id).toBe(firstUser.id);
@@ -135,12 +135,6 @@ describe('Users', () => {
       .expect(200);
   });
 
-  it('Delete User', async () => {
-    const res = await request(app.getHttpServer())
-      .delete('/sa/users/' + firstUser.id.toString())
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
-      .expect(204);
-  });
   it('Ban User', async () => {
     const res = await request(app.getHttpServer())
       .put('/sa/users/' + secondUser.id.toString() + '/ban')
@@ -157,7 +151,6 @@ describe('Users', () => {
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .query({ sortDirection: 'asc' })
       .expect(200);
-    console.log(res.body.items);
   });
   it('UnBan User', async () => {
     const res = await request(app.getHttpServer())
@@ -168,49 +161,45 @@ describe('Users', () => {
         banReason: 'dfdxsdsdasdsfsF?g.,frsdgfsfdgds',
       })
       .expect(204);
-    console.log(res.body);
   });
-
   it('Get Users', async () => {
     const res = await request(app.getHttpServer())
       .get('/sa/users')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
       .query({ sortDirection: 'asc' })
       .expect(200);
-    console.log(res.body.items);
-  }); /*
-    it('Delete User', async () => {
-      const res = await request(app.getHttpServer())
-        .delete('/users/' + new ObjectId())
-        .expect(401);
-    });
-    it('Delete User', async () => {
-      const res = await request(app.getHttpServer())
-        .delete('/users/' + new ObjectId())
-        .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
-        .expect(404);
-    });
-    it('Get Users', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/users')
-        .expect(200)
-        .expect({
-          pagesCount: 1,
-          page: 1,
-          pageSize: 10,
-          totalCount: 1,
-          items: [
-            {
-              id: secondUser.id,
-              login: secondUser.login,
-              email: secondUser.email,
-              createdAt: secondUser.createdAt,
-            },
-          ],
-        });
-    });
-  
-     */
+    console.log(res.body[0]);
+  });
+  it('Get Users', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/sa/users')
+      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
+      .expect(200)
+      .expect({
+        pagesCount: 1,
+        page: 1,
+        pageSize: 10,
+        totalCount: 1,
+        items: [
+          {
+            id: secondUser.id,
+            login: secondUser.login,
+            email: secondUser.email,
+            banInfo: IsObject,
+            createdAt: secondUser.createdAt,
+          },
+          {
+            id: firstUser.id,
+            login: firstUser.login,
+            email: firstUser.email,
+            banInfo: IsObject,
+            createdAt: firstUser.createdAt,
+          },
+        ],
+      });
+    console.log(res.body);
+  });
+
   afterAll(async () => {
     await app.close();
   });

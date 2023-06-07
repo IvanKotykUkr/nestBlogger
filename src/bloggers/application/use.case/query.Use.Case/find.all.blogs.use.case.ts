@@ -36,7 +36,7 @@ export class FindALLBlogsUseCase implements IQueryHandler<FindALLBlogsCommand> {
         pageSize,
         page,
       );
-
+    console.log();
     return {
       pagesCount: +pagesCountSearch,
       page: +page,

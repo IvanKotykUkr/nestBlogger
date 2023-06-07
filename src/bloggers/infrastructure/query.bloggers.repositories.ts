@@ -73,7 +73,6 @@ export class QueryBloggersRepositories {
     pageSize: number,
     page: number,
   ): Promise<BloggerResponseSaType[]> {
-    console.log(filter);
     const direction = this.getDirection(sortDirection);
     const bloggers = await this.BloggerModel.find(filter)
       .skip(page > 0 ? (page - 1) * pageSize : 0)

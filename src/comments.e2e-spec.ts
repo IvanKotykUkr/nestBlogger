@@ -161,7 +161,6 @@ describe('Users', () => {
       .split(',')
       .map((item) => item.split(';')[0])
       .map((item) => item.split('=')[1]);
-    console.log('check here ' + res.body.accessToken);
     tokensForFirstUser.accessToken = res.body.accessToken;
     tokensForFirstUser.refreshToken = cookies.toString();
   });
