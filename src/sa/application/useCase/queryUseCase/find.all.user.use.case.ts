@@ -33,6 +33,7 @@ export class FindAllUserUseCase implements IQueryHandler<FindAllUserCommand> {
       command.searchLoginTerm,
       command.searchEmailTerm,
     );
+    console.log(filter);
     const totalCountSearch: number =
       await this.usersRepositories.usersSearchCount(filter);
     const pagesCountSearch: number = Math.ceil(totalCountSearch / pageSize);
@@ -66,7 +67,7 @@ export class FindAllUserUseCase implements IQueryHandler<FindAllUserCommand> {
       return { 'accountData.email': { $regex: searchEmailTerm } };
     if (banStatus === 'all' && searchLoginTerm && searchEmailTerm)
       return {
-        $and: [
+        $or: [
           { 'accountData.login': { $regex: searchLoginTerm } },
           { 'accountData.email': { $regex: searchEmailTerm } },
         ],
@@ -75,14 +76,14 @@ export class FindAllUserUseCase implements IQueryHandler<FindAllUserCommand> {
       return { 'banInfo.isBanned': true };
     if (banStatus === 'banned' && searchLoginTerm && !searchEmailTerm)
       return {
-        $and: [
+        $or: [
           { 'banInfo.isBanned': true },
           { 'accountData.login': { $regex: searchLoginTerm } },
         ],
       };
     if (banStatus === 'banned' && !searchLoginTerm && searchEmailTerm)
       return {
-        $and: [
+        $or: [
           { 'banInfo.isBanned': true },
           { 'accountData.email': { $regex: searchEmailTerm } },
         ],
@@ -90,7 +91,7 @@ export class FindAllUserUseCase implements IQueryHandler<FindAllUserCommand> {
 
     if (banStatus === 'banned' && searchLoginTerm && searchEmailTerm)
       return {
-        $and: [
+        $or: [
           { 'banInfo.isBanned': true },
           { 'accountData.login': { $regex: searchLoginTerm } },
           { 'accountData.email': { $regex: searchEmailTerm } },
@@ -102,7 +103,7 @@ export class FindAllUserUseCase implements IQueryHandler<FindAllUserCommand> {
 
     if (banStatus === 'notBanned' && searchLoginTerm && !searchEmailTerm)
       return {
-        $and: [
+        $or: [
           { 'banInfo.isBanned': true },
           { 'accountData.login': { $regex: searchLoginTerm } },
         ],
@@ -110,14 +111,14 @@ export class FindAllUserUseCase implements IQueryHandler<FindAllUserCommand> {
 
     if (banStatus === 'notBanned' && !searchLoginTerm && searchEmailTerm)
       return {
-        $and: [
+        $or: [
           { 'banInfo.isBanned': false },
           { 'accountData.email': { $regex: searchEmailTerm } },
         ],
       };
     if (banStatus === 'notBanned' && searchLoginTerm && searchEmailTerm)
       return {
-        $and: [
+        $or: [
           { 'banInfo.isBanned': false },
           { 'accountData.login': { $regex: searchLoginTerm } },
           { 'accountData.email': { $regex: searchEmailTerm } },

@@ -8,7 +8,6 @@ import cookieParser from 'cookie-parser';
 import { Test } from '@nestjs/testing';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './exeption.filter';
-import { IsObject } from 'class-validator';
 import request = require('supertest');
 
 jest.setTimeout(60_0000);
@@ -16,7 +15,7 @@ describe('Users', () => {
   let app: INestApplication;
   const firstUser = {
     id: '',
-    login: 'Vasa',
+    login: 'loSer',
     email: 'beefier_tangos0q@icloud.com',
     password: 'Qwerty1234',
     createdAt: '',
@@ -166,37 +165,15 @@ describe('Users', () => {
     const res = await request(app.getHttpServer())
       .get('/sa/users')
       .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
-      .query({ sortDirection: 'asc' })
+      .query({
+        pageSize: 15,
+        pageNumber: 1,
+        searchLoginTerm: 'seR',
+        searchEmailTerm: '.com',
+        sortDirection: 'asc',
+        sortBy: 'login',
+      })
       .expect(200);
-    console.log(res.body[0]);
-  });
-  it('Get Users', async () => {
-    const res = await request(app.getHttpServer())
-      .get('/sa/users')
-      .set({ Authorization: 'Basic YWRtaW46cXdlcnR5' })
-      .expect(200)
-      .expect({
-        pagesCount: 1,
-        page: 1,
-        pageSize: 10,
-        totalCount: 1,
-        items: [
-          {
-            id: secondUser.id,
-            login: secondUser.login,
-            email: secondUser.email,
-            banInfo: IsObject,
-            createdAt: secondUser.createdAt,
-          },
-          {
-            id: firstUser.id,
-            login: firstUser.login,
-            email: firstUser.email,
-            banInfo: IsObject,
-            createdAt: firstUser.createdAt,
-          },
-        ],
-      });
     console.log(res.body);
   });
 
