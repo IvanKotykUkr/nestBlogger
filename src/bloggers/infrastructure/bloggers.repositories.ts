@@ -30,16 +30,6 @@ export class BloggersRepositories {
     return this.reqBlogger(bloggerInstance);
   }
 
-  async updateBlogger(blogger: BloggerType): Promise<boolean> {
-    const bloggerInstance = await this.BloggerModel.findById(blogger._id);
-    if (!bloggerInstance) return false;
-    bloggerInstance.name = blogger.name;
-    bloggerInstance.description = blogger.description;
-    bloggerInstance.websiteUrl = blogger.websiteUrl;
-    await bloggerInstance.save();
-    return true;
-  }
-
   async deleteBlogger(id: ObjectId): Promise<boolean> {
     const bloggerInstance = await this.BloggerModel.findById(id);
     if (!bloggerInstance) return false;
@@ -47,14 +37,6 @@ export class BloggersRepositories {
     await bloggerInstance.deleteOne();
 
     return true;
-  }
-
-  async findBlogger(_id: ObjectId): Promise<BloggerResponseType | string> {
-    const blogger = await this.BloggerModel.findById(_id);
-    if (blogger) {
-      return this.reqBlogger(blogger);
-    }
-    return 'not found';
   }
 
   async findById(_id: ObjectId): Promise<BloggerDocument> {

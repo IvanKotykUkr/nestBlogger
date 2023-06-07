@@ -239,7 +239,6 @@ describe('Users', () => {
       .set('Cookie', 'refreshToken=' + tokensForFirstUser.refreshToken)
       .send({})
       .expect(401);
-    console.log(res.body);
     const cookies = res.headers['set-cookie'][0]
       .split(',')
       .map((item) => item.split(';')[0])
@@ -271,7 +270,7 @@ describe('Users', () => {
 
       .send({})
       .expect(401);
-    console.log(res.body);
+
     expect(res.body.email).toBe(firstUser.email);
     expect(res.body.login).toBe(firstUser.login);
   });

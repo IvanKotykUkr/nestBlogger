@@ -27,7 +27,6 @@ export class CreateRefreshTokenUseCase
       secret: process.env.REFRESH_JWT_SECRET,
       expiresIn: '2h',
     });
-    console.log(refresh);
     return refresh;
   }
 }

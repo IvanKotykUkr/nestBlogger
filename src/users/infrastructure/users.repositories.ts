@@ -23,7 +23,6 @@ export class UsersRepositories {
 
   async createUser(newUser: UserDBType): Promise<UserDBType> {
     const userInstance = new this.UsersModel(newUser);
-    userInstance.createdAt = new Date();
     await userInstance.save();
     return this.reqUsers(userInstance);
   }
